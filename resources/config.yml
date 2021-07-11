@@ -1,0 +1,22 @@
+---
+#Welcome to Ranks configs! :D
+#This plugin was made by IvanCraft623
+
+#Provider where player information is stored
+#Options: SQLite3(Recomended), YAML
+Database-provider: SQLite3
+
+#Players will have this rank by default
+Default_Rank: Guest
+
+#All players will have these permissions
+Global_Perms:
+  - example.perm
+
+#Ranks hierarchy
+#It is advisable to put all the ranks, otherwise the non-established ranks will be ordered in the lowest position
+Hierarchy:
+  - Owner #Highest rank
+  - Admin
+  - Guest #Lower rank
+...

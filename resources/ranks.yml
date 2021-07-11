@@ -1,0 +1,40 @@
+---
+Guest:
+  nametag:
+    prefix: "§2[§a+§2]"
+    nameColor: "§f"
+  chat:
+    prefix: "§2[§a+§2]"
+    nameColor: "§f"
+    chatFormat: "§5: §7"
+  permissions:
+  - pchat.colored.format
+  - pchat.colored.nametag
+  - pocketmine.command.list
+Admin:
+  nametag:
+    prefix: "§9[§bAdmin§9]§r"
+    nameColor: "§a"
+  chat:
+    prefix: "§9[§bAdmin§9]§r"
+    nameColor: "§a"
+    chatFormat: "§5: §6"
+  permissions:
+  - pocketmine.broadcast
+  - pocketmine.command.gamemode
+  - pocketmine.command.give
+  - pocketmine.command.kick
+  - pocketmine.command.teleport
+  - pocketmine.command.time
+Owner:
+  nametag:
+    prefix: "§l§7|§aOwner§7|§r"
+    nameColor: "§9"
+  chat:
+    prefix: "§l§7|§aOwner§7|§r"
+    nameColor: "§9"
+    chatFormat: " §4> §b"
+  permissions:
+  - pocketmine.command
+  - pperms.command
+...
