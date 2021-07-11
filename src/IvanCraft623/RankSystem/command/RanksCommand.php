@@ -48,7 +48,7 @@ class RanksCommand extends PluginCommand {
 						);
 						return true;
 					}
-					if (!$sender->hasPermission("ranks.commands")) {
+					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
 						return true;
 					}
@@ -64,7 +64,7 @@ class RanksCommand extends PluginCommand {
 				break;
 
 				case 'delete':
-					if (!$sender->hasPermission("ranks.commands")) {
+					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
 						return true;
 					}
@@ -84,7 +84,7 @@ class RanksCommand extends PluginCommand {
 				break;
 
 				case 'edit': //TODO
-					if (!$sender->hasPermission("ranks.commands")) {
+					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
 						return true;
 					}
@@ -96,7 +96,7 @@ class RanksCommand extends PluginCommand {
 				break;
 
 				case 'list':
-					if (!$sender->hasPermission("ranks.commands")) {
+					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
 						return true;
 					}
@@ -109,7 +109,7 @@ class RanksCommand extends PluginCommand {
 
 				case 'set':
 				case 'setrank':
-					if (!$sender->hasPermission("ranks.commands")) {
+					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
 						return true;
 					}
@@ -165,7 +165,7 @@ class RanksCommand extends PluginCommand {
 
 				case 'remove':
 				case 'removerank':
-					if (!$sender->hasPermission("ranks.commands")) {
+					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
 						return true;
 					}
@@ -187,7 +187,7 @@ class RanksCommand extends PluginCommand {
 				break;
 
 				case 'setperm':
-					if (!$sender->hasPermission("ranks.commands")) {
+					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
 						return true;
 					}
@@ -205,7 +205,7 @@ class RanksCommand extends PluginCommand {
 				break;
 
 				case 'removeperm':
-					if (!$sender->hasPermission("ranks.commands")) {
+					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
 						return true;
 					}
@@ -273,7 +273,7 @@ class RanksCommand extends PluginCommand {
 	}
 
 	public static function sendUsageMessage(CommandSender $sender) : void {
-		if ($sender->hasPermission("ranks.commands")) {
+		if ($sender->hasPermission("ranksystem.commands")) {
 			$sender->sendMessage(
 				"§a---- §5Ranks §bCommands §a----"."\n"."\n".
 				"§eUse:§a /ranks create §7(Create a Rank.)"."\n".
