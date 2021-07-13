@@ -120,7 +120,7 @@ class SQLite3 extends Provider {
 		if ($this->isInDb($user)) {
 			$this->db->exec("UPDATE `users` SET `permissions`='$stringPerms' WHERE user='$user';");
 		} else {
-			$dbInfo = db::$db->prepare("INSERT OR IGNORE INTO users(user,ranks,permissions) SELECT :user, :ranks, :permissions WHERE NOT EXISTS(SELECT * FROM users WHERE user = :user);");
+			$dbInfo = $this->db->prepare("INSERT OR IGNORE INTO users(user,ranks,permissions) SELECT :user, :ranks, :permissions WHERE NOT EXISTS(SELECT * FROM users WHERE user = :user);");
 			$dbInfo->bindValue(":user", $user, SQLITE3_TEXT);
 			$dbInfo->bindValue(":ranks", "", SQLITE3_TEXT);
 			$dbInfo->bindValue(":permissions", $stringPerms, SQLITE3_TEXT);

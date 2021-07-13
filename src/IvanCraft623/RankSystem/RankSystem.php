@@ -44,7 +44,7 @@ class RankSystem extends PluginBase {
 		$this->loadEvents();
 		$this->loadProvider();
 		$this->getRankManager()->load();
-		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask($this), 20);
+		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 20);
 	}
 
 	public function getProvider() : Provider{
@@ -102,7 +102,7 @@ class RankSystem extends PluginBase {
 	}
 
 	public function loadEvents() : void {
-		$values = [new EventListener($this)];
+		$values = [new EventListener()];
 		foreach ($values as $events) {
 			$this->getServer()->getPluginManager()->registerEvents($events, $this);
 		}

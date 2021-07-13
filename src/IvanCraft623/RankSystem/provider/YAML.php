@@ -23,7 +23,7 @@ use pocketmine\utils\{SingletonTrait, Config};
 class YAML extends Provider {
 	use SingletonTrait;
 
-	/** @var \Config */
+	/** @var Config */
 	public $db;
 
 	public function load() : void {
