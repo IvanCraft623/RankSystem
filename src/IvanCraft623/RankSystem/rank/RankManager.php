@@ -42,8 +42,8 @@ final class RankManager {
 	}
 
 	/**
-	 * @param String|Array $rank
-	 * @return ?Rank|Array
+	 * @param String|Array $names
+	 * @return Rank|Null|Array
 	 */
 	public function getByName($names) {
 		if (is_array($names)) {

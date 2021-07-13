@@ -152,7 +152,7 @@ final class Session {
 	/**
 	 * @param Rank|String $rank
 	 */
-	public function getRankExpTime(Rank $rank) : ?int {
+	public function getRankExpTime($rank) : ?int {
 		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getByName($rank);
 		if ($this->isTempRank($rank)) {
 			return $this->tempRanksDuration[$rank->getName()];
@@ -223,7 +223,7 @@ final class Session {
 	}
 
 	public function hasPermission(string $perm) : bool {
-		return in_array($perm, $this->permission, true);
+		return in_array($perm, $this->permissions, true);
 	}
 
 	public function loadPermissions() : void {
