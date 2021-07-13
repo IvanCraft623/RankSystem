@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace IvanCraft623\RankSystem\provider;
 
 use IvanCraft623\RankSystem\RankSystem as Ranks;
-use pocketmine\utils\SingletonTrait;
 
 abstract class Provider {
 

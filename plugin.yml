@@ -3,7 +3,7 @@ name: RankSystem
 author: IvanCraft623
 version: 0.0.1
 main: IvanCraft623\RankSystem\RankSystem
-api: 4.0.0
+api: 3.0.0
 permissions:
   ranksystem.commands:
     default: op

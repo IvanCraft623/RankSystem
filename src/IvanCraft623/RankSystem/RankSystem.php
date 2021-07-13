@@ -20,7 +20,7 @@ namespace IvanCraft623\RankSystem;
 use IvanCraft623\RankSystem\{command\RanksCommand, session\SessionManager, rank\RankManager, task\UpdateTask};
 use IvanCraft623\RankSystem\provider\{Provider, YAML, SQLite3};
 
-use pocketmine\{plugin\PluginBase, utils\Config, utils\SingletonTrait, permission\PermissionManager, permission\DefaultPermissions};
+use pocketmine\{plugin\PluginBase, utils\Config, utils\SingletonTrait, permission\DefaultPermissions};
 
 class RankSystem extends PluginBase {
 	use SingletonTrait;
@@ -75,7 +75,7 @@ class RankSystem extends PluginBase {
 	 */
 	public function getPmmpPerms() : array {
 		if (self::$pmDefaultPerms === []) {
-			foreach (PermissionManager::getInstance()->getPermissions() as $permission) {
+			foreach ($this->getServer()->getPluginManager()->getPermissions() as $permission) {
 				if (strpos($permission->getName(), DefaultPermissions::ROOT) !== false) {
 					self::$pmDefaultPerms[] = $permission;
 				}
@@ -85,13 +85,7 @@ class RankSystem extends PluginBase {
 	}
 
 	public function getPluginPerms(PluginBase $plugin) : array {
-		$pluginPerms = [];
-		foreach ($plugin->getDescription()->getPermissions() as $default => $perms) {
-			foreach ($perms as $perm) {
-				$pluginPerms[] = $perm;
-			}
-		}
-		return $pluginPerms;
+		return $plugin->getDescription()->getPermissions();
 	}
 
 	public function saveResources() : void {

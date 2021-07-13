@@ -20,7 +20,7 @@ namespace IvanCraft623\RankSystem\command;
 use IvanCraft623\RankSystem\{RankSystem as Ranks, Utils};
 
 use pocketmine\{Server, player\Player, plugin\PluginBase};
-use pocketmine\command\{CommandSender};
+use pocketmine\command\{PluginCommand, CommandSender};
 
 class RanksCommand extends PluginCommand {
 
@@ -139,7 +139,6 @@ class RanksCommand extends PluginCommand {
 						return true;
 					}
 					$rank = $this->plugin->getRankManager()->getByName($args[2]);
-					$expTime = Utils::parseDuration($args[3]);
 					if (!isset($args[3])) {
 						$expTime = "Never";
 						$session->setRank($rank);
