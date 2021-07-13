@@ -139,7 +139,6 @@ class RanksCommand extends PluginCommand {
 						return true;
 					}
 					$rank = $this->plugin->getRankManager()->getByName($args[2]);
-					$expTime = Utils::parseDuration($args[3]);
 					if (!isset($args[3])) {
 						$expTime = "Never";
 						$session->setRank($rank);
