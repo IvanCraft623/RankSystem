@@ -6,9 +6,6 @@
 ## Description:
 An amazing Rank and Permissions Manager. The best ranks manager for PocketMine-MP.
 
-## Important:
-At the moment the plugin does not have a system to create / modify ranges in the game, at the moment you must create the ranges manually from the file: "ranks.yml". This feature will arrive soon!
-
 # Commands
 Command | Description | Permission
 --- | --- | ---
@@ -27,6 +24,7 @@ Command | Description | Permission
 
 - Multiple Ranks per user support
 - Temp-ranks System
+- Easy Rank Creation / Edit System in-game
 - SQLite3 Provider Support
 - Yaml Provider Support
 - Ranks inheritance system to allow you to inherit group permissions
