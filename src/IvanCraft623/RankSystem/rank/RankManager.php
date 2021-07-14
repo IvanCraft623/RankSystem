@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\rank;
 
-use pocketmine\utils\SingletonTrait;
+use pocketmine\{Config, utils\SingletonTrait};
 use IvanCraft623\RankSystem\RankSystem as Ranks;
 
 use RuntimeException;
