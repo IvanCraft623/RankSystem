@@ -6,4 +6,5 @@ branches:
 projects:
   RankSystem:
     path: ""
+    icon: icon.png
 ...
