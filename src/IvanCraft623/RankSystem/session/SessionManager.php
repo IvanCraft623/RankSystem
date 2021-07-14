@@ -42,4 +42,14 @@ final class SessionManager {
 	public function getAll() : array {
 		return $this->sessions;
 	}
+
+	public function reload() {
+		$sessions = [];
+		foreach ($this->sessions as $user => $ss) {
+			$session = new Session($user);
+			$session->updateRanks();
+			$sessions[$user] = $session;
+		}
+		$this->sessions = $sessions;
+	}
 }

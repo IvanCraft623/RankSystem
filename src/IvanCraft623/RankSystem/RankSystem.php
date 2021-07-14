@@ -37,13 +37,13 @@ class RankSystem extends PluginBase {
 	public function onLoad() : void {
 		self::setInstance($this);
 		$this->saveResources();
+		$this->getRankManager()->load();
 	}
 
 	public function onEnable() : void {
 		$this->loadCommands();
 		$this->loadEvents();
 		$this->loadProvider();
-		$this->getRankManager()->load();
 		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 20);
 	}
 

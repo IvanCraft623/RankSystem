@@ -20,14 +20,14 @@ namespace IvanCraft623\RankSystem;
 use IvanCraft623\RankSystem\{RankSystem as Ranks, event\UserRankExpireEvent};
 
 use pocketmine\{Server, player\Player};
-use pocketmine\event\{Listener, player\PlayerLoginEvent, player\PlayerChatEvent};
+use pocketmine\event\{Listener, player\PlayerJoinEvent, player\PlayerChatEvent};
 
 class EventListener implements Listener {
 
 	/**
 	 * @priority HIGH
 	 */
-	public function onLogin(PlayerLoginEvent $event) : void {
+	public function onJoin(PlayerJoinEvent $event) : void {
 		$player = $event->getPlayer();
 		$session = Ranks::getInstance()->getSessionManager()->get($player->getName());
 		$session->updateRanks();

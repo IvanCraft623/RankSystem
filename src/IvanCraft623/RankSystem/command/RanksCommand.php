@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\command;
 
-use IvanCraft623\RankSystem\{RankSystem as Ranks, Utils};
+use IvanCraft623\RankSystem\{RankSystem as Ranks, Utils, rank\RankModifier};
 
 use pocketmine\{Server, Player, plugin\PluginBase};
 use pocketmine\command\{PluginCommand, CommandSender};
@@ -40,7 +40,7 @@ class RanksCommand extends PluginCommand {
 	public function execute(CommandSender $sender, string $label, array $args) {
 		if (isset($args[0])) {
 			switch ($args[0]) {
-				case 'create': //TODO
+				case 'create':
 					if (!$sender instanceof Player) {
 						$sender->sendMessage(
 							"§cYou can only use this command in game!"."\n".
@@ -60,7 +60,7 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage("§c".$args[1]." rank already exist!");
 						return true;
 					}
-					$sender->sendMessage("§cThis function is under development!");
+					new RankModifier($sender, $args[1]);
 				break;
 
 				case 'delete':
@@ -83,7 +83,7 @@ class RanksCommand extends PluginCommand {
 					$this->plugin->getRankManager()->delete($args[1]);
 				break;
 
-				case 'edit': //TODO
+				case 'edit':
 					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
 						return true;
@@ -92,7 +92,12 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage("§cUse: /ranks edit <rank>");
 						return true;
 					}
-					$sender->sendMessage("§cThis function is under development!");
+					if (!$this->plugin->getRankManager()->exists($args[1])) {
+						$sender->sendMessage("§c".$args[1]." rank does not exist!");
+						return true;
+					}
+					$rank = $this->plugin->getRankManager()->getByName($args[1]);
+					new RankModifier($sender, $args[1], $rank->getNameTagFormat(), $rank->getChatFormat(), $rank->getPermissions());
 				break;
 
 				case 'list':
@@ -123,9 +128,8 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage(
 							"§cUse: /ranks set <player> <rank> [timeToExpire]"."\n".
 							"§bIf §a[timToExpire]§b is not specified the rank will not expire"."\n"."\n".
-							"§aIf you want the rank to expire, §e[timeToExpire]§a must specify 4 data as follows:"."\n".
-							"§edays, hours and minutes. §bExample: §e1d2h3m"."\n".
-							"§bIn this case the range will expire in 1 day, 2 hours and 3 minutes."
+							"§aDuration arguments: y = year, M = month, w = week, d = day, h = hour, m = minute"."\n".
+							"§eFor instance, 1y3M means one year and three months (this is the same as 15M). 1w2d12h means one week, two days, and twelve hours (this is the same as 9d12h)."
 						);
 						return true;
 					}
@@ -148,9 +152,8 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage(
 							"§cInvalid timeToExpire provided!"."\n".
 							"§bIf §a[timToExpire]§b is not specified the rank will not expire"."\n"."\n".
-							"§aIf you want the rank to expire, §e[timeToExpire]§a must specify 4 data as follows:"."\n".
-							"§edays, hours and minutes. §bExample: §e1d2h3m"."\n".
-							"§bIn this case the range will expire in 1 day, 2 hours and 3 minutes."
+							"§aDuration arguments: y = year, M = month, w = week, d = day, h = hour, m = minute"."\n".
+							"§eFor instance, 1y3M means one year and three months (this is the same as 15M). 1w2d12h means one week, two days, and twelve hours (this is the same as 9d12h)."
 						);
 						return true;
 					}

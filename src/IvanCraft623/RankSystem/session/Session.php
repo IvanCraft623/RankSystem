@@ -100,7 +100,7 @@ final class Session {
 		foreach ($ranks as $rank) {
 			$prefixes[] = $rank->getNameTagFormat()["prefix"];
 		}
-		return implode(" ", $prefixes);
+		return implode("", $prefixes);
 	}
 
 	public function getChatPrefix() : string {
@@ -109,17 +109,17 @@ final class Session {
 		foreach ($ranks as $rank) {
 			$prefixes[] = $rank->getChatFormat()["prefix"];
 		}
-		return implode(" ", $prefixes);
+		return implode("", $prefixes);
 	}
 
 	public function getNameTagFormat() : string {
 		$highestFormat = $this->plugin->getRankManager()->getHierarchical($this->ranks)[0]->getNameTagFormat();
-		return $this->getNameTagPrefix()." ".$highestFormat["nameColor"].$this->name;
+		return $this->getNameTagPrefix().$highestFormat["nameColor"].$this->name;
 	}
 
 	public function getChatFormat() : string {
 		$highestFormat = $this->plugin->getRankManager()->getHierarchical($this->ranks)[0]->getChatFormat();
-		return $this->getChatPrefix()." ".$highestFormat["nameColor"].$this->name.$highestFormat["chatFormat"];
+		return $this->getChatPrefix().$highestFormat["nameColor"].$this->name.$highestFormat["chatFormat"];
 	}
 
 	/**

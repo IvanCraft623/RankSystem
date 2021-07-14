@@ -48,6 +48,10 @@ final class Rank {
 		return null;
 	}
 
+	public static function closeAll() : void {
+		self::$ranks = [];
+	}
+
 	public static function getAll() : array {
 		return self::$ranks;
 	}
