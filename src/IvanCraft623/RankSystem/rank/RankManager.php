@@ -17,13 +17,16 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\rank;
 
-use pocketmine\utils\SingletonTrait;
+use pocketmine\utils\{Config, SingletonTrait};
 use IvanCraft623\RankSystem\RankSystem as Ranks;
 
 use RuntimeException;
 
 final class RankManager {
 	use SingletonTrait;
+
+	/** @var Config */
+	private $data;
 
 	/** @var Array */
 	private $hierarchy = [];
@@ -32,9 +35,18 @@ final class RankManager {
 	private $defaultRank = null;
 
 	public function load() : void {
-	 	foreach (Ranks::getInstance()->getConfigs("ranks.yml")->getAll() as $name => $data) {
+		$this->data = Ranks::getInstance()->getConfigs("ranks.yml");
+	 	foreach ($this->data->getAll() as $name => $data) {
 	 		new Rank($name, $data["nametag"], $data["chat"], $data["permissions"]);
 	 	}
+	}
+
+	public function reload() : void {
+		$this->hierarchy = [];
+		$this->defaultRank = null;
+		Rank::closeAll();
+		$this->load();
+		Ranks::getInstance()->getSessionManager()->reload();
 	}
 
 	public function getAll() : array {
@@ -42,8 +54,8 @@ final class RankManager {
 	}
 
 	/**
-	 * @param String|Array $rank
-	 * @return ?Rank|Array
+	 * @param String|Array $names
+	 * @return Rank|Null|Array
 	 */
 	public function getByName($names) {
 		if (is_array($names)) {
@@ -123,17 +135,9 @@ final class RankManager {
 	 * $permissions = ["example.perm", "example.perm2"]:
 	 */
 	public function create(string $name, array $nametag, array $chat, array $permissions = []) : void {
-		$ranksConfig = Ranks::getInstance()->getConfigs("ranks.yml");
-		$ranksAll = $ranksConfig->getAll();
-		$newRank = [
-			"nametag" => $nametag,
-			"chat" => $chat,
-			"permissions" => $permissions
-		];
-		$ranksAll[$name] = $newRank;
-		$ranksConfig->setAll($ranksAll);
-		$ranksConfig->save();
-		$rank = new Rank($name, $nametag, $chat, $permissions);
+		if (!$this->exists($name)) {
+			$this->saveRankData($name, $nametag, $chat, $permissions);
+		}
 	}
 
 	/**
@@ -141,8 +145,18 @@ final class RankManager {
 	 */
 	public function delete($rank) {
 		$rank = ($rank instanceof Rank) ? $rank->getName() : $rank;
-		$ranksConfig = Ranks::getInstance()->getConfigs("ranks.yml");
-		$ranksConfig->remove($rank);
-		$ranksConfig->save();
+		$this->data->remove($rank);
+		$this->data->save();
+	}
+
+	public function saveRankData(string $name, array $nametag, array $chat, array $permissions = []) {
+		$data = [
+			"nametag" => $nametag,
+			"chat" => $chat,
+			"permissions" => $permissions
+		];
+		$this->data->set($name, $data);
+		$this->data->save();
+		$this->reload();
 	}
 }

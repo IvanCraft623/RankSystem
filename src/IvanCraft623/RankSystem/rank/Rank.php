@@ -48,6 +48,10 @@ final class Rank {
 		return null;
 	}
 
+	public static function closeAll() : void {
+		self::$ranks = [];
+	}
+
 	public static function getAll() : array {
 		return self::$ranks;
 	}
@@ -72,7 +76,7 @@ final class Rank {
 		$this->name = $name;
 		$this->nametag = $nametag;
 		$this->chat = $chat;
-		$this->permission = $permissions;
+		$this->permissions = $permissions;
 
 		self::$ranks[$name] = $this;
 	}
@@ -90,6 +94,6 @@ final class Rank {
 	}
 
 	public function getPermissions() : array {
-		return $this->permission;
+		return $this->permissions;
 	}
 }

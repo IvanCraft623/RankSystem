@@ -20,7 +20,7 @@ class UserRankSetEvent extends Event implements Cancellable {
 	/** @var Rank $rank */
 	protected $rank;
 
-	/** @var $expTime */
+	/** @var ?int $expTime */
 	protected $expTime;
 
 	/**
