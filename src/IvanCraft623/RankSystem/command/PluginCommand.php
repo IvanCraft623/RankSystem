@@ -1,6 +1,8 @@
 <?php
 
-#Plugin By:
+declare(strict_types=1);
+
+#Plugin by IvanCraft623 (Twitter: @IvanCraft623)
 
 /*
 	8888888                            .d8888b.                   .d888 888     .d8888b.   .d8888b.   .d8888b.  
@@ -13,32 +15,26 @@
 	8888888  Y88P   "Y888888 888  888  "Y8888P"  888    "Y888888 888     "Y888  "Y8888P"  888888888   "Y8888P"  
 */
 
-declare(strict_types=1);
+namespace IvanCraft623\RankSystem\command;
 
-namespace IvanCraft623\RankSystem\task;
+use pocketmine\command\Command;
+use pocketmine\plugin\Plugin;
+use pocketmine\plugin\PluginOwned;
 
-use IvanCraft623\RankSystem\{RankSystem as Ranks, event\UserRankExpireEvent};
+abstract class PluginCommand extends Command implements PluginOwned {
 
-use pocketmine\{player\Player, Server, scheduler\Task};
+	private $owningPlugin;
 
-class UpdateTask extends Task {
+	public function __construct(string $name, $plugin){
+		parent::__construct($name);
+		$this->owningPlugin = $plugin;
+		$this->usageMessage = "";
+	}
 
-	public function onRun() : void {
-		#Check Expired Ranks
-		foreach (Ranks::getInstance()->getSessionManager()->getAll() as $session) {
-			foreach ($session->getTempRanks() as $rank) {
-				$expTime = $session->getRankExpTime($rank);
-				if ($expTime <= time()) {
-					# Call Event
-					$ev = new UserRankExpireEvent(
-						$session,
-						$rank
-					);
-					$ev->call();
-
-					$session->removeRank($rank);
-				}
-			}
-		}
+	/**
+	 * @return Plugin
+	 */
+	public function getOwningPlugin() : Plugin{
+		return $this->owningPlugin;
 	}
 }

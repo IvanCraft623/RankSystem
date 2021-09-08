@@ -6,9 +6,10 @@ namespace IvanCraft623\RankSystem\event;
 
 use IvanCraft623\RankSystem\{RankSystem as Ranks, rank\Rank, session\Session};
 
-use pocketmine\event\{Cancellable, Event};
+use pocketmine\event\{Event, Cancellable, CancellableTrait};
 
 class UserRankSetEvent extends Event implements Cancellable {
+	use CancellableTrait;
 
 	/** @var null $handlerList */
 	public static $handlerList = \null;

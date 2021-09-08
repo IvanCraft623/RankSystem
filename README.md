@@ -1,7 +1,3 @@
-[![](https://poggit.pmmp.io/shield.state/RankSystem)](https://poggit.pmmp.io/p/RankSystem)
-[![](https://poggit.pmmp.io/shield.api/RankSystem)](https://poggit.pmmp.io/p/RankSystem)
-[![](https://poggit.pmmp.io/shield.dl.total/RankSystem)](https://poggit.pmmp.io/p/RankSystem)
-
 <div align="center">
   <h1> 👑 RankSystem 🔧</h1>
   <p>An amazing Rank and Permissions Manager</p>

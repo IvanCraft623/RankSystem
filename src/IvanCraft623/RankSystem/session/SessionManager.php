@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace IvanCraft623\RankSystem\session;
 
 use pocketmine\utils\SingletonTrait;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 final class SessionManager {
 	use SingletonTrait;

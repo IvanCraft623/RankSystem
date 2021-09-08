@@ -43,6 +43,11 @@ class YAML extends Provider {
 		if ($this->isInDb($user)) {
 			$all = $this->db->getAll();
 			$ranks = $all[$user]["ranks"];
+			foreach ($ranks as $rank => $expTime) {
+				if (!Ranks::getInstance()->getRankManager()->exists($rank)) {
+					unset($ranks[$rank]);
+				}
+			}
 		}
 		return $ranks;
 	}

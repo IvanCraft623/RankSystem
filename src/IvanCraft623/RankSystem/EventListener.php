@@ -49,7 +49,7 @@ class EventListener implements Listener {
 	public function onRankExpire(UserRankExpireEvent $event) : void {
 		$session = $event->getSession();
 		$rank = $event->getRank();
-		$player = Ranks::getInstance()->getServer()->getPlayer($session->getName());
+		$player = Ranks::getInstance()->getServer()->getPlayerByPrefix($session->getName());
 		if ($player !== null) {
 			$player->sendMessage("§c» §eYour §b".$rank->getName()."§e rank has expired!");
 		}
