@@ -58,7 +58,9 @@ class SQLite3 extends Provider {
 					if (is_numeric($expTime)) {
 						$expTime = (int)$expTime;
 					}
-					$ranks[$data[0]] = $expTime;
+					if (Ranks::getInstance()->getRankManager()->exists($data[0])) {
+						$ranks[$data[0]] = $expTime;
+					}
 				}
 			}
 		}

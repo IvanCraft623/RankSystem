@@ -85,7 +85,7 @@ final class Session {
 			$ranks[] = $rank;
 		}
 		if ($ranks === []) {
-			$ranks = [$this->plugin->getRankManager()->getDefault()];
+			$ranks[0] = $this->plugin->getRankManager()->getDefault();
 		}
 		$this->ranks = $manager->getHierarchical($ranks);
 	}
@@ -277,7 +277,10 @@ final class Session {
 
 	public function updateRanks() {
 		$this->ranks = $this->plugin->getRankManager()->getHierarchical($this->ranks);
-		$player = Ranks::getInstance()->getServer()->getPlayerByPrefix($this->name);
+		if ($this->ranks === []) {
+			$this->ranks = [$this->plugin->getRankManager()->getDefault()];
+		}
+		$player = Ranks::getInstance()->getServer()->getPlayerExact($this->name);
 		if ($player !== null) {
 			$this->updatePermissions();
 			$player->setNameTag($this->getNameTagFormat());
@@ -285,7 +288,7 @@ final class Session {
 	}
 
 	public function updatePermissions() {
-		$player = Ranks::getInstance()->getServer()->getPlayerByPrefix($this->name);
+		$player = Ranks::getInstance()->getServer()->getPlayerExact($this->name);
 		if ($player !== null) {
 			foreach ($this->attachments as $attachment) {
 				$player->removeAttachment($attachment);

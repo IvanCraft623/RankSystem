@@ -72,7 +72,7 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage("§cUse: /ranks delete <rank>");
 						return true;
 					}
-					if ($this->plugin->getRankManager()->exists($args[1])) {
+					if (!$this->plugin->getRankManager()->exists($args[1])) {
 						$sender->sendMessage("§c".$args[1]." rank does not exist!");
 						return true;
 					}
@@ -81,11 +81,19 @@ class RanksCommand extends PluginCommand {
 						return true;
 					}
 					$this->plugin->getRankManager()->delete($args[1]);
+					$sender->sendMessage("§bYou have successfully §cdeleted§b the rank §e".$args[1]);
 				break;
 
 				case 'edit':
 					if (!$sender->hasPermission("ranksystem.commands")) {
 						$sender->sendMessage("§cYou do not have permission to use this command!");
+						return true;
+					}
+					if (!$sender instanceof Player) {
+						$sender->sendMessage(
+							"§cYou can only use this command in game!"."\n".
+							"§eTo edit a rank you must go to §bplugin_data/Ranks/ranks.yml §eand edit it manually."
+						);
 						return true;
 					}
 					if (!isset($args[1])) {
