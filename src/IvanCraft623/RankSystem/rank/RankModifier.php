@@ -20,7 +20,7 @@ namespace IvanCraft623\RankSystem\rank;
 use IvanCraft623\RankSystem\RankSystem as Ranks;
 use IvanCraft623\RankSystem\form\{Form, CustomForm, ModalForm, SimpleForm};
 
-use pocketmine\player\Player;
+use pocketmine\Player;
 
 /**
  * Class RankModifier

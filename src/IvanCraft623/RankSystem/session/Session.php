@@ -178,7 +178,7 @@ final class Session {
 
 		$default = $this->plugin->getRankManager()->getDefault();
 		if ($rank === $default || $this->hasRank($rank)) {
-			$ev->cancel();
+			$ev->setCancelled();
 			return false;
 		}
 		if ($this->ranks[0] === $default) {
@@ -209,7 +209,7 @@ final class Session {
 
 		$default = $this->plugin->getRankManager()->getDefault();
 		if ($rank === $default || !$this->hasRank($rank)) {
-			$ev->cancel();
+			$ev->setCancelled();
 			return false;
 		}
 		$this->unsetRank($rank);

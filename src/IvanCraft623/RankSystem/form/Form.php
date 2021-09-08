@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace IvanCraft623\RankSystem\form;
 
 use pocketmine\form\Form as IForm;
-use pocketmine\player\Player;
+use pocketmine\Player;
 
 abstract class Form implements IForm{
 

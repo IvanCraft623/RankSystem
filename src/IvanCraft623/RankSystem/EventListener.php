@@ -19,7 +19,7 @@ namespace IvanCraft623\RankSystem;
 
 use IvanCraft623\RankSystem\{RankSystem as Ranks, event\UserRankExpireEvent};
 
-use pocketmine\{Server, player\Player};
+use pocketmine\Server;
 use pocketmine\event\{Listener, player\PlayerJoinEvent, player\PlayerChatEvent};
 
 class EventListener implements Listener {
@@ -49,7 +49,7 @@ class EventListener implements Listener {
 	public function onRankExpire(UserRankExpireEvent $event) : void {
 		$session = $event->getSession();
 		$rank = $event->getRank();
-		$player = Ranks::getInstance()->getServer()->getPlayerByPrefix($session->getName());
+		$player = Ranks::getInstance()->getServer()->getPlayer($session->getName());
 		if ($player !== null) {
 			$player->sendMessage("§c» §eYour §b".$rank->getName()."§e rank has expired!");
 		}

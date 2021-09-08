@@ -19,11 +19,11 @@ namespace IvanCraft623\RankSystem\task;
 
 use IvanCraft623\RankSystem\{RankSystem as Ranks, event\UserRankExpireEvent};
 
-use pocketmine\{player\Player, Server, scheduler\Task};
+use pocketmine\scheduler\Task;
 
 class UpdateTask extends Task {
 
-	public function onRun() : void {
+	public function onRun(int $currentTick) : void {
 		#Check Expired Ranks
 		foreach (Ranks::getInstance()->getSessionManager()->getAll() as $session) {
 			foreach ($session->getTempRanks() as $rank) {

@@ -1,9 +1,10 @@
 ---
-name: Ranks
+name: RankSystem
 author: IvanCraft623
-version: 0.0.1
+website: https://github.com/IvanCraft623/RankSystem
+version: 0.0.2
 main: IvanCraft623\RankSystem\RankSystem
-api: 4.0.0
+api: 3.0.0
 permissions:
   ranksystem.commands:
     default: op

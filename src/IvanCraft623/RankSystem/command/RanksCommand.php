@@ -19,8 +19,8 @@ namespace IvanCraft623\RankSystem\command;
 
 use IvanCraft623\RankSystem\{RankSystem as Ranks, Utils, rank\RankModifier};
 
-use pocketmine\{Server, player\Player, plugin\PluginBase};
-use pocketmine\command\{CommandSender};
+use pocketmine\{Server, Player, plugin\PluginBase};
+use pocketmine\command\{PluginCommand, CommandSender};
 
 class RanksCommand extends PluginCommand {
 
