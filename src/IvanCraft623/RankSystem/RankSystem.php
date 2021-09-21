@@ -76,7 +76,7 @@ class RankSystem extends PluginBase {
 	public function getPmmpPerms() : array {
 		if (self::$pmDefaultPerms === []) {
 			foreach (PermissionManager::getInstance()->getPermissions() as $permission) {
-				if (strpos($permission->getName(), DefaultPermissions::ROOT) !== false) {
+				if (strpos($permission->getName(), "pocketmine") !== false) {
 					self::$pmDefaultPerms[] = $permission;
 				}
 			}
