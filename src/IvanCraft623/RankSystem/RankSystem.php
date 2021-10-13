@@ -69,6 +69,17 @@ class RankSystem extends PluginBase {
 		}
 		return self::$globalPerms;
 	}
+	
+	private function fixConfig()
+    {
+        $config = $this->getConfig();
+
+        if(!$config->exists("superadmin-ranks"))
+            $config->set("superadmin-ranks", ["OP"]);
+
+        $this->saveConfig();
+        $this->reloadConfig();
+    }
 
 	/**
 	 * From PurePerms
@@ -92,6 +103,54 @@ class RankSystem extends PluginBase {
 		$this->saveResource("config.yml");
 		$this->saveResource("ranks.yml");
 	}
+	
+	/**
+     * @param IPlayer $player
+     * @param string|null $levelName
+     */
+    public function updatePermissions(IPlayer $player, string $levelName = null)
+    {
+        if($player instanceof Player)
+        {
+            if($this->getConfigValue("enable-multiworld-perms") == null) {
+                $levelName = null;
+            }elseif($levelName == null) {
+                $levelName = $player->getLevel()->getName();
+            }
+
+            $permissions = [];
+
+            /** @var string $permission */
+            foreach($this->getPermissions($player, $levelName) as $permission)
+            {
+                if($permission === '*')
+                {
+                    foreach($this->getServer()->getPluginManager()->getPermissions() as $tmp)
+                    {
+                        $permissions[$tmp->getName()] = true;
+                    }
+                }
+                else
+                {
+                    $isNegative = substr($permission, 0, 1) === "-";
+
+                    if($isNegative)
+                        $permission = substr($permission, 1);
+
+                    $permissions[$permission] = !$isNegative;
+                }
+            }
+
+            $permissions[self::CORE_PERM] = true;
+
+            /** @var \pocketmine\permission\PermissionAttachment $attachment */
+            $attachment = $this->getAttachment($player);
+
+            $attachment->clearPermissions();
+
+            $attachment->setPermissions($permissions);
+        }
+    }
 
 	public function loadCommands() : void {
 		$values = [new RanksCommand($this)];
