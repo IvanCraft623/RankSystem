@@ -19,4 +19,5 @@ Hierarchy:
   - Owner #Highest rank
   - Admin
   - Guest #Lower rank
+superadmin-ranks: ["OP"]
 ...
