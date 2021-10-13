@@ -145,6 +145,7 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage("§c".$args[2]." rank does not exist!");
 						return true;
 					}
+					$superAdminRanks = $this->plugin->getConfigValue("superadmin-ranks");
 					$session = $this->plugin->getSessionManager()->get($args[1]);
 					if ($session->hasRank($args[2])) {
 						$sender->sendMessage("§c".$args[1]." already has the rank ".$args[2]."!");
