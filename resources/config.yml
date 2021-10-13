@@ -6,6 +6,10 @@
 #Options: SQLite3(Recomended), YAML
 Database-provider: SQLite3
 
+# Disable /op permission for all players
+# - true / false
+disable-op: true
+
 #Players will have this rank by default
 Default_Rank: Guest
 
