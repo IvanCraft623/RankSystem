@@ -102,7 +102,7 @@ class RankSystem extends PluginBase {
 	public function loadCommands() : void {
 		$values = [new RanksCommand($this)];
 		foreach ($values as $commands) {
-			$this->getServer()->getCommandMap()->register('_cmd', $commands);
+			$this->getServer()->getCommandMap()->register('RankSystem', $commands);
 		}
 		unset($values);
 	}
