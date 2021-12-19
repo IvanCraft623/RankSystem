@@ -17,15 +17,22 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\task;
 
-use IvanCraft623\RankSystem\{RankSystem as Ranks, event\UserRankExpireEvent};
+use IvanCraft623\RankSystem\RankSystem;
+use IvanCraft623\RankSystem\event\UserRankExpireEvent;
 
-use pocketmine\{player\Player, Server, scheduler\Task};
+use pocketmine\scheduler\Task;
 
 class UpdateTask extends Task {
 
+	private RankSystem $plugin;
+
+	public function __construct() {
+		$this->plugin = RankSystem::getInstance();
+	}
+
 	public function onRun() : void {
 		#Check Expired Ranks
-		foreach (Ranks::getInstance()->getSessionManager()->getAll() as $session) {
+		foreach ($this->plugin->getSessionManager()->getAll() as $session) {
 			foreach ($session->getTempRanks() as $rank) {
 				$expTime = $session->getRankExpTime($rank);
 				if ($expTime <= time()) {

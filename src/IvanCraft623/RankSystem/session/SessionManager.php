@@ -17,19 +17,15 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\session;
 
-use pocketmine\utils\SingletonTrait;
 use pocketmine\player\Player;
+use pocketmine\utils\SingletonTrait;
 
 final class SessionManager {
 	use SingletonTrait;
 
-	/** @var array<string, Session> */
-	private $sessions = [];
+	private array $sessions = [];
 
-	/**
-	 * @param Player|string $player
-	 */
-	public function get($player) : Session {
+	public function get(Player|string $player) : Session {
 		$player = ($player instanceof Player) ? $player->getName() : $player;
 		if (isset($this->sessions[$player])) {
 			return $this->sessions[$player];

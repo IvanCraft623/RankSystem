@@ -23,9 +23,9 @@ use pocketmine\plugin\PluginOwned;
 
 abstract class PluginCommand extends Command implements PluginOwned {
 
-	private $owningPlugin;
+	private Plugin $owningPlugin;
 
-	public function __construct(string $name, $plugin){
+	public function __construct(string $name, $plugin) {
 		parent::__construct($name);
 		$this->owningPlugin = $plugin;
 		$this->usageMessage = "";
@@ -34,7 +34,7 @@ abstract class PluginCommand extends Command implements PluginOwned {
 	/**
 	 * @return Plugin
 	 */
-	public function getOwningPlugin() : Plugin{
+	public function getOwningPlugin() : Plugin {
 		return $this->owningPlugin;
 	}
 }

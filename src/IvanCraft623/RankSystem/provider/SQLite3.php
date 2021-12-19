@@ -17,17 +17,16 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\provider;
 
-use IvanCraft623\RankSystem\RankSystem as Ranks;
+use IvanCraft623\RankSystem\RankSystem;
 use pocketmine\utils\SingletonTrait;
 
 class SQLite3 extends Provider {
 	use SingletonTrait;
 
-	/** @var \SQLite3 */
-	public $db;
+	public \SQLite3 $db;
 
 	public function load() : void {
-		$this->db = new \SQLite3(Ranks::getInstance()->getDataFolder() . "Ranks.db");
+		$this->db = new \SQLite3($this->plugin->getInstance()->getDataFolder() . "Ranks.db");
 		//Users DB
 		$this->db->exec("CREATE TABLE IF NOT EXISTS users (
 			user TEXT NOT NULL,
@@ -58,7 +57,7 @@ class SQLite3 extends Provider {
 					if (is_numeric($expTime)) {
 						$expTime = (int)$expTime;
 					}
-					if (Ranks::getInstance()->getRankManager()->exists($data[0])) {
+					if ($this->plugin->getRankManager()->exists($data[0])) {
 						$ranks[$data[0]] = $expTime;
 					}
 				}

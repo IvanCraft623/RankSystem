@@ -17,27 +17,17 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\rank;
 
-use IvanCraft623\RankSystem\RankSystem as Ranks;
-
 final class Rank {
 
-	/** @var Array */
-	private static $ranks = [];
+	private static array $ranks = [];
 
-	/** @var Ranks */
-	private $plugin;
+	private string $name;
 
-	/** @var String */
-	private $name;
+	private array $nametag = [];
 
-	/** @var Array */
-	private $nametag = [];
+	private array $chat = [];
 
-	/** @var Array */
-	private $chat = [];
-
-	/** @var String[] */
-	private $permissions = [];
+	private array $permissions = [];
 
 	public static function getByName(string $name) : ?Rank {
 		foreach (self::$ranks as $nm => $rank) {
@@ -72,7 +62,6 @@ final class Rank {
 	 * $perms = ["example.perm", "example.perm2"]:
 	 */
 	public function __construct(string $name, array $nametag, array $chat, array $permissions = []) {
-		$this->plugin = Ranks::getInstance();
 		$this->name = $name;
 		$this->nametag = $nametag;
 		$this->chat = $chat;

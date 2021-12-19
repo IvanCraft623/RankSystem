@@ -17,8 +17,12 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\rank;
 
-use IvanCraft623\RankSystem\RankSystem as Ranks;
-use IvanCraft623\RankSystem\form\{Form, CustomForm, ModalForm, SimpleForm};
+use IvanCraft623\RankSystem\RankSystem;
+
+use IvanCraft623\RankSystem\form\Form;
+use IvanCraft623\RankSystem\form\CustomForm;
+use IvanCraft623\RankSystem\form\ModalForm;
+use IvanCraft623\RankSystem\form\SimpleForm;
 
 use pocketmine\player\Player;
 
@@ -27,20 +31,15 @@ use pocketmine\player\Player;
  */
 final class RankModifier {
 
-	/** @var Player */
-	private $player;
+	private Player $player;
 
-	/** @var String */
-	private $name;
+	private string $name;
 
-	/** @var Array */
-	private $nametag = [];
+	private array $nametag = [];
 
-	/** @var Array */
-	private $chat = [];
+	private array $chat = [];
 
-	/** @var String[] */
-	private $permissions = [];
+	private array $permissions = [];
 	
 	public function __construct(Player $player, string $name, array $nametag = ["prefix" => "", "nameColor" => "§f"], array $chat = ["prefix" => "", "nameColor" => "§f", "chatFormat" => "§a: §7"], array $permissions = []) {
 		$this->player = $player;
@@ -53,7 +52,7 @@ final class RankModifier {
 	}
 
 	private function save() : void {
-		Ranks::getInstance()->getRankManager()->saveRankData($this->name, $this->nametag, $this->chat, $this->permissions);
+		RankSystem::getInstance()->getRankManager()->saveRankData($this->name, $this->nametag, $this->chat, $this->permissions);
 	}
 
 	private function sendMainForm() : void {

@@ -17,25 +17,30 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem;
 
-use IvanCraft623\RankSystem\{command\RanksCommand, session\SessionManager, rank\RankManager, task\UpdateTask};
+use IvanCraft623\RankSystem\command\RanksCommand;
+use IvanCraft623\RankSystem\session\SessionManager;
+use IvanCraft623\RankSystem\rank\RankManager;
+use IvanCraft623\RankSystem\task\UpdateTask;
 use IvanCraft623\RankSystem\provider\{Provider, YAML, SQLite3};
 
-use pocketmine\{plugin\PluginBase, utils\Config, utils\SingletonTrait, permission\PermissionManager, permission\DefaultPermissions};
+use pocketmine\permission\PermissionManager;
+use pocketmine\permission\DefaultPermissions;
+use pocketmine\plugin\PluginBase;
+use pocketmine\utils\Config;
+use pocketmine\utils\SingletonTrait;
 
 class RankSystem extends PluginBase {
 	use SingletonTrait;
 
-	/** @var array */
-	private static $globalPerms = [];
+	private static array $globalPerms = [];
 
-	/** @var array */
-	private static $pmDefaultPerms = [];
+	private static array $pmDefaultPerms = [];
 
-	/** @var Provider */
-	private $provider;
+	private Provider $provider;
 
 	public function onLoad() : void {
 		self::setInstance($this);
+		self::$globalPerms = $this->getConfig()->get("Global_Perms");
 		$this->saveResources();
 		$this->getRankManager()->load();
 	}
@@ -64,9 +69,6 @@ class RankSystem extends PluginBase {
 	}
 
 	public function getGlobalPerms() : array {
-		if (self::$globalPerms === []) {
-			self::$globalPerms = $this->getConfigs("config.yml")->get("Global_Perms");
-		}
 		return self::$globalPerms;
 	}
 

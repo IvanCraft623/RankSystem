@@ -19,10 +19,7 @@ namespace IvanCraft623\RankSystem;
 
 final class Utils {
 
-	/**
-	 * @param Int|String $expTime
-	 */
-	public static function getTimeLeft($expTime) : ?array {
+	public static function getTimeLeft(int|string $expTime) : ?array {
 		if (time() < $expTime) {
 			$leftTime = $expTime - time();
 			$day = floor($leftTime / 86400);
@@ -43,10 +40,7 @@ final class Utils {
 		return null;
 	}
 
-	/**
-	 * @param Int|String $expTime
-	 */
-	public static function getExpIn($expTime) : ?string {
+	public static function getExpIn(int|string $expTime) : ?string {
 		if (is_numeric($expTime)) {
 			$time = self::getTimeLeft($expTime);
 			return $time["Days"]." day(s), ".$time["Hours"]." hour(s), ".$time["Minutes"]." minute(s), ".$time["Seconds"]." second(s)";

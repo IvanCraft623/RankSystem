@@ -17,33 +17,35 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\session;
 
-use IvanCraft623\RankSystem\{RankSystem as Ranks, rank\Rank, event\UserRankSetEvent, event\UserRankRemoveEvent, event\UserPermissionSetEvent, event\UserPermissionRemoveEvent};
+use IvanCraft623\RankSystem\RankSystem;
+use IvanCraft623\RankSystem\rank\Rank;
+
+use IvanCraft623\RankSystem\event\UserRankSetEvent;
+use IvanCraft623\RankSystem\event\UserRankRemoveEvent;
+use IvanCraft623\RankSystem\event\UserPermissionSetEvent;
+use IvanCraft623\RankSystem\event\UserPermissionRemoveEvent;
 
 final class Session {
 
-	/** @var Ranks */
-	private $plugin;
+	private RankSystem $plugin;
 
-	/** @var String */
-	private $name;
+	private string $name;
 
 	/** @var Rank[] */
-	private $ranks = [];
+	private array $ranks = [];
 
 	/** @var Rank[] */
-	private $tempRanks = [];
+	private array $tempRanks = [];
 
-	/** @var Array */
-	private $tempRanksDuration = [];
+	private array $tempRanksDuration = [];
 
 	/** @var String[] */
-	private $permissions = [];
+	private array $permissions = [];
 
-	/** @var Array */
-	private $attachments = [];
+	private array $attachments = [];
 	
 	public function __construct(string $name) {
-		$this->plugin = Ranks::getInstance();
+		$this->plugin = RankSystem::getInstance();
 		$this->name = $name;
 		$this->loadRanks();
 		$this->loadPermissions(); 
@@ -133,26 +135,17 @@ final class Session {
 		return $this->tempRanks;
 	}
 
-	/**
-	 * @param Rank|String $rank
-	 */
-	public function isTempRank($rank) : bool {
+	public function isTempRank(Rank|string $rank) : bool {
 		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getByName($rank);
 		return in_array($rank, $this->tempRanks, true);
 	}
 
-	/**
-	 * @param Rank|String $rank
-	 */
-	public function hasRank($rank) : bool {
+	public function hasRank(Rank|string $rank) : bool {
 		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getByName($rank);
 		return in_array($rank, $this->ranks, true);
 	}
 
-	/**
-	 * @param Rank|String $rank
-	 */
-	public function getRankExpTime($rank) : ?int {
+	public function getRankExpTime(Rank|string $rank) : ?int {
 		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getByName($rank);
 		if ($this->isTempRank($rank)) {
 			return $this->tempRanksDuration[$rank->getName()];
@@ -160,10 +153,7 @@ final class Session {
 		return null;
 	}
 
-	/**
-	 * @param Int|string $expTime
-	 */
-	public function setRank(Rank $rank, $expTime = "Never") : bool {
+	public function setRank(Rank $rank, int|string$expTime = "Never") : bool {
 		# Call Event
 		$ev = new UserRankSetEvent(
 			$this,
@@ -280,7 +270,7 @@ final class Session {
 		if ($this->ranks === []) {
 			$this->ranks = [$this->plugin->getRankManager()->getDefault()];
 		}
-		$player = Ranks::getInstance()->getServer()->getPlayerExact($this->name);
+		$player = $this->plugin->getServer()->getPlayerExact($this->name);
 		if ($player !== null) {
 			$this->updatePermissions();
 			$player->setNameTag($this->getNameTagFormat());
@@ -288,7 +278,7 @@ final class Session {
 	}
 
 	public function updatePermissions() {
-		$player = Ranks::getInstance()->getServer()->getPlayerExact($this->name);
+		$player = $this->plugin->getServer()->getPlayerExact($this->name);
 		if ($player !== null) {
 			foreach ($this->attachments as $attachment) {
 				$player->removeAttachment($attachment);

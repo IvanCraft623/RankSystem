@@ -17,23 +17,26 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\command;
 
-use IvanCraft623\RankSystem\{RankSystem as Ranks, Utils, rank\RankModifier};
+use IvanCraft623\RankSystem\RankSystem;
+use IvanCraft623\RankSystem\Utils;
+use IvanCraft623\RankSystem\rank\RankModifier;
 
-use pocketmine\{Server, player\Player, plugin\PluginBase};
-use pocketmine\command\{CommandSender};
+use pocketmine\command\CommandSender;
+use pocketmine\player\Player;
+use pocketmine\plugin\PluginBase;
 
 class RanksCommand extends PluginCommand {
 
-	/** @var Ranks */
-	private $plugin;
+	private RankSystem $plugin;
 
 	/**
 	 * RanksCommand Constructor
-	 * @param Ranks $plugin
+	 * @param RankSystem $plugin
 	 */
-	public function __construct(Ranks $plugin) {
-		parent::__construct('ranks', $plugin);
+	public function __construct(RankSystem $plugin) {
+		parent::__construct('ranksystem', $plugin);
 		$this->plugin = $plugin;
+		$this->setAliases(["ranks"]);
 		$this->setDescription('A Ranks/Perms manager by IvanCraft623.');
 	}
 
@@ -237,12 +240,12 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage("§cUse: /ranks perms <plugin>");
 						return true;
 					}
-					$plugin = (strtolower($args[1]) === 'pocketmine' || strtolower($args[1]) === 'pmmp') ? 'pocketmine' : Server::getInstance()->getPluginManager()->getPlugin($args[1]);
+					$plugin = (strtolower($args[1]) === 'pocketmine' || strtolower($args[1]) === 'pmmp') ? 'pocketmine' : $this->plugin->getServer()->getPluginManager()->getPlugin($args[1]);
 					if ($plugin === null) {
 						$sender->sendMessage("§cPlugin ".$args[1]." does NOT exist!");
 						return true;
 					}
-					$permissions = ($plugin instanceof PluginBase) ? Ranks::getInstance()->getPluginPerms($plugin) : Ranks::getInstance()->getPmmpPerms();
+					$permissions = ($plugin instanceof PluginBase) ? $this->plugin->getPluginPerms($plugin) : $this->plugin->getPmmpPerms();
 					if (empty($permissions)) {
 						$sender->sendMessage("§e".$args[1]." doesn't have any permissions!");
 						return true;

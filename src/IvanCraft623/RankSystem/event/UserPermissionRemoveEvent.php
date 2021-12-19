@@ -4,26 +4,23 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\event;
 
-use IvanCraft623\RankSystem\{RankSystem as Ranks, session\Session};
+use IvanCraft623\RankSystem\session\Session;
 
-use pocketmine\event\{Event, Cancellable, CancellableTrait};
+use pocketmine\event\Event;
+use pocketmine\event\Cancellable;
+use pocketmine\event\CancellableTrait;
 
 class UserPermissionRemoveEvent extends Event implements Cancellable {
 	use CancellableTrait;
 
-	/** @var null $handlerList */
-	public static $handlerList = \null;
+	protected Session $session;
 
-	/** @var Session $session */
-	protected $session;
-
-	/** @var String $permission */
-	protected $permission;
+	protected string $permission;
 
 	/**
 	 * UserPermissionRemoveEvent constructor.
 	 * @param Session $session
-	 * @param String $permission
+	 * @param string $permission
 	 */
 	public function __construct(Session $session, string $permission) {
 		$this->session = $session;

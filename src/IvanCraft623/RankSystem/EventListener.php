@@ -17,29 +17,39 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem;
 
-use IvanCraft623\RankSystem\{RankSystem as Ranks, event\UserRankExpireEvent};
+use IvanCraft623\RankSystem\RankSystem;
+use IvanCraft623\RankSystem\event\UserRankExpireEvent;
 
-use pocketmine\{Server, player\Player};
-use pocketmine\event\{Listener, player\PlayerJoinEvent, player\PlayerChatEvent};
+use pocketmine\Server;
+use pocketmine\player\Player;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerChatEvent;
 
 class EventListener implements Listener {
+
+	private RankSystem $plugin;
+
+	public function __construct() {
+		$this->plugin = RankSystem::getInstance();
+	}
 
 	/**
 	 * @priority HIGH
 	 */
 	public function onJoin(PlayerJoinEvent $event) : void {
 		$player = $event->getPlayer();
-		$session = Ranks::getInstance()->getSessionManager()->get($player->getName());
+		$session = $this->plugin->getSessionManager()->get($player);
 		$session->updateRanks();
 	}
 
 	/**
 	 * @priority HIGH
+	 * @ignoreCancelled
 	 */
 	public function onChat(PlayerChatEvent $event) : void {
-		if ($event->isCancelled()) return;
 		$player = $event->getPlayer();
-		$session = Ranks::getInstance()->getSessionManager()->get($player->getName());
+		$session = $this->plugin->getSessionManager()->get($player);
 		$event->setFormat($session->getChatFormat().$event->getMessage());
 	}
 
@@ -49,7 +59,7 @@ class EventListener implements Listener {
 	public function onRankExpire(UserRankExpireEvent $event) : void {
 		$session = $event->getSession();
 		$rank = $event->getRank();
-		$player = Ranks::getInstance()->getServer()->getPlayerByPrefix($session->getName());
+		$player = $this->plugin->getServer()->getPlayerByPrefix($session->getName());
 		if ($player !== null) {
 			$player->sendMessage("§c» §eYour §b".$rank->getName()."§e rank has expired!");
 		}

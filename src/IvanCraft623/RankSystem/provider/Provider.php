@@ -17,9 +17,15 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\provider;
 
-use IvanCraft623\RankSystem\RankSystem as Ranks;
+use IvanCraft623\RankSystem\RankSystem;
 
 abstract class Provider {
+
+	public RankSystem $plugin;
+
+	public function __construct() {
+		$this->plugin = RankSystem::getInstance();
+	}
 
 	abstract public function load() : void;
 

@@ -38,4 +38,4 @@ Command | Description | Permission
 # Project information
 Version | Pocketmine API | PHP | Status
 --- | --- | --- | ---
-0.0.3 | [PM4](https://github.com/pmmp/PocketMine-MP/tree/stable) & [PM3](https://github.com/pmmp/PocketMine-MP/tree/legacy/pm3) | 7.3 => 8 | Functional
+0.0.4 | [PM4](https://github.com/pmmp/PocketMine-MP/tree/stable) & [PM3](https://github.com/pmmp/PocketMine-MP/tree/legacy/pm3) | 8 | Functional

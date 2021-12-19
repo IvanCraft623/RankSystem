@@ -17,25 +17,30 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\rank;
 
-use pocketmine\utils\{Config, SingletonTrait};
-use IvanCraft623\RankSystem\RankSystem as Ranks;
+use IvanCraft623\RankSystem\RankSystem;
+
+use pocketmine\utils\Config;
+use pocketmine\utils\SingletonTrait;
 
 use RuntimeException;
 
 final class RankManager {
 	use SingletonTrait;
 
-	/** @var Config */
-	private $data;
+	private RankSystem $plugin;
 
-	/** @var Array */
-	private $hierarchy = [];
+	private Config $data;
 
-	/** @var ?Rank */
-	private $defaultRank = null;
+	private array $hierarchy = [];
+
+	private ?Rank $defaultRank = null;
+
+	public function __construct() {
+		$this->plugin = RankSystem::getInstance();
+	}
 
 	public function load() : void {
-		$this->data = Ranks::getInstance()->getConfigs("ranks.yml");
+		$this->data = $this->plugin->getConfigs("ranks.yml");
 	 	foreach ($this->data->getAll() as $name => $data) {
 	 		new Rank($name, $data["nametag"], $data["chat"], $data["permissions"]);
 	 	}
@@ -46,7 +51,7 @@ final class RankManager {
 		$this->defaultRank = null;
 		Rank::closeAll();
 		$this->load();
-		Ranks::getInstance()->getSessionManager()->reload();
+		$this->plugin->getSessionManager()->reload();
 	}
 
 	public function getAll() : array {
@@ -74,7 +79,7 @@ final class RankManager {
 
 	public function getDefault() : Rank {
 		if ($this->defaultRank === null) {
-			$name = Ranks::getInstance()->getConfigs("config.yml")->get("Default_Rank");
+			$name = $this->plugin->getConfig()->get("Default_Rank");
 			if ($name === false) {
 				throw new RuntimeException("The default rank is not specified!");
 			}
@@ -95,7 +100,7 @@ final class RankManager {
 	 */
 	public function getHierarchy() : array {
 		if ($this->hierarchy === []) {
-			$this->hierarchy = $this->getByName(Ranks::getInstance()->getConfigs("config.yml")->get("Hierarchy"));
+			$this->hierarchy = $this->getByName($this->plugin->getConfig()->get("Hierarchy"));
 			foreach ($this->getAll() as $rank) {
 				if (!in_array($rank, $this->hierarchy)) {
 					$this->hierarchy[] = $rank;

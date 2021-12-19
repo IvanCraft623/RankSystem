@@ -17,17 +17,16 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\provider;
 
-use IvanCraft623\RankSystem\RankSystem as Ranks;
-use pocketmine\utils\{SingletonTrait, Config};
+use pocketmine\utils\SingletonTrait;
+use pocketmine\utils\Config;
 
 class YAML extends Provider {
 	use SingletonTrait;
 
-	/** @var Config */
-	public $db;
+	public Config $db;
 
 	public function load() : void {
-		$this->db = Ranks::getInstance()->getConfigs("users.yml");
+		$this->db = $this->plugin->getConfigs("users.yml");
 	}
 
 	public function getName() : string {
@@ -44,7 +43,7 @@ class YAML extends Provider {
 			$all = $this->db->getAll();
 			$ranks = $all[$user]["ranks"];
 			foreach ($ranks as $rank => $expTime) {
-				if (!Ranks::getInstance()->getRankManager()->exists($rank)) {
+				if (!$this->plugin->getRankManager()->exists($rank)) {
 					unset($ranks[$rank]);
 				}
 			}

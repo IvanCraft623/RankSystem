@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\event;
 
-use IvanCraft623\RankSystem\{RankSystem as Ranks, session\Session, rank\Rank};
+use IvanCraft623\RankSystem\rank\Rank;
+use IvanCraft623\RankSystem\session\Session;
 
 use pocketmine\event\Event;
 
 class UserRankExpireEvent extends Event {
 
-	/** @var null $handlerList */
-	public static $handlerList = \null;
+	protected Session $session;
 
-	/** @var Session $session */
-	protected $session;
-
-	/** @var Rank $rank */
-	protected $rank;
+	protected Rank $rank;
 
 	/**
 	 * UserRankExpireEvent constructor.
