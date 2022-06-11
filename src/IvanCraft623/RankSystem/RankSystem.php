@@ -140,6 +140,10 @@ class RankSystem extends PluginBase {
 	}
 
 	public function setProvider(Provider $provider) : void {
+		$databaseFolder = $this->getDataFolder() . "database";
+		if (!file_exists($databaseFolder)) {
+			mkdir($databaseFolder, 0777);
+		}
 		$provider->load();
 		$this->provider = $provider;
 		$this->getLogger()->info("User provider was set to: " . $provider->getName());
