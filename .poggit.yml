@@ -6,4 +6,7 @@ branches:
 projects:
   RankSystem:
     path: ""
+    libs:
+      - src: poggit/libasynql/libasynql
+        version: ^4.0.0
 ...

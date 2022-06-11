@@ -41,7 +41,7 @@ final class Utils {
 	}
 
 	public static function getExpIn(int|string $expTime) : ?string {
-		if (is_numeric($expTime)) {
+		if (is_numeric($expTime) && $expTime > 0) {
 			$time = self::getTimeLeft($expTime);
 			return $time["Days"]." day(s), ".$time["Hours"]." hour(s), ".$time["Minutes"]." minute(s), ".$time["Seconds"]." second(s)";
 		}

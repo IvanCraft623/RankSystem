@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace IvanCraft623\RankSystem\session;
 
 use IvanCraft623\RankSystem\RankSystem;
+use IvanCraft623\RankSystem\provider\UserData;
 use IvanCraft623\RankSystem\rank\Rank;
 
 use IvanCraft623\RankSystem\event\UserRankSetEvent;
@@ -47,38 +48,32 @@ final class Session {
 	public function __construct(string $name) {
 		$this->plugin = RankSystem::getInstance();
 		$this->name = $name;
-		$this->loadRanks();
-		$this->loadPermissions(); 
+		$this->loadUserData();
 	}
 
-	private function unsetRank(Rank $rank) : void {
-		foreach ($this->ranks as $key => $rk) {
-			if ($rk == $rank) {
-				unset($this->ranks[$key]);
-			}
-		}
-		foreach ($this->tempRanks as $key => $rk) {
-			if ($rk == $rank) {
-				unset($this->tempRanks[$key]);
-				unset($this->tempRanksDuration[$rank->getName()]);
-			}
-		}
+	private function loadUserData() : void {
+		$this->plugin->getProvider()->getUserData($this->name)->onCompletion(
+			function (?UserData $userData) {
+				if ($userData !== null) {
+					# Ranks
+					$this->syncRanks($userData->getRanks());
+
+					# Permissions
+					$this->syncPermissions($userData->getPermissions());
+
+					$this->updateRanks();
+				}
+			}, fn() => throw new \Error("Failed to load ".$this->name."' session")
+		);
 	}
 
-	private function unsetPermssion(string $permission) : bool {
-		foreach ($this->permissions as $key => $perm) {
-			if ($perm === $permission) {
-				unset($this->permissions[$key]);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private function loadRanks() : void {
-		$ranks = [];
+	/**
+	 * @param array<string, ?int> $ranks
+	 */
+	public function syncRanks(array $ranksdata) : void {
 		$manager = $this->plugin->getRankManager();
-		foreach ($this->plugin->getProvider()->getRanks($this->name) as $name => $expTime) {
+		$ranks = [];
+		foreach ($ranksdata as $name => $expTime) {
 			$rank = $manager->getByName($name);
 			if (is_numeric($expTime)) {
 				$this->tempRanks[] = $rank;
@@ -86,10 +81,19 @@ final class Session {
 			}
 			$ranks[] = $rank;
 		}
-		if ($ranks === []) {
-			$ranks[0] = $this->plugin->getRankManager()->getDefault();
-		}
 		$this->ranks = $manager->getHierarchical($ranks);
+		$this->updateRanks();
+	}
+
+	/**
+	 * @param string[] $userPermssions
+	 */
+	public function syncPermissions(array $userPermissions) : void {
+		$this->permissions = array_merge($this->plugin->getGlobalPerms(), $userPermissions);
+		foreach ($this->ranks as $rank) {
+			$this->permissions = array_merge($this->permissions, $rank->getPermissions());
+		}
+		$this->updatePermissions();
 	}
 
 	public function getName() : string {
@@ -153,7 +157,7 @@ final class Session {
 		return null;
 	}
 
-	public function setRank(Rank $rank, int|string$expTime = "Never") : bool {
+	public function setRank(Rank $rank, ?int $expTime = null) : bool {
 		# Call Event
 		$ev = new UserRankSetEvent(
 			$this,
@@ -180,8 +184,16 @@ final class Session {
 				$this->tempRanksDuration[$rank->getName()] = (int)$expTime;
 			}
 		}
-		$this->plugin->getProvider()->setRank($this->name, $rank->getName(), $expTime);
-		$this->updateRanks();
+
+		$this->plugin->getProvider()->setRank($this->name, $rank->getName(), $expTime)->onCompletion(
+			function (array $ranks) {
+				$this->syncRanks($ranks);
+				$this->syncPermissions($this->permissions);
+			},
+			function () {
+				// Do something...
+			}
+		);
 		return true;
 	}
 
@@ -202,9 +214,16 @@ final class Session {
 			$ev->cancel();
 			return false;
 		}
-		$this->unsetRank($rank);
-		$this->plugin->getProvider()->removeRank($this->name, $rank->getName());
-		$this->updateRanks();
+
+		$this->plugin->getProvider()->removeRank($this->name, $rank->getName())->onCompletion(
+			function (array $ranks) {
+				$this->syncRanks($ranks);
+				$this->syncPermissions($this->permissions);
+			},
+			function () {
+				// Do something...
+			}
+		);
 		return true;
 	}
 
@@ -214,21 +233,6 @@ final class Session {
 
 	public function hasPermission(string $perm) : bool {
 		return in_array($perm, $this->permissions, true);
-	}
-
-	public function loadPermissions() : void {
-		# Set Global Perms
-		$this->permissions = $this->plugin->getGlobalPerms();
-		# Set User Perms
-		foreach ($this->plugin->getProvider()->getPermissions($this->name) as $perm) {
-			$this->permissions[] = $perm;
-		}
-		# Set All User Rank Perms
-		foreach ($this->ranks as $rank) {
-			foreach ($rank->getPermissions() as $perm) {
-				$this->permissions[] = $perm;
-			}
-		}
 	}
 
 	public function setPermission(string $perm) : bool {
@@ -242,9 +246,15 @@ final class Session {
 		if ($ev->isCancelled()) {
 			return false;
 		}
-		$this->permissions[] = $perm;
-		$this->plugin->getProvider()->setPermission($this->name, $perm);
-		$this->updatePermissions();
+
+		$this->plugin->getProvider()->setPermission($this->name, $perm)->onCompletion(
+			function (array $permissions) {
+				$this->syncPermissions($permissions);
+			},
+			function () {
+				// Do something...
+			}
+		);
 		return true;
 	}
 
@@ -259,9 +269,15 @@ final class Session {
 		if ($ev->isCancelled()) {
 			return false;
 		}
-		$this->unsetPermssion($perm);
-		$this->plugin->getProvider()->removePermission($this->name, $perm);
-		$this->updatePermissions();
+
+		$this->plugin->getProvider()->removePermission($this->name, $perm)->onCompletion(
+			function (array $permissions) {
+				$this->syncPermissions($permissions);
+			},
+			function () {
+				// Do something...
+			}
+		);
 		return true;
 	}
 
