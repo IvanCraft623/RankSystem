@@ -132,7 +132,8 @@ class RankSystem extends PluginBase {
 					break;
 
 				default:
-					throw new DisablePluginException ("Error Processing Request");
+					$this->getLogger()->critical("Unknown database type: " . $name);
+					throw new DisablePluginException("Unknown database type: " . $name); // @phpstan-ignore-line
 					break;
 			}
 			$this->setProvider($provider::getInstance());

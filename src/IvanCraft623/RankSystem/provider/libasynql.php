@@ -88,7 +88,7 @@ class libasynql extends Provider {
 		$promiseResolver = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($promiseResolver) {
-				$dataPromiseResolver->resolve($userData !== null);
+				$promiseResolver->resolve($userData !== null);
 			},
 			fn() => $promiseResolver->reject()
 		);

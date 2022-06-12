@@ -77,8 +77,8 @@ class UserData implements JsonSerializable {
 	 * @phpstan-param array{
 	 * 	name: string,
 	 * 	ranks: string,
-	 * 	permissions: string
-	 * 	generationTime: ?int,
+	 * 	permissions: string,
+	 * 	generationTime: ?int
 	 * } $data
 	 */
 	public static function jsonDeserialize(array $data) : UserData {

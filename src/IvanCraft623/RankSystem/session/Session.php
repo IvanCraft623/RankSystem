@@ -94,7 +94,7 @@ final class Session {
 	}
 
 	/**
-	 * @param array<string, ?int> $ranks
+	 * @param array<string, ?int> $ranksdata
 	 */
 	public function syncRanks(array $ranksdata) : void {
 		$manager = $this->plugin->getRankManager();
@@ -112,7 +112,7 @@ final class Session {
 	}
 
 	/**
-	 * @param string[] $userPermssions
+	 * @param string[] $userPermissions
 	 */
 	public function syncPermissions(array $userPermissions) : void {
 		$this->permissions = array_merge($this->plugin->getGlobalPerms(), $userPermissions);
