@@ -32,7 +32,7 @@ final class RankManager {
 	private Config $data;
 
 	/**
-	 * @var array<string Rank>
+	 * @var array<string, Rank>
 	 */
 	private array $ranks;
 
@@ -60,7 +60,7 @@ final class RankManager {
 	}
 
 	/**
-	 * @return array<string Rank>
+	 * @return array<string, Rank>
 	 */
 	public function getAll() : array {
 		return $this->ranks;

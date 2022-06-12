@@ -287,7 +287,7 @@ final class Session {
 	}
 
 	public function isTempPermission(string $permission) : bool {
-		return $this->getPermissionsExpTime($permission) !== null;
+		return $this->getPermissionExpTime($permission) !== null;
 	}
 
 	public function getPermissionExpTime(string $permission) : ?int {

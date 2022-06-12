@@ -47,7 +47,7 @@ class UpdateTask extends Task {
 				}
 			}
 			foreach ($session->getUserPermissions() as $permission => $expTime) {
-				if ($expTime !== null && $expTime <= $time) {
+				if ($session->isTempPermission($permission) && $expTime <= $time) {
 					$session->removePermission($permission);
 				}
 			}

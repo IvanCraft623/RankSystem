@@ -28,6 +28,7 @@ class UserPermissionSetEvent extends Event implements Cancellable {
 	public function __construct(Session $session, string $permission, ?int $expTime) {
 		$this->session = $session;
 		$this->permission = $permission;
+		$this->expTime = $expTime;
 	}
 
 	/**
