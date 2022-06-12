@@ -21,10 +21,12 @@ use IvanCraft623\RankSystem\command\RanksCommand;
 use IvanCraft623\RankSystem\session\SessionManager;
 use IvanCraft623\RankSystem\rank\RankManager;
 use IvanCraft623\RankSystem\task\UpdateTask;
-use IvanCraft623\RankSystem\provider\{Provider, YAML, SQLite3};
+use IvanCraft623\RankSystem\provider\Provider;
+use IvanCraft623\RankSystem\provider\libasynql as libasynqlProvider;
 
 use pocketmine\permission\PermissionManager;
 use pocketmine\permission\DefaultPermissions;
+use pocketmine\plugin\DisablePluginException;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
@@ -117,20 +119,33 @@ class RankSystem extends PluginBase {
 		unset($values);
 	}
 
-	public function loadProvider() : void {
-		switch (strtolower($this->getConfigs("config.yml")->get("Database-provider"))) {
-			case 'yaml':
-				$provider = YAML::class;
-			break;
-			
-			
-			case 'sqlite3':
-			default:
-				$provider = SQLite3::class;
-			break;
+	private function loadProvider() : void {
+		if (!isset($this->provider)) {
+			$name = $this->getConfigs("config.yml")->get("database")["type"] ?? "";
+			switch (strtolower($name)) {
+				case "sqlite":
+				case "sqlite3":
+				case "sq3":
+				case "mysql":
+				case "mysqli":
+					$provider = libasynqlProvider::class;
+					break;
+
+				default:
+					$this->getLogger()->critical("Unknown database type: " . $name);
+					throw new DisablePluginException("Unknown database type: " . $name); // @phpstan-ignore-line
+			}
+			$this->setProvider($provider::getInstance());
 		}
-		$this->provider = $provider::getInstance();
-		$this->provider->load();
-		$this->getLogger()->info("User provider was set to: " . $this->provider->getName());
+	}
+
+	public function setProvider(Provider $provider) : void {
+		$databaseFolder = $this->getDataFolder() . "database";
+		if (!file_exists($databaseFolder)) {
+			mkdir($databaseFolder, 0777);
+		}
+		$provider->load();
+		$this->provider = $provider;
+		$this->getLogger()->info("User provider was set to: " . $provider->getName());
 	}
 }

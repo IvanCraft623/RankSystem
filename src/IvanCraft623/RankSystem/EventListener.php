@@ -23,8 +23,9 @@ use IvanCraft623\RankSystem\event\UserRankExpireEvent;
 use pocketmine\Server;
 use pocketmine\player\Player;
 use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerPreLoginEvent;
 
 class EventListener implements Listener {
 
@@ -35,12 +36,21 @@ class EventListener implements Listener {
 	}
 
 	/**
-	 * @priority HIGH
+	 * @priority LOW
 	 */
-	public function onJoin(PlayerJoinEvent $event) : void {
-		$player = $event->getPlayer();
-		$session = $this->plugin->getSessionManager()->get($player);
-		$session->updateRanks();
+	public function onLogin(PlayerJoinEvent $event) : void {
+		$session = $this->plugin->getSessionManager()->get($event->getPlayer());
+		$session->onInitialize(function () use ($session) {
+			$session->updateRanks();
+		});
+	}
+
+	/**
+	 * @priority LOW
+	 */
+	public function onPreLogin(PlayerPreLoginEvent $event) : void {
+		// This is to have the session ready in case a plugin wants to get data
+		$this->plugin->getSessionManager()->get($event->getPlayerInfo()->getUsername());
 	}
 
 	/**

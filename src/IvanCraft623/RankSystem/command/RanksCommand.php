@@ -155,10 +155,10 @@ class RanksCommand extends PluginCommand {
 					}
 					$rank = $this->plugin->getRankManager()->getByName($args[2]);
 					if (!isset($args[3])) {
-						$expTime = "Never";
+						$expTime = -1;
 						$session->setRank($rank);
 					} elseif (($expTime = Utils::parseDuration($args[3])) !== null) {
-						$session->setRank($rank, $expTime);
+						$session->setRank($rank, ($expTime === -1 ? null : $expTime));
 					} else {
 						$sender->sendMessage(
 							"§cInvalid timeToExpire provided!"."\n".

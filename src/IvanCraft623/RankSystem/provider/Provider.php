@@ -19,9 +19,11 @@ namespace IvanCraft623\RankSystem\provider;
 
 use IvanCraft623\RankSystem\RankSystem;
 
+use pocketmine\promise\Promise;
+
 abstract class Provider {
 
-	public RankSystem $plugin;
+	protected RankSystem $plugin;
 
 	public function __construct() {
 		$this->plugin = RankSystem::getInstance();
@@ -29,22 +31,43 @@ abstract class Provider {
 
 	abstract public function load() : void;
 
-	abstract public function getName() : string;
+	abstract public function unload() : void;
 
-	abstract public function isInDb(string $user) : bool;
-
-	abstract public function getRanks(string $user) : array;
+	abstract public function getname() : string;
 
 	/**
-	 * @param Int|string $expTime
+	 * @phpstan-return Promise<?UserData>
 	 */
-	abstract public function setRank(string $user, string $rankName, $expTime = "Never") : void;
+	abstract public function getUserData(string $name) : Promise;
 
-	abstract public function removeRank(string $user, string $rankName) : void;
+	/**
+	 * @phpstan-return Promise<bool>
+	 */
+	abstract public function isInDb(string $name) : Promise;
 
-	abstract public function getPermissions(string $user) : array;
+	/**
+	 * @param array<string, ?int> $ranks
+	 */
+	abstract public function setRanks(string $name, array $ranks, ?callable $onSuccess = null, ?callable $onError = null) : void;
+
+	/**
+	 * @phpstan-return Promise<array<string, ?int>>
+	 */
+	abstract public function setRank(string $name, string $rank, ?int $expTime = null) : Promise;
+
+	abstract public function removeRank(string $name, string $rank) : Promise;
 	
-	abstract public function setPermission(string $user, string $permission) : void;
+	/**
+	 * @param string[] $permisions
+	 */
+	abstract public function setPermissions(string $name, array $permisions, ?callable $onSuccess = null, ?callable $onError = null) : void;
+	
+	/**
+	 * @phpstan-return Promise<string[]>
+	 */
+	abstract public function setPermission(string $name, string $permission) : Promise;
 
-	abstract public function removePermission(string $user, string $permission) : void;
+	abstract public function removePermission(string $name, string $permission) : Promise;
+
+	abstract public function delete(string $name, ?callable $onSuccess = null, ?callable $onError = null) : void;
 }
