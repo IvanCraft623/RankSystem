@@ -27,7 +27,7 @@ Command | Description | Permission
 - Multiple Ranks per user support
 - Temp-ranks System
 - SQLite3 Provider Support
-- Yaml Provider Support
+- MySQL Provider Support
 - Easy Rank Creation / Edit System
 - Ranks inheritance system to allow you to inherit rank permissions
 - Permissions per User
