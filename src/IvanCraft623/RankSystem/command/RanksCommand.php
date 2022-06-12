@@ -107,7 +107,7 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage("§c".$args[1]." rank does not exist!");
 						return true;
 					}
-					$rank = $this->plugin->getRankManager()->getByName($args[1]);
+					$rank = $this->plugin->getRankManager()->getRank($args[1]);
 					new RankModifier($sender, $args[1], $rank->getNameTagFormat(), $rank->getChatFormat(), $rank->getPermissions());
 				break;
 
@@ -153,7 +153,7 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage("§c".$args[1]." already has the rank ".$args[2]."!");
 						return true;
 					}
-					$rank = $this->plugin->getRankManager()->getByName($args[2]);
+					$rank = $this->plugin->getRankManager()->getRank($args[2]);
 					if (!isset($args[3])) {
 						$expTime = -1;
 						$session->setRank($rank);
@@ -195,7 +195,7 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage("§c".$args[1]." does not have the rank ".$args[2]."!");
 						return true;
 					}
-					$session->removeRank($this->plugin->getRankManager()->getByName($args[2]));
+					$session->removeRank($this->plugin->getRankManager()->getRank($args[2]));
 					$sender->sendMessage("§bYou have successfully §cremoved§b the rank §e".$args[2]." §bof §a".$args[1]);
 				break;
 

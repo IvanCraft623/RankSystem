@@ -31,9 +31,14 @@ final class RankManager {
 
 	private Config $data;
 
-	private array $hierarchy = [];
+	/**
+	 * @var array<string Rank>
+	 */
+	private array $ranks;
 
 	private ?Rank $defaultRank = null;
+
+	private array $hierarchy;
 
 	public function __construct() {
 		$this->plugin = RankSystem::getInstance();
@@ -42,39 +47,27 @@ final class RankManager {
 	public function load() : void {
 		$this->data = $this->plugin->getConfigs("ranks.yml");
 	 	foreach ($this->data->getAll() as $name => $data) {
-	 		new Rank($name, $data["nametag"], $data["chat"], $data["permissions"]);
+	 		$this->ranks[$name] = new Rank($name, $data["nametag"], $data["chat"], $data["permissions"]);
 	 	}
 	}
 
 	public function reload() : void {
+		$this->ranks = [];
 		$this->hierarchy = [];
 		$this->defaultRank = null;
-		Rank::closeAll();
 		$this->load();
 		$this->plugin->getSessionManager()->reload();
 	}
 
+	/**
+	 * @return array<string Rank>
+	 */
 	public function getAll() : array {
-		return Rank::getAll();
+		return $this->ranks;
 	}
 
-	/**
-	 * @param String|Array $names
-	 * @return Rank|Null|Array
-	 */
-	public function getByName($names) {
-		if (is_array($names)) {
-			$ranks = [];
-			foreach ($names as $name) {
-				$rank = Rank::getByName($name);
-				if ($rank !== null) {
-					$ranks[] = $rank;
-				}
-			}
-		} else {
-			$ranks = Rank::getByName($names);
-		}
-		return $ranks;
+	public function getRank(string $name) : ?Rank {
+		return $this->ranks[$name] ?? null;
 	}
 
 	public function getDefault() : Rank {
@@ -86,24 +79,30 @@ final class RankManager {
 			if (!$this->exists($name)) {
 				throw new RuntimeException("The rank: ".$name." specified as default does not exist!");
 			}
-			$this->defaultRank = $this->getByName($name);
+			$this->defaultRank = $this->getRank($name);
 		}
 		return $this->defaultRank;
 	}
 
 	public function exists(string $name) : bool {
-		return ($this->getByName($name) !== null);
+		return $this->getRank($name) !== null;
 	}
 
 	/**
 	 * @return Rank[]
 	 */
 	public function getHierarchy() : array {
-		if ($this->hierarchy === []) {
-			$this->hierarchy = $this->getByName($this->plugin->getConfig()->get("Hierarchy"));
-			foreach ($this->getAll() as $rank) {
-				if (!in_array($rank, $this->hierarchy)) {
-					$this->hierarchy[] = $rank;
+		if (!isset($this->hierarchy)) {
+			$this->hierarchy = [];
+			foreach ($this->plugin->getConfig()->get("Hierarchy", []) as $name) {
+				$rank = $this->getRank($name);
+				if ($rank !== null) {
+					$this->hierarchy[$name] = $rank;
+				}
+			}
+			foreach ($this->ranks as $rank) {
+				if (!isset($this->hierarchy[$rank->getName()])) {
+					$this->hierarchy[$rank->getName()] = $rank;
 				}
 			}
 		}
@@ -118,7 +117,7 @@ final class RankManager {
 		$hierarchicalRanks = [];
 		foreach ($this->getHierarchy() as $rank) {
 			if (in_array($rank, $ranks, true)) {
-				$hierarchicalRanks[] = $rank;
+				$hierarchicalRanks[spl_object_id($rank)] = $rank;
 			}
 		}
 		return $hierarchicalRanks;

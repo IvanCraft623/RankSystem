@@ -82,13 +82,13 @@ final class Session {
 					$this->syncPermissions($userData->getPermissions());
 
 					$this->updateRanks();
-
-					$this->initialized = true;
-					foreach ($this->onInits as $onInit) {
-						$onInit();
-					}
-					$this->onInits = [];
 				}
+
+				$this->initialized = true;
+				foreach ($this->onInits as $onInit) {
+					$onInit();
+				}
+				$this->onInits = [];
 			}, fn() => throw new \Error("Failed to load ".$this->name."' session")
 		);
 	}
@@ -97,17 +97,19 @@ final class Session {
 	 * @param array<string, ?int> $ranksdata
 	 */
 	public function syncRanks(array $ranksdata) : void {
+		$this->ranks = [];
 		$manager = $this->plugin->getRankManager();
-		$ranks = [];
 		foreach ($ranksdata as $name => $expTime) {
-			$rank = $manager->getByName($name);
-			if (is_numeric($expTime)) {
-				$this->tempRanks[] = $rank;
-				$this->tempRanksDuration[$rank->getName()] = $expTime;
+			$rank = $manager->getRank($name);
+			if ($rank !== null) {
+				$id = spl_object_id($rank);
+				if (is_numeric($expTime)) {
+					$this->tempRanks[$id] = $rank;
+					$this->tempRanksDuration[$id] = $expTime;
+				}
+				$this->ranks[$id] = $rank;
 			}
-			$ranks[] = $rank;
 		}
-		$this->ranks = $manager->getHierarchical($ranks);
 		$this->updateRanks();
 	}
 
@@ -116,7 +118,7 @@ final class Session {
 	 */
 	public function syncPermissions(array $userPermissions) : void {
 		$this->permissions = array_merge($this->plugin->getGlobalPerms(), $userPermissions);
-		foreach ($this->ranks as $rank) {
+		foreach ($this->getRanks() as $rank) {
 			$this->permissions = array_merge($this->permissions, $rank->getPermissions());
 		}
 		$this->updatePermissions();
@@ -127,30 +129,28 @@ final class Session {
 	}
 
 	public function getNameTagPrefix() : string {
-		$prefixes = [];
-		$ranks = $this->plugin->getRankManager()->getHierarchical($this->ranks);
-		foreach ($ranks as $rank) {
-			$prefixes[] = $rank->getNameTagFormat()["prefix"];
+		$prefix = "";
+		foreach ($this->plugin->getRankManager()->getHierarchical($this->getRanks()) as $rank) {
+			$prefix .= $rank->getNameTagFormat()["prefix"];
 		}
-		return implode("", $prefixes);
+		return $prefix;
 	}
 
 	public function getChatPrefix() : string {
-		$prefixes = [];
-		$ranks = $this->plugin->getRankManager()->getHierarchical($this->ranks);
-		foreach ($ranks as $rank) {
-			$prefixes[] = $rank->getChatFormat()["prefix"];
+		$prefix = "";
+		foreach ($this->plugin->getRankManager()->getHierarchical($this->getRanks()) as $rank) {
+			$prefix .= $rank->getChatFormat()["prefix"];
 		}
-		return implode("", $prefixes);
+		return $prefix;
 	}
 
 	public function getNameTagFormat() : string {
-		$highestFormat = $this->plugin->getRankManager()->getHierarchical($this->ranks)[0]->getNameTagFormat();
+		$highestFormat = $this->getHighestRank()->getNameTagFormat();
 		return $this->getNameTagPrefix().$highestFormat["nameColor"].$this->name;
 	}
 
 	public function getChatFormat() : string {
-		$highestFormat = $this->plugin->getRankManager()->getHierarchical($this->ranks)[0]->getChatFormat();
+		$highestFormat = $this->getHighestRank()->getChatFormat();
 		return $this->getChatPrefix().$highestFormat["nameColor"].$this->name.$highestFormat["chatFormat"];
 	}
 
@@ -158,7 +158,14 @@ final class Session {
 	 * @return Rank[]
 	 */
 	public function getRanks() : array {
-		return $this->ranks;
+		$default = $this->plugin->getRankManager()->getDefault();
+		$ranks = (count($this->ranks) === 0 ? [spl_object_id($default) => $default] : $this->ranks);
+		return $ranks;
+	}
+
+	public function getHighestRank() : Rank {
+		$ranks = $this->plugin->getRankManager()->getHierarchical($this->getRanks());
+		return $ranks[array_key_first($ranks)];
 	}
 
 	public function getTempRanks() : array {
@@ -166,19 +173,19 @@ final class Session {
 	}
 
 	public function isTempRank(Rank|string $rank) : bool {
-		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getByName($rank);
-		return in_array($rank, $this->tempRanks, true);
+		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getRank($rank);
+		return $rank !== null && isset($this->tempRanks[spl_object_id($rank)]);
 	}
 
 	public function hasRank(Rank|string $rank) : bool {
-		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getByName($rank);
-		return in_array($rank, $this->ranks, true);
+		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getRank($rank);
+		return $rank !== null && isset($this->getRanks()[spl_object_id($rank)]);
 	}
 
 	public function getRankExpTime(Rank|string $rank) : ?int {
-		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getByName($rank);
-		if ($this->isTempRank($rank)) {
-			return $this->tempRanksDuration[$rank->getName()];
+		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getRank($rank);
+		if ($rank !== null) {
+			return $this->tempRanksDuration[spl_object_id($rank)] ?? null;
 		}
 		return null;
 	}
@@ -200,15 +207,6 @@ final class Session {
 		if ($rank === $default || $this->hasRank($rank)) {
 			$ev->cancel();
 			return false;
-		}
-		if ($this->ranks[0] === $default) {
-			$this->ranks = [$rank];
-		} else {
-			$this->ranks[] = $rank;
-			if (is_numeric($expTime)) {
-				$this->tempRanks[] = $rank;
-				$this->tempRanksDuration[$rank->getName()] = (int)$expTime;
-			}
 		}
 
 		$this->plugin->getProvider()->setRank($this->name, $rank->getName(), $expTime)->onCompletion(
@@ -309,9 +307,6 @@ final class Session {
 
 	public function updateRanks() {
 		$this->ranks = $this->plugin->getRankManager()->getHierarchical($this->ranks);
-		if ($this->ranks === []) {
-			$this->ranks = [$this->plugin->getRankManager()->getDefault()];
-		}
 		$player = $this->plugin->getServer()->getPlayerExact($this->name);
 		if ($player !== null) {
 			$this->updatePermissions();

@@ -49,7 +49,7 @@ class RankSystem extends PluginBase {
 
 	public function onEnable() : void {
 		$this->loadCommands();
-		$this->loadEvents();
+		$this->loadListeners();
 		$this->loadProvider();
 		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 20);
 	}
@@ -103,7 +103,7 @@ class RankSystem extends PluginBase {
 		$this->saveResource("ranks.yml");
 	}
 
-	public function loadCommands() : void {
+	private function loadCommands() : void {
 		$values = [new RanksCommand($this)];
 		foreach ($values as $commands) {
 			$this->getServer()->getCommandMap()->register('RankSystem', $commands);
@@ -111,17 +111,13 @@ class RankSystem extends PluginBase {
 		unset($values);
 	}
 
-	public function loadEvents() : void {
-		$values = [new EventListener()];
-		foreach ($values as $events) {
-			$this->getServer()->getPluginManager()->registerEvents($events, $this);
-		}
-		unset($values);
+	private function loadListeners() : void {
+		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 	}
 
 	private function loadProvider() : void {
 		if (!isset($this->provider)) {
-			$name = $this->getConfigs("config.yml")->get("database")["type"] ?? "";
+			$name = $this->getConfig()->get("database")["type"] ?? "";
 			switch (strtolower($name)) {
 				case "sqlite":
 				case "sqlite3":

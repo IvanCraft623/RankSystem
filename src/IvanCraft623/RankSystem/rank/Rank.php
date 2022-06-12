@@ -19,8 +19,6 @@ namespace IvanCraft623\RankSystem\rank;
 
 final class Rank {
 
-	private static array $ranks = [];
-
 	private string $name;
 
 	private array $nametag = [];
@@ -28,23 +26,6 @@ final class Rank {
 	private array $chat = [];
 
 	private array $permissions = [];
-
-	public static function getByName(string $name) : ?Rank {
-		foreach (self::$ranks as $nm => $rank) {
-			if ($nm === $name) {
-				return $rank;
-			}
-		}
-		return null;
-	}
-
-	public static function closeAll() : void {
-		self::$ranks = [];
-	}
-
-	public static function getAll() : array {
-		return self::$ranks;
-	}
 
 	/* Example of how provide the variables:
 	 * 
@@ -66,8 +47,6 @@ final class Rank {
 		$this->nametag = $nametag;
 		$this->chat = $chat;
 		$this->permissions = $permissions;
-
-		self::$ranks[$name] = $this;
 	}
 
 	public function getName() : string {
