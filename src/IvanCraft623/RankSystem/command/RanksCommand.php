@@ -138,7 +138,7 @@ class RanksCommand extends PluginCommand {
 					if (!isset($args[2])) {
 						$sender->sendMessage(
 							"§cUse: /ranks set <player> <rank> [timeToExpire]"."\n".
-							"§bIf §a[timToExpire]§b is not specified the rank will not expire"."\n"."\n".
+							"§bIf §a[timeToExpire]§b is not specified the rank will not expire"."\n"."\n".
 							"§aDuration arguments: y = year, M = month, w = week, d = day, h = hour, m = minute"."\n".
 							"§eFor instance, 1y3M means one year and three months (this is the same as 15M). 1w2d12h means one week, two days, and twelve hours (this is the same as 9d12h)."
 						);
@@ -205,7 +205,7 @@ class RanksCommand extends PluginCommand {
 						return true;
 					}
 					if (!isset($args[2])) {
-						$sender->sendMessage("§cUse: /ranks setperm <player> <permission>");
+						$sender->sendMessage("§cUse: /ranks setperm <player> <permission> [timeToExpire]");
 						return true;
 					}
 					$session = $this->plugin->getSessionManager()->get($args[1]);
@@ -213,8 +213,23 @@ class RanksCommand extends PluginCommand {
 						$sender->sendMessage("§c".$args[1]." already have the permission ".$args[2]);
 						return true;
 					}
-					$session->setPermission($args[2]);
-					$sender->sendMessage("§bYou have successfully §agive§b the permission §e".$args[2]." §b to ".$args[1]);
+					$expTime = null;
+					if (isset($args[3]) && ($expTime = Utils::parseDuration($args[3])) === null) {
+						$sender->sendMessage(
+							"§cInvalid timeToExpire provided!"."\n".
+							"§bIf §a[timToExpire]§b is not specified the permission will not expire"."\n"."\n".
+							"§aDuration arguments: y = year, M = month, w = week, d = day, h = hour, m = minute"."\n".
+							"§eFor instance, 1y3M means one year and three months (this is the same as 15M). 1w2d12h means one week, two days, and twelve hours (this is the same as 9d12h)."
+						);
+						return true;
+					}
+					$session->setPermission($args[2], $expTime);
+					$sender->sendMessage(
+						"§a---- §6You have given permission! §a----"."\n"."\n".
+						"§ePlayer:§b {$args[1]}"."\n".
+						"§ePermission:§b {$args[2]}"."\n".
+						"§eExpire In:§b ".Utils::getExpIn($expTime)
+					);
 				break;
 
 				case 'removeperm':

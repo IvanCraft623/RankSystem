@@ -32,10 +32,10 @@ class UpdateTask extends Task {
 
 	public function onRun() : void {
 		#Check Expired Ranks
+		$time = time();
 		foreach ($this->plugin->getSessionManager()->getAll() as $session) {
 			foreach ($session->getTempRanks() as $rank) {
-				$expTime = $session->getRankExpTime($rank);
-				if ($expTime <= time()) {
+				if ($session->getRankExpTime($rank) <= $time) {
 					# Call Event
 					$ev = new UserRankExpireEvent(
 						$session,
@@ -44,6 +44,11 @@ class UpdateTask extends Task {
 					$ev->call();
 
 					$session->removeRank($rank);
+				}
+			}
+			foreach ($session->getUserPermissions() as $permission => $expTime) {
+				if ($expTime !== null && $expTime <= $time) {
+					$session->removePermission($permission);
 				}
 			}
 		}

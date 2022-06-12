@@ -54,6 +54,9 @@ final class Session {
 	/** @var String[] */
 	private array $permissions = [];
 
+	/** @var array<string, ?int> */
+	private array $userPermissions = [];
+
 	private array $attachments = [];
 	
 	public function __construct(string $name) {
@@ -125,14 +128,18 @@ final class Session {
 	 * Only get called when permissions were loaded or updated
 	 * on database, don't call it directly.
 	 *
-	 * @param string[] $userPermissions
+	 * @param array<string, ?int> $userPermissions
 	 *
 	 * @internal
 	 */
 	public function syncPermissions(array $userPermissions) : void {
-		$this->permissions = array_merge($this->plugin->getGlobalPerms(), $userPermissions);
+		$this->permissions = [];
+		$this->userPermissions = $userPermissions;
 		foreach ($this->getRanks() as $rank) {
 			$this->permissions = array_merge($this->permissions, $rank->getPermissions());
+		}
+		foreach ($userPermissions as $perm => $expTime) {
+			$this->permissions[] = $perm;
 		}
 		$this->updatePermissions();
 	}
@@ -141,7 +148,7 @@ final class Session {
 		return $this->name;
 	}
 
-	public function getPlayer() : void {
+	public function getPlayer() : ?Player {
 		return $this->player ?? ($this->player = $this->plugin->getServer()->getPlayerExact($this->name));
 	}
 
@@ -212,7 +219,7 @@ final class Session {
 		$ev = new UserRankSetEvent(
 			$this,
 			$rank,
-			(is_numeric($expTime) ? (int)$expTime : null)
+			$expTime
 		);
 		$ev->call();
 
@@ -272,15 +279,31 @@ final class Session {
 		return $this->permissions;
 	}
 
+	/**
+	 * @return array<string, ?int>
+	 */
+	public function getUserPermissions() : array {
+		return $this->userPermissions;
+	}
+
+	public function isTempPermission(string $permission) : bool {
+		return $this->getPermissionsExpTime($permission) !== null;
+	}
+
+	public function getPermissionExpTime(string $permission) : ?int {
+		return $this->userPermissions[$permission] ?? null;
+	}
+
 	public function hasPermission(string $perm) : bool {
 		return in_array($perm, $this->permissions, true);
 	}
 
-	public function setPermission(string $perm) : bool {
+	public function setPermission(string $perm, ?int $expTime = null) : bool {
 		# Call Event
 		$ev = new UserPermissionSetEvent(
 			$this,
-			$perm
+			$perm,
+			$expTime
 		);
 		$ev->call();
 
@@ -288,7 +311,7 @@ final class Session {
 			return false;
 		}
 
-		$this->plugin->getProvider()->setPermission($this->name, $perm)->onCompletion(
+		$this->plugin->getProvider()->setPermission($this->name, $perm, $expTime)->onCompletion(
 			function (array $permissions) {
 				$this->syncPermissions($permissions);
 			},

@@ -25,7 +25,7 @@ class UserData implements JsonSerializable {
 	
 	/**
 	 * @param array<string, ?int> $ranks
-	 * @param string[] $permissions
+	 * @param array<string, ?int> $permissions
 	 */
 	public function __construct(
 		protected string $name,
@@ -51,7 +51,7 @@ class UserData implements JsonSerializable {
 	}
 
 	/**
-	 * @return string[]
+	 * @return array<string, ?int>
 	 */
 	public function getPermissions() : array {
 		return $this->permissions;

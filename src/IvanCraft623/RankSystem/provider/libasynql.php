@@ -161,12 +161,12 @@ class libasynql extends Provider {
 	}
 
 	/**
-	 * @param string[] $permisions
+	 * @param array<string, ?int> $permissions
 	 */
-	public function setPermissions(string $name, array $permisions, ?callable $onSuccess = null, ?callable $onError = null) : void {
+	public function setPermissions(string $name, array $permissions, ?callable $onSuccess = null, ?callable $onError = null) : void {
 		$this->database->executeGeneric("data.users.setPermissions", [
 			"name" => $name,
-			"permissions" => json_encode($permisions, JSON_THROW_ON_ERROR)
+			"permissions" => json_encode($permissions, JSON_THROW_ON_ERROR)
 		], $onSuccess, function (SqlError $result) use ($onError) {
 			$this->plugin->getLogger()->emergency($result->getQuery() . ' - ' . $result->getErrorMessage());
 			if ($onError !== null) {
@@ -176,17 +176,17 @@ class libasynql extends Provider {
 	}
 
 	/**
-	 * @phpstan-return Promise<string[]>
+	 * @phpstan-return Promise<array<string, ?int>>
 	 */
-	public function setPermission(string $name, string $permission) : Promise {
+	public function setPermission(string $name, string $permission, ?int $expTime = null) : Promise {
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
-			function (?UserData $userData) use ($name, $permission, $resultPromise) {
+			function (?UserData $userData) use ($name, $permission, $expTime, $resultPromise) {
 				$permissions = [];
 				if ($userData !== null) {
 					$permissions = $userData->getPermissions();
 				}
-				$permissions[] = $permission;
+				$permissions[$permission] = $expTime;
 				$this->setPermissions($name, $permissions, function() use ($permissions, $resultPromise) {
 					$resultPromise->resolve($permissions);
 				}, fn() => $resultPromise->reject());
@@ -203,11 +203,7 @@ class libasynql extends Provider {
 				$permissions = [];
 				if ($userData !== null) {
 					$permissions = $userData->getPermissions();
-					foreach ($permissions as $key => $perm) {
-						if ($perm === $permission) {
-							unset($permissions[$key]);
-						}
-					}
+					unset($permissions[$permission]);
 					if (count($permissions) === 0 && count($userData->getRanks()) === 0) {
 						$this->delete($name, function() use ($permissions, $resultPromise) {
 							$resultPromise->resolve($permissions);

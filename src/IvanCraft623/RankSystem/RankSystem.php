@@ -51,7 +51,7 @@ class RankSystem extends PluginBase {
 		$this->loadCommands();
 		$this->loadListeners();
 		$this->loadProvider();
-		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 20);
+		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 60);
 	}
 
 	public function getProvider() : Provider{
