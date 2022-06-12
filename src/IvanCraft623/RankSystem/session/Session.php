@@ -26,6 +26,7 @@ use IvanCraft623\RankSystem\event\UserRankRemoveEvent;
 use IvanCraft623\RankSystem\event\UserPermissionSetEvent;
 use IvanCraft623\RankSystem\event\UserPermissionRemoveEvent;
 
+use pocketmine\player\Player;
 use pocketmine\promise\Promise;
 use pocketmine\promise\PromiseResolver;
 
@@ -34,6 +35,8 @@ final class Session {
 	private RankSystem $plugin;
 
 	private string $name;
+
+	private ?Player $player = null;
 
 	private bool $initialized = false;
 
@@ -94,7 +97,12 @@ final class Session {
 	}
 
 	/**
+	 * Only get called when ranks were loaded or updated
+	 * on database, don't call it directly.
+	 *
 	 * @param array<string, ?int> $ranksdata
+	 *
+	 * @internal
 	 */
 	public function syncRanks(array $ranksdata) : void {
 		$this->ranks = [];
@@ -114,7 +122,12 @@ final class Session {
 	}
 
 	/**
+	 * Only get called when permissions were loaded or updated
+	 * on database, don't call it directly.
+	 *
 	 * @param string[] $userPermissions
+	 *
+	 * @internal
 	 */
 	public function syncPermissions(array $userPermissions) : void {
 		$this->permissions = array_merge($this->plugin->getGlobalPerms(), $userPermissions);
@@ -126,6 +139,10 @@ final class Session {
 
 	public function getName() : string {
 		return $this->name;
+	}
+
+	public function getPlayer() : void {
+		return $this->player ?? ($this->player = $this->plugin->getServer()->getPlayerExact($this->name));
 	}
 
 	public function getNameTagPrefix() : string {
@@ -307,7 +324,7 @@ final class Session {
 
 	public function updateRanks() {
 		$this->ranks = $this->plugin->getRankManager()->getHierarchical($this->ranks);
-		$player = $this->plugin->getServer()->getPlayerExact($this->name);
+		$player = $this->getPlayer();
 		if ($player !== null) {
 			$this->updatePermissions();
 			$player->setNameTag($this->getNameTagFormat());
@@ -315,7 +332,7 @@ final class Session {
 	}
 
 	public function updatePermissions() {
-		$player = $this->plugin->getServer()->getPlayerExact($this->name);
+		$player = $this->getPlayer();
 		if ($player !== null) {
 			foreach ($this->attachments as $attachment) {
 				$player->removeAttachment($attachment);
