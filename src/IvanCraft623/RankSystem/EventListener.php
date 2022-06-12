@@ -39,8 +39,10 @@ class EventListener implements Listener {
 	 * @priority LOW
 	 */
 	public function onLogin(PlayerJoinEvent $event) : void {
-		$player = $event->getPlayer();
-		$this->plugin->getSessionManager()->get($player)->updateRanks();
+		$session = $this->plugin->getSessionManager()->get($event->getPlayer());
+		$session->onInitialize(function () use ($session) {
+			$session->updateRanks();
+		});
 	}
 
 	/**

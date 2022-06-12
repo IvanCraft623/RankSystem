@@ -26,11 +26,19 @@ use IvanCraft623\RankSystem\event\UserRankRemoveEvent;
 use IvanCraft623\RankSystem\event\UserPermissionSetEvent;
 use IvanCraft623\RankSystem\event\UserPermissionRemoveEvent;
 
+use pocketmine\promise\Promise;
+use pocketmine\promise\PromiseResolver;
+
 final class Session {
 
 	private RankSystem $plugin;
 
 	private string $name;
+
+	private bool $initialized = false;
+
+	/** @var \Closure[] */
+	private array $onInits = [];
 
 	/** @var Rank[] */
 	private array $ranks = [];
@@ -51,6 +59,18 @@ final class Session {
 		$this->loadUserData();
 	}
 
+	public function isInitialized() : bool {
+		return $this->initialized;
+	}
+
+	public function onInitialize(\Closure $onInit) : void {
+		if ($this->initialized) {
+			$onInit();
+		} else {
+			$this->onInits[spl_object_id($onInit)] = $onInit;
+		}
+	}
+
 	private function loadUserData() : void {
 		$this->plugin->getProvider()->getUserData($this->name)->onCompletion(
 			function (?UserData $userData) {
@@ -62,6 +82,12 @@ final class Session {
 					$this->syncPermissions($userData->getPermissions());
 
 					$this->updateRanks();
+
+					$this->initialized = true;
+					foreach ($this->onInits as $onInit) {
+						$onInit();
+					}
+					$this->onInits = [];
 				}
 			}, fn() => throw new \Error("Failed to load ".$this->name."' session")
 		);
