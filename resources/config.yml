@@ -2,6 +2,9 @@
 #Welcome to Ranks configs! :D
 #This plugin was made by IvanCraft623
 
+#Automatically migrate other plugins data
+auto-migrator: true
+
 #Provider where player information is stored
 database:
   # The database type. "sqlite" and "mysql" are supported.

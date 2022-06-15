@@ -21,6 +21,10 @@ use IvanCraft623\RankSystem\command\RanksCommand;
 use IvanCraft623\RankSystem\session\SessionManager;
 use IvanCraft623\RankSystem\rank\RankManager;
 use IvanCraft623\RankSystem\task\UpdateTask;
+use IvanCraft623\RankSystem\migrator\LegacyRankSystem;
+use IvanCraft623\RankSystem\migrator\Migrator;
+use IvanCraft623\RankSystem\migrator\MigratorManager;
+use IvanCraft623\RankSystem\migrator\PurePerms;
 use IvanCraft623\RankSystem\provider\Provider;
 use IvanCraft623\RankSystem\provider\libasynql as libasynqlProvider;
 
@@ -51,6 +55,7 @@ class RankSystem extends PluginBase {
 		$this->loadCommands();
 		$this->loadListeners();
 		$this->loadProvider();
+		$this->loadMigrators();
 		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 60);
 	}
 
@@ -64,6 +69,10 @@ class RankSystem extends PluginBase {
 
 	public function getRankManager() : RankManager {
 		return RankManager::getInstance();
+	}
+
+	public function getMigratorManager() : MigratorManager {
+		return MigratorManager::getInstance();
 	}
 
 	public function getConfigs(string $value) : Config {
@@ -132,6 +141,23 @@ class RankSystem extends PluginBase {
 					throw new DisablePluginException("Unknown database type: " . $name); // @phpstan-ignore-line
 			}
 			$this->setProvider($provider::getInstance());
+		}
+	}
+
+	public function loadMigrators() : void {
+		$migrator = $this->getMigratorManager();
+		$migrator->register(new LegacyRankSystem());
+		$migrator->register(new PurePerms());
+
+		foreach ($migrator->getAll() as $migrator) {
+			if ($migrator->canMigrate() && !$migrator->hasMigrated()) {
+				$this->getLogger()->notice("Migrating data from: " . $migrator->getName());
+				if ($migrator->migrate()) {
+					$this->getLogger()->info("§a" . $migrator->getName() . " data has migrated successfully!");
+				} else {
+					$this->getLogger()->warning("Failed to migrate data from " . $migrator->getName());
+				}
+			}
 		}
 	}
 

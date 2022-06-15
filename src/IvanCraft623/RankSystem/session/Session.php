@@ -236,7 +236,7 @@ final class Session {
 		$this->plugin->getProvider()->setRank($this->name, $rank->getName(), $expTime)->onCompletion(
 			function (array $ranks) {
 				$this->syncRanks($ranks);
-				$this->syncPermissions($this->permissions);
+				$this->syncPermissions($this->userPermissions);
 			},
 			function () {
 				// Do something...
@@ -266,7 +266,7 @@ final class Session {
 		$this->plugin->getProvider()->removeRank($this->name, $rank->getName())->onCompletion(
 			function (array $ranks) {
 				$this->syncRanks($ranks);
-				$this->syncPermissions($this->permissions);
+				$this->syncPermissions($this->userPermissions);
 			},
 			function () {
 				// Do something...

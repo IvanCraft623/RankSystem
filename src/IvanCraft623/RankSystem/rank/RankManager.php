@@ -22,6 +22,7 @@ use IvanCraft623\RankSystem\RankSystem;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
 
+use InvalidArgumentException;
 use RuntimeException;
 
 final class RankManager {
@@ -36,7 +37,7 @@ final class RankManager {
 	 */
 	private array $ranks;
 
-	private ?Rank $defaultRank = null;
+	private Rank $defaultRank;
 
 	private array $hierarchy;
 
@@ -54,7 +55,7 @@ final class RankManager {
 	public function reload() : void {
 		$this->ranks = [];
 		$this->hierarchy = [];
-		$this->defaultRank = null;
+		unset($this->defaultRank);
 		$this->load();
 		$this->plugin->getSessionManager()->reload();
 	}
@@ -71,17 +72,30 @@ final class RankManager {
 	}
 
 	public function getDefault() : Rank {
-		if ($this->defaultRank === null) {
+		if (!isset($this->defaultRank)) {
 			$name = $this->plugin->getConfig()->get("Default_Rank");
 			if ($name === false) {
 				throw new RuntimeException("The default rank is not specified!");
 			}
-			if (!$this->exists($name)) {
+			if (!$this->exists((string) $name)) {
 				throw new RuntimeException("The rank: ".$name." specified as default does not exist!");
 			}
 			$this->defaultRank = $this->getRank($name);
 		}
 		return $this->defaultRank;
+	}
+
+	/**
+	 * This change is not reflected until ranks are reloaded
+	 *
+	 * @see reload()
+	 */
+	public function setDefault(string $rank) : void {
+		if (!$this->exists($rank)) {
+			throw new InvalidArgumentException("Rank ". $rank . " not found");
+		}
+		$this->plugin->getConfig()->set("Default_Rank", $rank);
+		$this->plugin->getConfig()->save();
 	}
 
 	public function exists(string $name) : bool {
