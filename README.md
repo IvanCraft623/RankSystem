@@ -8,6 +8,21 @@ An amazing Rank and Permissions Manager. The best ranks manager for PocketMine-M
 ## For Developers
 Examples and tutorials can be found on the [RankSystem Wiki](https://github.com/IvanCraft623/RankSystem/wiki).
 
+# Features
+
+- Multiple Ranks per user support
+- Data migrator from other ranks/groups plugins (PurePerms)
+- Temp-ranks System
+- Temp-ranks System
+- SQLite3 Provider Support
+- MySQL Provider Support
+- Easy Rank Creation / Edit System
+- Ranks inheritance system to allow you to inherit rank permissions
+- Permissions per User
+- Profile System
+- Provides simple and flexible API for plugin developers
+- And more...!
+
 # Commands
 Command | Description | Permission
 --- | --- | ---
@@ -21,19 +36,6 @@ Command | Description | Permission
 `/ranks removeperm <user> <permission>` | Remove a Permission of a User | ranksystem.commands
 `/ranks perms <plugin>` | Show a list of all plugin permissions | None
 `/ranks credits` | Show RankSystem Credits | None
-
-# Features
-
-- Multiple Ranks per user support
-- Temp-ranks System
-- SQLite3 Provider Support
-- MySQL Provider Support
-- Easy Rank Creation / Edit System
-- Ranks inheritance system to allow you to inherit rank permissions
-- Permissions per User
-- Profile System
-- Provides simple and flexible API for plugin developers
-- And more...!
 
 # Project information
 Version | Pocketmine API | PHP | Status
