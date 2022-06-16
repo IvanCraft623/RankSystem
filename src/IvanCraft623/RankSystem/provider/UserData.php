@@ -76,16 +76,16 @@ class UserData implements JsonSerializable {
 	 * @param mixed[] $data
 	 * @phpstan-param array{
 	 * 	name: string,
-	 * 	ranks: string,
-	 * 	permissions: string,
+	 * 	ranks: ?string,
+	 * 	permissions: ?string,
 	 * 	generationTime: ?int
 	 * } $data
 	 */
 	public static function jsonDeserialize(array $data) : UserData {
 		return new UserData(
 			(string) $data["name"],
-			(array) (json_decode($data["ranks"], true)),
-			(array) (json_decode($data["permissions"], true)),
+			(array) ($data["ranks"] === null ? [] : json_decode($data["ranks"], true)),
+			(array) ($data["permissions"] === null ? [] : json_decode($data["permissions"], true)),
 			(int) ($data["generationTime"] ?? time())
 		);
 	}

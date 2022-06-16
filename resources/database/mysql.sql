@@ -5,8 +5,8 @@
 		CREATE TABLE IF NOT EXISTS RankSystemUsers
 		(
 			name           VARCHAR(32) PRIMARY KEY NOT NULL,
-			ranks          TEXT        DEFAULT "",
-			permissions    TEXT        DEFAULT ""
+			ranks          TEXT        DEFAULT NULL,
+			permissions    TEXT        DEFAULT NULL
 		);
 	-- #}
 -- #}
