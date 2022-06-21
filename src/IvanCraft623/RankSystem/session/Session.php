@@ -80,15 +80,17 @@ final class Session {
 	private function loadUserData() : void {
 		$this->plugin->getProvider()->getUserData($this->name)->onCompletion(
 			function (?UserData $userData) {
+				$permissions = [];
 				if ($userData !== null) {
 					# Ranks
 					$this->syncRanks($userData->getRanks());
 
 					# Permissions
-					$this->syncPermissions($userData->getPermissions());
+					$permissions = $userData->getPermissions();
 
 					$this->updateRanks();
 				}
+				$this->syncPermissions($permissions);
 
 				$this->initialized = true;
 				foreach ($this->onInits as $onInit) {
