@@ -12,6 +12,7 @@ Examples and tutorials can be found on the [RankSystem Wiki](https://github.com/
 
 - Multiple Ranks per user support
 - Data migrator from other ranks/groups plugins (PurePerms)
+- Multi-rank inheritance system to allow you to inherit rank permissions
 - Temp-ranks System
 - Temp-ranks System
 - SQLite3 Provider Support
@@ -40,4 +41,4 @@ Command | Description | Permission
 # Project information
 Version | Pocketmine API | PHP | Status
 --- | --- | --- | ---
-0.0.4 | [PM4](https://github.com/pmmp/PocketMine-MP/tree/stable) & [PM3](https://github.com/pmmp/PocketMine-MP/tree/legacy/pm3) | 8 | Functional
+1.0.0 | [PM4](https://github.com/pmmp/PocketMine-MP/tree/stable) & [PM3](https://github.com/pmmp/PocketMine-MP/tree/legacy/pm3) | 8 | Functional

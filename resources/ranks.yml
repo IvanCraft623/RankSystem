@@ -8,9 +8,8 @@ Guest:
     nameColor: "§f"
     chatFormat: "§5: §7"
   permissions:
-  - pchat.colored.format
-  - pchat.colored.nametag
   - pocketmine.command.list
+  inheritance: []
 Admin:
   nametag:
     prefix: "§9[§bAdmin§9]§r "
@@ -26,6 +25,8 @@ Admin:
   - pocketmine.command.kick
   - pocketmine.command.teleport
   - pocketmine.command.time
+  inheritance:
+    - Guest
 Owner:
   nametag:
     prefix: "§l§7|§aOwner§7|§r "
@@ -37,4 +38,6 @@ Owner:
   permissions:
   - pocketmine.command
   - pperms.command
+  inheritance:
+    - Admin
 ...

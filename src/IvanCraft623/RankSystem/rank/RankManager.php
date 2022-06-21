@@ -47,8 +47,21 @@ final class RankManager {
 
 	public function load() : void {
 		$this->data = $this->plugin->getConfigs("ranks.yml");
-	 	foreach ($this->data->getAll() as $name => $data) {
+		$ranksData = $this->data->getAll();
+	 	foreach ($ranksData as $name => $data) {
 	 		$this->ranks[$name] = new Rank($name, $data["nametag"], $data["chat"], $data["permissions"]);
+	 	}
+
+	 	# Inheritance
+	 	foreach ($this->ranks as $rank) {
+	 		if (isset($ranksData[$rank->getName()]["inheritance"])) {
+	 			foreach ($ranksData[$rank->getName()]["inheritance"] as $name) {
+	 				$rank_that_inherits_permissions_to_another_rank = $this->getRank($name);
+	 				if ($rank_that_inherits_permissions_to_another_rank !== null) {
+	 					$rank->addInheritance($rank_that_inherits_permissions_to_another_rank);
+	 				}
+	 			}
+	 		}
 	 	}
 	}
 
@@ -151,10 +164,12 @@ final class RankManager {
 	 * ];
 	 *
 	 * $permissions = ["example.perm", "example.perm2"]:
+	 *
+	 * $inheritance = ["Guest"]:
 	 */
-	public function create(string $name, array $nametag, array $chat, array $permissions = []) : void {
+	public function create(string $name, array $nametag, array $chat, array $permissions = [], array $inheritance = []) : void {
 		if (!$this->exists($name)) {
-			$this->saveRankData($name, $nametag, $chat, $permissions);
+			$this->saveRankData($name, $nametag, $chat, $permissions, $inheritance);
 		}
 	}
 
@@ -167,11 +182,12 @@ final class RankManager {
 		$this->data->save();
 	}
 
-	public function saveRankData(string $name, array $nametag, array $chat, array $permissions = []) {
+	public function saveRankData(string $name, array $nametag, array $chat, array $permissions = [], array $inheritance = []) {
 		$data = [
 			"nametag" => $nametag,
 			"chat" => $chat,
-			"permissions" => $permissions
+			"permissions" => $permissions,
+			"inheritance" => $inheritance
 		];
 		$this->data->set($name, $data);
 		$this->data->save();

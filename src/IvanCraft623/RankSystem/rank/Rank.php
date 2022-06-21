@@ -27,6 +27,9 @@ final class Rank {
 
 	private array $permissions = [];
 
+	/** @var Rank[] */
+	private array $inheritance = [];
+
 	/* Example of how provide the variables:
 	 * 
 	 * $nametag = [
@@ -63,5 +66,21 @@ final class Rank {
 
 	public function getPermissions() : array {
 		return $this->permissions;
+	}
+
+	public function getInheritance() : array {
+		return $this->inheritance;
+	}
+
+	/**
+	 * @internal
+	 */
+	public function addInheritance(Rank $rank) : void {
+		if ($rank === $this) {
+			throw new \InvalidArgumentException("A rank cannot inherit ranks from itself");
+		}
+
+		$this->inheritance[] = $rank;
+		$this->permissions = array_merge($this->permissions, $rank->getPermissions());
 	}
 }
