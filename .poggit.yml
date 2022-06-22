@@ -7,6 +7,9 @@ projects:
   RankSystem:
     path: ""
     libs:
+      - src: ifera-mc/ConfigUpdater/ConfigUpdater
+        version: ^2.0.0
+        branch: master
       - src: poggit/libasynql/libasynql
         version: ^4.0.0
 ...

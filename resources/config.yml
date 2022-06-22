@@ -1,6 +1,10 @@
 ---
-#Welcome to Ranks configs! :D
+#Welcome to RankSystem config! :D
 #This plugin was made by IvanCraft623
+
+#Do not edit this value!
+#Only for internal use.
+config-version: 1
 
 #Automatically migrate other plugins data
 auto-migrator: true

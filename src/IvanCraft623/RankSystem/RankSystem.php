@@ -28,6 +28,8 @@ use IvanCraft623\RankSystem\migrator\PurePerms;
 use IvanCraft623\RankSystem\provider\Provider;
 use IvanCraft623\RankSystem\provider\libasynql as libasynqlProvider;
 
+use JackMD\ConfigUpdater\ConfigUpdater;
+
 use pocketmine\permission\PermissionManager;
 use pocketmine\permission\DefaultPermissions;
 use pocketmine\plugin\DisablePluginException;
@@ -38,6 +40,8 @@ use pocketmine\utils\SingletonTrait;
 class RankSystem extends PluginBase {
 	use SingletonTrait;
 
+	public const CONFIG_VERSION = 1;
+
 	private static array $globalPerms = [];
 
 	private static array $pmDefaultPerms = [];
@@ -46,6 +50,11 @@ class RankSystem extends PluginBase {
 
 	public function onLoad() : void {
 		self::setInstance($this);
+
+		if (ConfigUpdater::checkUpdate($this, $this->getConfig(), "config-version", self::CONFIG_VERSION)) {
+			$this->reloadConfig();
+		}
+
 		self::$globalPerms = $this->getConfig()->get("Global_Perms");
 		$this->saveResources();
 		$this->getRankManager()->load();
