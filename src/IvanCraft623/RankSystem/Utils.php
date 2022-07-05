@@ -17,7 +17,15 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem;
 
+use Ifera\ScoreHud\event\PlayerTagsUpdateEvent;
+use Ifera\ScoreHud\scoreboard\ScoreTag;
+use IvanCraft623\RankSystem\session\Session;
+use IvanCraft623\RankSystem\rank\Rank;
+use pocketmine\Server;
+
 final class Utils {
+
+	public static bool $scoreHudDetected;
 
 	public static function getTimeLeft(null|int|string $expTime) : ?array {
 		if (time() < $expTime) {
@@ -49,30 +57,57 @@ final class Utils {
 	}
 
 	/**
-     * @param string $duration Must be of the form [ay][bM][cw][dd][eh][fm] with a, b, c, d, e, f integers
-     * @return ?Int UNIX timestamp corresponding to the duration (1y will return the timestamp one year from now)
-     * Credits for adeynes
-     */
-    public static function parseDuration(string $duration): ?int {
-        $time_units = ['y' => 'year', 'M' => 'month', 'w' => 'week', 'd' => 'day', 'h' => 'hour', 'm' => 'minute'];
-        $regex = '/^([0-9]+y)?([0-9]+M)?([0-9]+w)?([0-9]+d)?([0-9]+h)?([0-9]+m)?$/';
-        $matches = [];
-        $is_matching = preg_match($regex, $duration, $matches);
-        if (!$is_matching) {
-            return null;
-        }
+	 * @param string $duration Must be of the form [ay][bM][cw][dd][eh][fm] with a, b, c, d, e, f integers
+	 * @return ?Int UNIX timestamp corresponding to the duration (1y will return the timestamp one year from now)
+	 * Credits for adeynes
+	 */
+	public static function parseDuration(string $duration): ?int {
+		$time_units = ['y' => 'year', 'M' => 'month', 'w' => 'week', 'd' => 'day', 'h' => 'hour', 'm' => 'minute'];
+		$regex = '/^([0-9]+y)?([0-9]+M)?([0-9]+w)?([0-9]+d)?([0-9]+h)?([0-9]+m)?$/';
+		$matches = [];
+		$is_matching = preg_match($regex, $duration, $matches);
+		if (!$is_matching) {
+			return null;
+		}
 
-        $time = '';
+		$time = '';
 
-        foreach ($matches as $index => $match) {
-            if ($index === 0 || strlen($match) === 0) continue; // index 0 is the full match
-            $n = substr($match, 0, -1);
-            $unit = $time_units[substr($match, -1)];
-            $time .= "$n $unit ";
-        }
+		foreach ($matches as $index => $match) {
+			if ($index === 0 || strlen($match) === 0) continue; // index 0 is the full match
+			$n = substr($match, 0, -1);
+			$unit = $time_units[substr($match, -1)];
+			$time .= "$n $unit ";
+		}
 
-        $time = trim($time);
+		$time = trim($time);
 
-        return $time === '' ? time() : strtotime($time);
-    }
+		return $time === '' ? time() : strtotime($time);
+	}
+
+	/**
+	 * @param Rank[] $ranks
+	 */
+	public static function ranks2string(array $ranks): string {
+		$ranksNames = [];
+		foreach ($ranks as $rank) {
+			$ranksNames[] = $rank->getName();
+		}
+		return implode(", ", $ranksNames);
+	}
+
+	public static function updateScoreTags(Session $session): void {
+		if (!isset(self::$scoreHudDetected)) {
+			self::$scoreHudDetected = Server::getInstance()->getPluginManager()->getPlugin("ScoreHud") !== null;
+		}
+		if (self::$scoreHudDetected) {
+			$player = $session->getPlayer();
+			if ($player !== null) {
+				(new PlayerTagsUpdateEvent($player, [
+					new ScoreTag("ranksystem.ranks", self::ranks2string($session->getRanks())),
+					new ScoreTag("ranksystem.highest_rank", $session->getHighestRank()->getName()),
+					new ScoreTag("ranksystem.nametag", $session->getNameTagFormat())
+				]))->call();
+			}
+		}
+	}
 }

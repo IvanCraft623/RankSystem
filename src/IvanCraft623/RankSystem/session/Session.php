@@ -20,6 +20,7 @@ namespace IvanCraft623\RankSystem\session;
 use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\provider\UserData;
 use IvanCraft623\RankSystem\rank\Rank;
+use IvanCraft623\RankSystem\Utils;
 
 use IvanCraft623\RankSystem\event\UserRankSetEvent;
 use IvanCraft623\RankSystem\event\UserRankRemoveEvent;
@@ -353,6 +354,7 @@ final class Session {
 		if ($player !== null) {
 			$this->updatePermissions();
 			$player->setNameTag($this->getNameTagFormat());
+			Utils::updateScoreTags($this);
 		}
 	}
 

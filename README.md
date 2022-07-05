@@ -22,6 +22,7 @@ Examples and tutorials can be found on the [RankSystem Wiki](https://github.com/
 - Permissions per User
 - Profile System
 - Provides simple and flexible API for plugin developers
+- ScoreHud Integration
 - And more...!
 
 # Commands
@@ -37,6 +38,15 @@ Command | Description | Permission
 `/ranks removeperm <user> <permission>` | Remove a Permission of a User | ranksystem.commands
 `/ranks perms <plugin>` | Show a list of all plugin permissions | None
 `/ranks credits` | Show RankSystem Credits | None
+
+# ScoreHud Integration
+This plugin supports ScoreHud plugin.
+Tag | Description
+--- | ---
+`{ranksystem.ranks}` | The ranks of the player
+`{ranksystem.highest_rank}` | The player's highest rank
+`{ranksystem.nametag}` | NameTag assigned by RankSystem to the player
+
 
 # Project information
 Version | Pocketmine API | PHP | Status
