@@ -112,6 +112,8 @@ final class Session {
 	 */
 	public function syncRanks(array $ranksdata) : void {
 		$this->ranks = [];
+		$this->tempRanks = [];
+		$this->tempRanksDuration = [];
 		$manager = $this->plugin->getRankManager();
 		foreach ($ranksdata as $name => $expTime) {
 			$rank = $manager->getRank($name);
@@ -152,7 +154,16 @@ final class Session {
 	}
 
 	public function getPlayer() : ?Player {
-		return $this->player ?? ($this->player = $this->plugin->getServer()->getPlayerExact($this->name));
+		return $this->player;
+	}
+
+	/**
+	 * Called when the player joins the server
+	 *
+	 * @internal
+	 */
+	public function setPlayer(Player $player) : void {
+		$this->player = $player;
 	}
 
 	public function getNameTagPrefix() : string {
@@ -364,7 +375,7 @@ final class Session {
 			foreach ($this->attachments as $attachment) {
 				$player->removeAttachment($attachment);
 			}
-			$attachment = [];
+			$this->attachments = [];
 			foreach ($this->permissions as $permission) {
 				$this->attachments[] = $player->addAttachment($this->plugin, $permission, true);
 			}
