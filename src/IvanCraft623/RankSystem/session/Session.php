@@ -20,7 +20,7 @@ namespace IvanCraft623\RankSystem\session;
 use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\provider\UserData;
 use IvanCraft623\RankSystem\rank\Rank;
-use IvanCraft623\RankSystem\Utils;
+use IvanCraft623\RankSystem\utils\Utils;
 
 use IvanCraft623\RankSystem\event\UserRankSetEvent;
 use IvanCraft623\RankSystem\event\UserRankRemoveEvent;
@@ -59,6 +59,11 @@ final class Session {
 	private array $userPermissions = [];
 
 	private array $attachments = [];
+
+	/** @var \Closure[] */
+	private array $syncQueue = [];
+
+	private bool $synchronized = false;
 	
 	public function __construct(string $name) {
 		$this->plugin = RankSystem::getInstance();
@@ -94,6 +99,7 @@ final class Session {
 				$this->syncPermissions($permissions);
 
 				$this->initialized = true;
+				$this->synchronized = true;
 				foreach ($this->onInits as $onInit) {
 					$onInit();
 				}
@@ -230,6 +236,31 @@ final class Session {
 		return null;
 	}
 
+	private function addToSyncQueue(\Closure $closure) : void {
+		$this->syncQueue[] = $closure;
+		if ($this->synchronized) {
+			$this->synchronized = false;
+			$this->loadSyncTask();
+		}
+	}
+
+	private function loadSyncTask() : void {
+		if (!$this->synchronized) {
+			if (count($this->syncQueue) === 0) {
+				$this->synchronized = true;
+				return;
+			}
+			$key = array_key_first($this->syncQueue);
+			$this->syncQueue[$key]()->onCompletion(function () use ($key) {
+				unset($this->syncQueue[$key]);
+				$this->loadSyncTask();
+			},
+			function () {
+				// Do something...
+			});
+		}
+	}
+
 	public function setRank(Rank $rank, ?int $expTime = null) : bool {
 		# Call Event
 		$ev = new UserRankSetEvent(
@@ -249,15 +280,19 @@ final class Session {
 			return false;
 		}
 
-		$this->plugin->getProvider()->setRank($this->name, $rank->getName(), $expTime)->onCompletion(
-			function (array $ranks) {
-				$this->syncRanks($ranks);
-				$this->syncPermissions($this->userPermissions);
-			},
-			function () {
-				// Do something...
-			}
-		);
+		$this->addToSyncQueue(function () use ($rank, $expTime) : Promise {
+			$resolver = new PromiseResolver;
+			$this->plugin->getProvider()->setRank($this->name, $rank->getName(), $expTime)->onCompletion(
+				function (array $ranks) use ($resolver) {
+					$this->syncRanks($ranks);
+					$this->syncPermissions($this->userPermissions);
+					$resolver->resolve(true);
+				},
+				fn() => $resolver->resolve(false)
+			);
+			return $resolver->getPromise();
+		});
+
 		return true;
 	}
 
@@ -279,15 +314,18 @@ final class Session {
 			return false;
 		}
 
-		$this->plugin->getProvider()->removeRank($this->name, $rank->getName())->onCompletion(
-			function (array $ranks) {
-				$this->syncRanks($ranks);
-				$this->syncPermissions($this->userPermissions);
-			},
-			function () {
-				// Do something...
-			}
-		);
+		$this->addToSyncQueue(function () use ($rank) : Promise {
+			$resolver = new PromiseResolver;
+				$this->plugin->getProvider()->removeRank($this->name, $rank->getName())->onCompletion(
+				function (array $ranks) use ($resolver) {
+					$this->syncRanks($ranks);
+					$this->syncPermissions($this->userPermissions);
+					$resolver->resolve(true);
+				},
+				fn() => $resolver->resolve(false)
+			);
+			return $resolver->getPromise();
+		});
 		return true;
 	}
 
@@ -327,14 +365,17 @@ final class Session {
 			return false;
 		}
 
-		$this->plugin->getProvider()->setPermission($this->name, $perm, $expTime)->onCompletion(
-			function (array $permissions) {
-				$this->syncPermissions($permissions);
-			},
-			function () {
-				// Do something...
-			}
-		);
+		$this->addToSyncQueue(function () use ($perm, $expTime) : Promise {
+			$resolver = new PromiseResolver;
+				$this->plugin->getProvider()->setPermission($this->name, $perm, $expTime)->onCompletion(
+				function (array $permissions) use ($resolver) {
+					$this->syncPermissions($permissions);
+					$resolver->resolve(true);
+				},
+				fn() => $resolver->resolve(false)
+			);
+			return $resolver->getPromise();
+		});
 		return true;
 	}
 
@@ -350,14 +391,17 @@ final class Session {
 			return false;
 		}
 
-		$this->plugin->getProvider()->removePermission($this->name, $perm)->onCompletion(
-			function (array $permissions) {
-				$this->syncPermissions($permissions);
-			},
-			function () {
-				// Do something...
-			}
-		);
+		$this->addToSyncQueue(function () use ($perm) : Promise {
+			$resolver = new PromiseResolver;
+				$this->plugin->getProvider()->removePermission($this->name, $perm)->onCompletion(
+				function (array $permissions) use ($resolver) {
+					$this->syncPermissions($permissions);
+					$resolver->resolve(true);
+				},
+				fn() => $resolver->resolve(false)
+			);
+			return $resolver->getPromise();
+		});
 		return true;
 	}
 

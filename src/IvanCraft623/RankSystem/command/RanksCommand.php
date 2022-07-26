@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace IvanCraft623\RankSystem\command;
 
 use IvanCraft623\RankSystem\RankSystem;
-use IvanCraft623\RankSystem\Utils;
+use IvanCraft623\RankSystem\utils\Utils;
 use IvanCraft623\RankSystem\rank\RankModifier;
 
 use pocketmine\command\CommandSender;
