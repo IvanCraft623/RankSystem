@@ -168,7 +168,7 @@ final class Session {
 
 	public function getNameTagPrefix() : string {
 		$prefix = "";
-		foreach ($this->plugin->getRankManager()->getHierarchical($this->getRanks()) as $rank) {
+		foreach ($this->getRanks() as $rank) {
 			$prefix .= $rank->getNameTagFormat()["prefix"];
 		}
 		return $prefix;
@@ -176,7 +176,7 @@ final class Session {
 
 	public function getChatPrefix() : string {
 		$prefix = "";
-		foreach ($this->plugin->getRankManager()->getHierarchical($this->getRanks()) as $rank) {
+		foreach ($this->getRanks() as $rank) {
 			$prefix .= $rank->getChatFormat()["prefix"];
 		}
 		return $prefix;
@@ -193,21 +193,23 @@ final class Session {
 	}
 
 	/**
+	 * They will always be ordered hierarchically
+	 *
 	 * @return Rank[]
 	 */
 	public function getRanks() : array {
 		$default = $this->plugin->getRankManager()->getDefault();
-		$ranks = (count($this->ranks) === 0 ? [spl_object_id($default) => $default] : $this->ranks);
+		$ranks = (count($this->ranks) === 0 ? [$default] : array_values($this->ranks));
 		return $ranks;
 	}
 
 	public function getHighestRank() : Rank {
-		$ranks = $this->plugin->getRankManager()->getHierarchical($this->getRanks());
+		$ranks = $this->getRanks();
 		return $ranks[array_key_first($ranks)];
 	}
 
 	public function getTempRanks() : array {
-		return $this->tempRanks;
+		return array_values($this->tempRanks);
 	}
 
 	public function isTempRank(Rank|string $rank) : bool {
@@ -217,7 +219,7 @@ final class Session {
 
 	public function hasRank(Rank|string $rank) : bool {
 		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getRank($rank);
-		return $rank !== null && isset($this->getRanks()[spl_object_id($rank)]);
+		return $rank !== null && isset($this->ranks[spl_object_id($rank)]);
 	}
 
 	public function getRankExpTime(Rank|string $rank) : ?int {

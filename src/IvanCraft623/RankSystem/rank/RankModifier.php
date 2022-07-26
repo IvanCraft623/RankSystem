@@ -19,10 +19,8 @@ namespace IvanCraft623\RankSystem\rank;
 
 use IvanCraft623\RankSystem\RankSystem;
 
-use IvanCraft623\RankSystem\form\Form;
-use IvanCraft623\RankSystem\form\CustomForm;
-use IvanCraft623\RankSystem\form\ModalForm;
-use IvanCraft623\RankSystem\form\SimpleForm;
+use jojoe77777\FormAPI\CustomForm;
+use jojoe77777\FormAPI\SimpleForm;
 
 use pocketmine\player\Player;
 

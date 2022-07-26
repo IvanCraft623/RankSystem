@@ -67,7 +67,7 @@ final class RankManager {
 
 	public function reload() : void {
 		$this->ranks = [];
-		$this->hierarchy = [];
+		unset($this->hierarchy);
 		unset($this->defaultRank);
 		$this->load();
 		$this->plugin->getSessionManager()->reload();

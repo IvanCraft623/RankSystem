@@ -34,7 +34,7 @@ Command | Description | Permission
 `/ranks list` | Show all ranks list. | ranksystem.commands
 `/ranks set <user> <rank> [expTime]` | Set a Rank to a User | ranksystem.commands
 `/ranks remove <user> <rank>` | Remove a Rank of a User | ranksystem.commands
-`/ranks setperm <user> <permission>` | Set a Permission to a User | ranksystem.commands
+`/ranks setperm <user> <permission> [expTime]` | Set a Permission to a User | ranksystem.commands
 `/ranks removeperm <user> <permission>` | Remove a Permission of a User | ranksystem.commands
 `/ranks perms <plugin>` | Show a list of all plugin permissions | None
 `/ranks credits` | Show RankSystem Credits | None

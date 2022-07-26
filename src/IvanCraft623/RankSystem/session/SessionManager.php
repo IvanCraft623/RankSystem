@@ -42,9 +42,7 @@ final class SessionManager {
 	public function reload() {
 		$sessions = [];
 		foreach ($this->sessions as $user => $ss) {
-			$session = new Session($user);
-			$session->updateRanks();
-			$sessions[$user] = $session;
+			$sessions[$user] = new Session($user);
 		}
 		$this->sessions = $sessions;
 	}
