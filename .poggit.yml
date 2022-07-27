@@ -7,6 +7,9 @@ projects:
   RankSystem:
     path: ""
     libs:
+      - src: CortexPE/Commando/Commando
+        version: ^3.0.0
+        branch: PM4
       - src: ifera-mc/ConfigUpdater/ConfigUpdater
         version: ^2.0.0
         branch: master

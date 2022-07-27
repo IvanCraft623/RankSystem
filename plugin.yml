@@ -7,7 +7,40 @@ api: "4.4.0"
 softdepend:
   - ScoreHud
 permissions:
-  ranksystem.commands:
+  ranksystem.command:
+    default: true
+    description: "Access to RankSystem main command"
+  ranksystem.command.credits:
+    default: true
+    description: "See RankSystem credits"
+  ranksystem.command.create:
     default: op
-    description: "Allows use ranks commands"
+    description: "Allow create ranks"
+  ranksystem.command.delete:
+    default: op
+    description: "Allow delete ranks"
+  ranksystem.command.edit:
+    default: op
+    description: "Allow edit ranks"
+  ranksystem.command.list:
+    default: op
+    description: "Allow see the list of ranks"
+  ranksystem.command.setrank:
+    default: op
+    description: "Allow set ranks to users"
+  ranksystem.command.removerank:
+    default: op
+    description: "Allow remove ranks from users"
+  ranksystem.command.setpermission:
+    default: op
+    description: "Allow set permissions to users"
+  ranksystem.command.removepermission:
+    default: op
+    description: "Allow remove permissions from users"
+  ranksystem.command.permissions:
+    default: op
+    description: "Allow see permissions from plugins or pocketmine"
+  ranksystem.command.help:
+    default: true
+    description: "Allow see avaible RankSystem commands"
 ...
