@@ -27,33 +27,39 @@ final class Utils {
 
 	public static bool $scoreHudDetected;
 
-	public static function getTimeLeft(null|int|string $expTime) : ?array {
-		if (time() < $expTime) {
-			$leftTime = $expTime - time();
-			$day = floor($leftTime / 86400);
-			$hourSeconds = $leftTime % 86400;
-			$hour = floor($hourSeconds / 3600);
-			$minuteSec = $hourSeconds % 3600;
-			$minute = floor($minuteSec / 60);
-			$remainingSec = $minuteSec % 60;
-			$second = ceil($remainingSec);
-			$remainingTime = [
-				"Days" => $day,
-				"Hours" => $hour,
-				"Minutes" => $minute,
-				"Seconds" => $second
-			];
-			return $remainingTime;
+	public static function getTime(int $seconds) : array {
+		if ($seconds < 0) {
+			throw new InvalidArgumentException("Seconds is lower than 0");
 		}
-		return null;
+		$year = floor($seconds / 31540000);
+		$monthSec = $seconds % 31540000;
+		$month = floor($monthSec / 2628000);
+		$daySec = $monthSec % 2628000;
+		$day = floor($daySec / 86400);
+		$hourSec = $daySec % 86400;
+		$hour = floor($hourSec / 3600);
+		$minuteSec = $hourSec % 3600;
+		$minute = floor($minuteSec / 60);
+		$remainingSec = $minuteSec % 60;
+		$second = ceil($remainingSec);
+		return [
+			"years" => (int) $year,
+			"months" => (int) $month,
+			"days" => (int) $day,
+			"hours" => (int) $hour,
+			"minutes" => (int) $minute,
+			"seconds" => (int) $second
+		];
 	}
 
-	public static function getExpIn(null|int|string $expTime) : ?string {
-		if (is_numeric($expTime) && $expTime > 0) {
-			$time = self::getTimeLeft($expTime);
-			return $time["Days"]." day(s), ".$time["Hours"]." hour(s), ".$time["Minutes"]." minute(s), ".$time["Seconds"]." second(s)";
+	public static function getTimeTranslated(int $seconds) : string {
+		$time = [];
+		foreach (self::getTime($seconds) as $key => $value) {
+			if ($value !== 0 || $key === "seconds") {
+				$time[] = $value . " " . $key;
+			}
 		}
-		return "Never";
+		return implode(", ", $time);
 	}
 
 	/**

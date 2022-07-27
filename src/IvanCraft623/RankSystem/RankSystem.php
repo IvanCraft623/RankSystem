@@ -17,7 +17,9 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem;
 
-use IvanCraft623\RankSystem\command\RanksCommand;
+use CortexPE\Commando\PacketHooker;
+
+use IvanCraft623\RankSystem\command\RankSystemCommand;
 use IvanCraft623\RankSystem\session\SessionManager;
 use IvanCraft623\RankSystem\rank\RankManager;
 use IvanCraft623\RankSystem\task\UpdateTask;
@@ -61,6 +63,10 @@ class RankSystem extends PluginBase {
 	}
 
 	public function onEnable() : void {
+		if (!PacketHooker::isRegistered()) {
+			PacketHooker::register($this);
+		}
+
 		$this->loadCommands();
 		$this->loadListeners();
 		$this->loadProvider();
@@ -122,7 +128,7 @@ class RankSystem extends PluginBase {
 	}
 
 	private function loadCommands() : void {
-		$values = [new RanksCommand($this)];
+		$values = [new RankSystemCommand($this)];
 		foreach ($values as $commands) {
 			$this->getServer()->getCommandMap()->register('RankSystem', $commands);
 		}

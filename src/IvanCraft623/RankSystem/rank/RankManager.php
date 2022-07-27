@@ -49,7 +49,7 @@ final class RankManager {
 		$this->data = $this->plugin->getConfigs("ranks.yml");
 		$ranksData = $this->data->getAll();
 	 	foreach ($ranksData as $name => $data) {
-	 		$this->ranks[$name] = new Rank($name, $data["nametag"], $data["chat"], $data["permissions"]);
+	 		$this->ranks[strtolower($name)] = new Rank($name, $data["nametag"], $data["chat"], $data["permissions"]);
 	 	}
 
 	 	# Inheritance
@@ -81,7 +81,7 @@ final class RankManager {
 	}
 
 	public function getRank(string $name) : ?Rank {
-		return $this->ranks[$name] ?? null;
+		return $this->ranks[strtolower($name)] ?? null;
 	}
 
 	public function getDefault() : Rank {
