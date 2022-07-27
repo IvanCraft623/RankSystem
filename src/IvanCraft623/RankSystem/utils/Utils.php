@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\utils;
 
+use InvalidArgumentException;
 use Ifera\ScoreHud\event\PlayerTagsUpdateEvent;
 use Ifera\ScoreHud\scoreboard\ScoreTag;
 use IvanCraft623\RankSystem\session\Session;
