@@ -17,33 +17,42 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\form;
 
-use jojoe77777\FormAPI\ModalForm;
+use jojoe77777\FormAPI\CustomForm;
 
 use pocketmine\player\Player;
 use pocketmine\promise\Promise;
 use pocketmine\promise\PromiseResolver;
 
-final class ConfirmationForm {
+final class InsetTimeForm {
 	
 	public function __construct() {
 	}
 
 	/**
-	 * @phpstan-return Promise<bool>
+	 * @phpstan-return Promise<int>
 	 */
 	public function send(Player $player, string $title, string $content) : Promise {
 		$resolver = new PromiseResolver();
-		$form = new ModalForm(function (Player $player, ?bool $result = null) use ($resolver) {
+		$form = new CustomForm(function (Player $player, array $result = null) use ($resolver) {
 			if ($result === null) {
 				$resolver->reject();
 			} else {
-				$resolver->resolve($result);
+				unset($result["content"]);
+				$time = 0;
+				foreach ($result as $seconds => $value) {
+					$time += (int) $seconds * abs((int) $value);
+				}
+				$resolver->resolve($time);
 			}
 		});
 		$form->setTitle($title);
-		$form->setContent($content);
-		$form->setButton1("Yes");
-		$form->setButton2("No");
+		if ($content !== "") {
+			$form->addLabel($content, "content");
+		}
+		$form->addInput("Months:", "", "0", "2628000");
+		$form->addInput("Days:", "", "0", "86400");
+		$form->addInput("Minutes:", "", "0", "60");
+		$form->addInput("Seconds:", "", "0", "1");
 		$form->sendToPlayer($player);
 		return $resolver->getPromise();
 	}

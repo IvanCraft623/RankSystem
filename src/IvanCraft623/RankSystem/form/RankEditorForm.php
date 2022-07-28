@@ -61,7 +61,7 @@ final class RankEditorForm {
 				break;
 				
 				case 4:
-					$this->save($player);
+					$this->save();
 				break;
 				
 				default:

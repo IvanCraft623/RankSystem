@@ -34,7 +34,7 @@ final class RemoveRankCommand extends BaseSubCommand {
 				$sender->sendMessage("§c" . $args["user"] . " does not has the " . $args["rank"]->getName() . " rank!");
 			} else {
 				$session->removeRank($args["rank"]);
-				$sender->sendMessage("§bYou have successfully §cremoved§b the §e" . $args["rank"]->getName() . " §brank from §a". $args["user"]);
+				$sender->sendMessage("§bYou have successfully §cremoved§b §e" . $args["user"] . "§b's §a" . $args["rank"]->getName() . " §brank");
 			}
 		});
 	}

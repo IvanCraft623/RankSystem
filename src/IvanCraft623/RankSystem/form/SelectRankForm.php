@@ -32,9 +32,11 @@ final class SelectRankForm {
 	}
 
 	/**
+	 * @param Rank[] $rank
+	 *
 	 * @phpstan-return Promise<Rank>
 	 */
-	public function send(Player $player, string $title) : Promise {
+	public function send(Player $player, string $title, ?array $ranks = null) : Promise {
 		$resolver = new PromiseResolver();
 		$form = new SimpleForm(function (Player $player, ?Rank $rank = null) use ($resolver) {
 			if ($rank === null) {
@@ -45,7 +47,7 @@ final class SelectRankForm {
 		});
 		$form->setTitle($title);
 		$form->setContent("Select a rank.");
-		foreach (RankManager::getInstance()->getAll() as $rank) {
+		foreach (($ranks ?? RankManager::getInstance()->getAll()) as $rank) {
 			$form->addButton($rank->getName(), -1, "", $rank);
 		}
 		$form->sendToPlayer($player);

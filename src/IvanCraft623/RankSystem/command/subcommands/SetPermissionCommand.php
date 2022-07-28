@@ -38,7 +38,7 @@ final class SetPermissionCommand extends BaseSubCommand {
 		} else {
 			$session = $this->plugin->getSessionManager()->get($args["user"]);
 			$session->onInitialize(function () use ($session, $sender, $args) {
-				if ($session->hasPermission($args["permission"])) {
+				if ($session->hasUserPermission($args["permission"])) {
 					$sender->sendMessage("§c" . $args["user"] . " already has the " . $args["permission"] . " permission!");
 				} else {
 					$session->setPermission($args["permission"], $args["time"] ?? null);

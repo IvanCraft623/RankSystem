@@ -46,7 +46,8 @@ class UpdateTask extends Task {
 					$session->removeRank($rank);
 				}
 			}
-			foreach ($session->getUserPermissions() as $permission => $expTime) {
+			foreach ($session->getUserPermissions() as $permission) {
+				$expTime = $session->getPermissionExpTime($permission);
 				if ($session->isTempPermission($permission) && $expTime <= $time) {
 					$session->removePermission($permission);
 				}

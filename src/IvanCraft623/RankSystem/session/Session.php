@@ -334,10 +334,10 @@ final class Session {
 	}
 
 	/**
-	 * @return array<string, ?int>
+	 * @return string[]
 	 */
 	public function getUserPermissions() : array {
-		return $this->userPermissions;
+		return array_keys($this->userPermissions);
 	}
 
 	public function isTempPermission(string $permission) : bool {
@@ -350,6 +350,10 @@ final class Session {
 
 	public function hasPermission(string $perm) : bool {
 		return in_array($perm, $this->permissions, true);
+	}
+
+	public function hasUserPermission(string $perm) : bool {
+		return isset($this->userPermissions[$perm]);
 	}
 
 	public function setPermission(string $perm, ?int $expTime = null) : bool {

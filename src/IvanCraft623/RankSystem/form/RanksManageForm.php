@@ -84,7 +84,7 @@ final class RanksManageForm {
 								function (bool $result) use ($player, $rank) {
 									if ($result) {
 										RankManager::getInstance()->delete($rank);
-										$sender->sendMessage("§eYou have successfully deleted the rank §c" . $rank->getName());
+										$player->sendMessage("§eYou have successfully deleted the rank §c" . $rank->getName());
 									}
 								}, function () {} // No response
 							);
@@ -101,13 +101,13 @@ final class RanksManageForm {
 					break;
 				
 				default:
-					# code...
+					# Close Form
 					break;
 			}
 		});
 		$form->setTitle("Ranks Manager");
 		$form->setContent("Select a category");
-		$form->addButton("Create", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/op");
+		$form->addButton("Create", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/anvil-plus");
 		$form->addButton("Edit", SimpleForm::IMAGE_TYPE_PATH, "textures/gui/newgui/Bundle/PaintBrush");
 		$form->addButton("Delete", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/icon_trash");
 		$form->addButton("Information", SimpleForm::IMAGE_TYPE_PATH, "textures/items/map_filled");

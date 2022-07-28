@@ -19,6 +19,7 @@ use IvanCraft623\RankSystem\command\subcommands\RemovePermissionCommand;
 use IvanCraft623\RankSystem\command\subcommands\RemoveRankCommand;
 use IvanCraft623\RankSystem\command\subcommands\SetPermissionCommand;
 use IvanCraft623\RankSystem\command\subcommands\SetRankCommand;
+use IvanCraft623\RankSystem\command\subcommands\UserInfoCommand;
 use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\command\CommandSender;
@@ -46,6 +47,7 @@ final class RankSystemCommand extends BaseCommand {
 		$this->registerSubCommand(new RemoveRankCommand($this->plugin));
 		$this->registerSubCommand(new SetPermissionCommand($this->plugin));
 		$this->registerSubCommand(new SetRankCommand($this->plugin));
+		$this->registerSubCommand(new UserInfoCommand($this->plugin));
 	}
 
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {

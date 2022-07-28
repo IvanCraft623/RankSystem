@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IvanCraft623\RankSystem\form;
 
 use IvanCraft623\RankSystem\rank\Rank;
+use IvanCraft623\RankSystem\session\Session;
 
 use pocketmine\player\Player;
 use pocketmine\promise\Promise;
@@ -33,12 +34,20 @@ final class FormManager {
 		(new RankInfoForm())->send($player, $rank);
 	}
 
+	public function sendUserInfo(Player $player, Session $session, bool $manage = false) : void {
+		(new UserInfoForm())->send($player, $session, $manage);
+	}
+
 	public function sendInsertText(Player $player, string $title, string $content, string $text, string $placeholder = "", ?string $default = null) : Promise {
 		return (new InsetTextForm())->send($player, $title, $content, $text, $placeholder, $default);
 	}
 
-	public function sendSelectRank(Player $player, string $title) : Promise {
-		return (new SelectRankForm())->send($player, $title);
+	public function sendInsertTime(Player $player, string $title, string $content) : Promise {
+		return (new InsetTimeForm())->send($player, $title, $content);
+	}
+
+	public function sendSelectRank(Player $player, string $title, ?array $ranks = null) : Promise {
+		return (new SelectRankForm())->send($player, $title, $ranks);
 	}
 
 	public function sendConfirmation(Player $player, string $title, string $content) : Promise {

@@ -28,7 +28,7 @@ final class RemovePermissionCommand extends BaseSubCommand {
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$session = $this->plugin->getSessionManager()->get($args["user"]);
 		$session->onInitialize(function () use ($session, $sender, $args) {
-			if (!$session->hasPermission($args["permission"])) {
+			if (!$session->hasUserPermission($args["permission"])) {
 				$sender->sendMessage("§c" . $args["user"] . " does not has the " . $args["permission"] . " permission!");
 			} else {
 				$session->removePermission($args["permission"]);

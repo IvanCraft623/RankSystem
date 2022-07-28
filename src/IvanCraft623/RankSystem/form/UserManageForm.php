@@ -19,7 +19,8 @@ namespace IvanCraft623\RankSystem\form;
 
 use jojoe77777\FormAPI\SimpleForm;
 
-use IvanCraft623\RankSystem\utils\Utils;
+use IvanCraft623\RankSystem\session\Session;
+use IvanCraft623\RankSystem\session\SessionManager;
 
 use pocketmine\player\Player;
 
@@ -33,10 +34,58 @@ final class UserManageForm {
 			if ($result === null) {
 				return;
 			}
-			# TODO!
+			switch ($result) {
+				case 0:
+					FormManager::getInstance()->sendInsertText(
+						$player, "User Manager", "§7Insert a user.", "User:"
+					)->onCompletion(
+						function (string $user) use ($player) {
+							FormManager::getInstance()->sendUserInfo($player, SessionManager::getInstance()->get($user), true);
+						}, function () {} // No response
+					);
+					break;
+
+				case 1:
+					$sessions = [];
+					foreach ($player->getServer()->getOnlinePlayers() as $pl) {
+						$sessions[] = SessionManager::getInstance()->get($pl);
+					}
+					$this->sendSelectUserForm($player, $sessions);
+					break;
+
+				case 2:
+					$this->sendSelectUserForm($player, SessionManager::getInstance()->getAll());
+					break;
+				
+				default:
+					# Close Form
+					break;
+			}
 		});
 		$form->setTitle("User Manager");
-		$form->setContent("Select a category");
+		$form->setContent("Select an action");
+		$form->addButton("Insert user", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/infobulb");
+		$form->addButton("Online users", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/World");
+		$form->addButton("Loaded users", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/icon_map");
+		$form->addButton("Exit", SimpleForm::IMAGE_TYPE_PATH, "textures/blocks/barrier");
+		$form->sendToPlayer($player);
+	}
+
+	/**
+	 * @param Session[] $sessions
+	 */
+	public function sendSelectUserForm(Player $player, array $sessions) : void {
+		$form = new SimpleForm(function (Player $player, Session $session = null) {
+			if ($session === null) {
+				return;
+			}
+			FormManager::getInstance()->sendUserInfo($player, $session, true);
+		});
+		$form->setTitle("User Manager");
+		$form->setContent("Select an user.");
+		foreach ($sessions as $session) {
+			$form->addButton($session->getName(), -1, "", $session);
+		}
 		$form->sendToPlayer($player);
 	}
 }
