@@ -40,6 +40,12 @@ permissions:
   ranksystem.command.permissions:
     default: op
     description: "Allow see permissions from plugins or pocketmine"
+  ranksystem.command.manage:
+    default: op
+    description: "Allow open a form to manage RankSystem"
+  ranksystem.command.rankinfo:
+    default: op
+    description: "Allow see info about a rank"
   ranksystem.command.help:
     default: true
     description: "Allow see avaible RankSystem commands"

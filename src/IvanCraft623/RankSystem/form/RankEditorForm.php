@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace IvanCraft623\RankSystem\rank;
+namespace IvanCraft623\RankSystem\form;
 
 use IvanCraft623\RankSystem\RankSystem;
 
@@ -24,105 +24,92 @@ use jojoe77777\FormAPI\SimpleForm;
 
 use pocketmine\player\Player;
 
-/**
- * Class RankModifier
- */
-final class RankModifier {
-
-	private Player $player;
-
-	private string $name;
-
-	private array $nametag = [];
-
-	private array $chat = [];
-
-	private array $permissions = [];
+final class RankEditorForm {
 	
-	public function __construct(Player $player, string $name, array $nametag = ["prefix" => "", "nameColor" => "§f"], array $chat = ["prefix" => "", "nameColor" => "§f", "chatFormat" => "§a: §7"], array $permissions = []) {
-		$this->player = $player;
-		$this->name = $name;
-		$this->nametag = $nametag;
-		$this->chat = $chat;
-		$this->permissions = $permissions;
-
-		$this->sendMainForm();
-	}
+	public function __construct(
+		private string $name,
+		private array $nametag = ["prefix" => "", "nameColor" => "§f"],
+		private array $chat = ["prefix" => "", "nameColor" => "§f", "chatFormat" => "§e: §7"],
+		private array $permissions = [],
+		private array $inheritance = []
+	) {}
 
 	private function save() : void {
-		RankSystem::getInstance()->getRankManager()->saveRankData($this->name, $this->nametag, $this->chat, $this->permissions);
+		RankSystem::getInstance()->getRankManager()->saveRankData($this->name, $this->nametag, $this->chat, $this->permissions, $this->inheritance);
 	}
 
-	private function sendMainForm() : void {
-		$player = $this->player;
+	public function send(Player $player) : void {
 		$form = new SimpleForm(function (Player $player, int $result = null) {
 			if ($result === null) {
 				return;
 			}
 			switch ($result) {
 				case 0:
-					$this->sendNametagForm();
+					$this->sendNametagForm($player);
 				break;
 				
 				case 1:
-					$this->sendChatForm();
+					$this->sendChatForm($player);
 				break;
 				
 				case 2:
-					$this->sendPermissionsForm();
+					$this->sendPermissionsForm($player);
 				break;
 				
 				case 3:
-					$this->save();
+					$this->sendInheritanceForm($player);
 				break;
 				
-				case 3:
+				case 4:
+					$this->save($player);
+				break;
+				
+				default:
 					# Close Form
 				break;
 			}
 		});
-		$form->setTitle("§l§7» §5Rank Modifier Panel §7«");
+		$form->setTitle("Rank Editor");
 		$form->setContent(
-			"§fRank: §a".$this->name."\n\n".
-			"§fNametag: ". $this->nametag["prefix"].$this->nametag["nameColor"]."Steve"."\n".
-			"§fChat: ". $this->chat["prefix"].$this->chat["nameColor"]."Steve".$this->chat["chatFormat"]."Hello world!"
+			"§fRank: §a" . $this->name . "\n\n" .
+			"§fNametag: " . $this->nametag["prefix"] . $this->nametag["nameColor"] . "Steve" . "\n" .
+			"§fChat: " . $this->chat["prefix"] . $this->chat["nameColor"] . "Steve".$this->chat["chatFormat"] . "Hello world!"
 		);
-		$form->addButton("Nametag", 0, "textures/ui/icon_steve");
-		$form->addButton("Chat", 0, "textures/ui/message");
-		$form->addButton("Permissions", 0, "textures/items/map_filled");
-		$form->addButton("Save and Exit", 0, "textures/ui/check");
-		$form->addButton("Exit", 0, "textures/blocks/barrier");
+		$form->addButton("Nametag", SimpleForm::IMAGE_TYPE_PATH, "textures/items/name_tag");
+		$form->addButton("Chat", SimpleForm::IMAGE_TYPE_PATH, "textures/gui/newgui/Language18");
+		$form->addButton("Permissions", SimpleForm::IMAGE_TYPE_PATH, "textures/items/map_filled");
+		$form->addButton("Inheritance", SimpleForm::IMAGE_TYPE_PATH, "textures/gui/newgui/Local");
+		$form->addButton("Save and Exit", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/check");
+		$form->addButton("Exit", SimpleForm::IMAGE_TYPE_PATH, "textures/blocks/barrier");
 		$form->sendToPlayer($player);
 	}
 
-	private function sendNametagForm() : void {
-		$player = $this->player;
+	private function sendNametagForm(Player $player) : void {
 		$form = new CustomForm(function (Player $player, array $result = null) {
 			if ($result !== null) {
 				$data = $result;
 				unset($data[0]);
 				$this->nametag = $data;
 			}
-			$this->sendMainForm();
+			$this->send($player);
 		});
-		$form->setTitle("§l§7» §5Rank Modifier Panel §7«");
+		$form->setTitle("Rank Editor");
 		$form->addLabel("§7Modify the data to your liking!");
 		$form->addInput("Prefix:", "", $this->nametag["prefix"], "prefix");
 		$form->addInput("Name Color:", "", $this->nametag["nameColor"], "nameColor");
 		$form->sendToPlayer($player);
 	}
 
-	private function sendChatForm() : void {
-		$player = $this->player;
+	private function sendChatForm(Player $player) : void {
 		$form = new CustomForm(function (Player $player, array $result = null) {
 			if ($result !== null) {
 				$data = $result;
 				unset($data[0]);
 				$this->chat = $data;
 			}
-			$this->sendMainForm();
+			$this->send($player);
 		});
-		$form->setTitle("§l§7» §5Rank Modifier Panel §7«");
+		$form->setTitle("Rank Editor");
 		$form->addLabel("§7Modify the data to your liking!");
 		$form->addInput("Prefix:", "", $this->chat["prefix"], "prefix");
 		$form->addInput("Name Color:", "", $this->chat["nameColor"], "nameColor");
@@ -130,17 +117,29 @@ final class RankModifier {
 		$form->sendToPlayer($player);
 	}
 
-	private function sendPermissionsForm() : void {
-		$player = $this->player;
+	private function sendPermissionsForm(Player $player) : void {
 		$form = new CustomForm(function (Player $player, array $result = null) {
 			if ($result !== null) {
 				$this->permissions = explode(", ", $result["permissions"]);
 			}
-			$this->sendMainForm();
+			$this->send($player);
 		});
-		$form->setTitle("§l§7» §5Rank Modifier Panel §7«");
+		$form->setTitle("Rank Editor");
 		$form->addLabel("§7Modify the data to your liking!\n\nExample: §eexample.permission, an.awasome.permission");
 		$form->addInput("Permissions:", "", implode(", ", $this->permissions), "permissions");
+		$form->sendToPlayer($player);
+	}
+
+	private function sendInheritanceForm(Player $player) : void {
+		$form = new CustomForm(function (Player $player, array $result = null) {
+			if ($result !== null) {
+				$this->inheritance = explode(", ", $result["inheritance"]);
+			}
+			$this->send($player);
+		});
+		$form->setTitle("Rank Editor");
+		$form->addLabel("§7It will inherit the permissions from other ranks.\n\nExample: §eAdmin, Owner");
+		$form->addInput("Inheritance:", "", implode(", ", $this->inheritance), "inheritance");
 		$form->sendToPlayer($player);
 	}
 }

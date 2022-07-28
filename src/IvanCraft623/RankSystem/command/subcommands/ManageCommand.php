@@ -8,22 +8,19 @@ use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\BaseSubCommand;
 use CortexPE\Commando\constraint\InGameRequiredConstraint;
 
-use IvanCraft623\RankSystem\command\args\RankArgument;
 use IvanCraft623\RankSystem\RankSystem;
-use IvanCraft623\RankSystem\utils\Utils;
 
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 
-final class EditCommand extends BaseSubCommand {
+final class ManageCommand extends BaseSubCommand {
 
 	public function __construct(private RankSystem $plugin) {
-		parent::__construct("edit", "Edit a Rank");
-		$this->setPermission("ranksystem.command.edit");
+		parent::__construct("manage", "Open a form to manage RankSystem");
+		$this->setPermission("ranksystem.command.manage");
 	}
 
 	protected function prepare() : void {
-		$this->registerArgument(0, new RankArgument("rank"));
 		$this->addConstraint(new InGameRequiredConstraint($this));
 	}
 
@@ -31,14 +28,7 @@ final class EditCommand extends BaseSubCommand {
 	 * @param Player $sender
 	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
-		$this->plugin->getFormManager()->sendRankEditor(
-			$sender,
-			$args["rank"]->getName(),
-			$args["rank"]->getNameTagFormat(),
-			$args["rank"]->getChatFormat(),
-			$args["rank"]->getPermissions(),
-			Utils::getRanksNames($args["rank"]->getInheritance())
-		);
+		$this->plugin->getFormManager()->sendManager($sender);
 	}
 
 	public function getParent() : BaseCommand {

@@ -10,7 +10,6 @@ use CortexPE\Commando\BaseSubCommand;
 use CortexPE\Commando\constraint\InGameRequiredConstraint;
 
 use IvanCraft623\RankSystem\RankSystem;
-use IvanCraft623\RankSystem\rank\RankModifier;
 
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
@@ -34,7 +33,12 @@ final class CreateCommand extends BaseSubCommand {
 		if ($this->plugin->getRankManager()->exists($args["rank"])) {
 			$sender->sendMessage("§c" . $args["rank"] . " rank already exist!");
 		} else {
-			new RankModifier($sender, $args["rank"]);
+			$this->plugin->getFormManager()->sendRankEditor(
+				$sender,
+				$args["rank"],
+				["prefix" => "§8[§7" . $args["rank"] . "§8] ", "nameColor" => "§f"],
+				["prefix" => "§8[§7" . $args["rank"] . "§8] ", "nameColor" => "§f", "chatFormat" => "§e: §7"]
+			);
 		}
 	}
 

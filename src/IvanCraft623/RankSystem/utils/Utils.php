@@ -93,13 +93,22 @@ final class Utils {
 
 	/**
 	 * @param Rank[] $ranks
+	 *
+	 * @return string[]
 	 */
-	public static function ranks2string(array $ranks): string {
+	public static function getRanksNames(array $ranks) : array {
 		$ranksNames = [];
 		foreach ($ranks as $rank) {
 			$ranksNames[] = $rank->getName();
 		}
-		return implode(", ", $ranksNames);
+		return $ranksNames;
+	}
+
+	/**
+	 * @param Rank[] $ranks
+	 */
+	public static function ranks2string(array $ranks): string {
+		return implode(", ", self::getRanksNames($ranks));
 	}
 
 	public static function updateScoreTags(Session $session): void {

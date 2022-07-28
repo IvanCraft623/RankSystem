@@ -20,6 +20,7 @@ namespace IvanCraft623\RankSystem;
 use CortexPE\Commando\PacketHooker;
 
 use IvanCraft623\RankSystem\command\RankSystemCommand;
+use IvanCraft623\RankSystem\form\FormManager;
 use IvanCraft623\RankSystem\session\SessionManager;
 use IvanCraft623\RankSystem\rank\RankManager;
 use IvanCraft623\RankSystem\task\UpdateTask;
@@ -80,6 +81,10 @@ class RankSystem extends PluginBase {
 
 	public function getSessionManager() : SessionManager {
 		return SessionManager::getInstance();
+	}
+
+	public function getFormManager() : FormManager {
+		return FormManager::getInstance();
 	}
 
 	public function getRankManager() : RankManager {
