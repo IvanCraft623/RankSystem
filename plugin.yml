@@ -46,6 +46,9 @@ permissions:
   ranksystem.command.rankinfo:
     default: op
     description: "Allow see info about a rank"
+  ranksystem.command.userinfo:
+    default: op
+    description: "Allow see info about a user"
   ranksystem.command.help:
     default: true
     description: "Allow see avaible RankSystem commands"

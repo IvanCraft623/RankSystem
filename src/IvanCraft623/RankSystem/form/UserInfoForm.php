@@ -130,7 +130,7 @@ final class UserInfoForm {
 						FormManager::getInstance()->sendInsertText($player, "Remove permission", "§7Write permission", "Permission:")->onCompletion(
 							function (string $permission) use ($player, $session) {
 								if (!$session->hasUserPermission($permission)) {
-									$sender->sendMessage("§c" . $session->getName() . " does not has the " . $permission . " permission!");
+									$player->sendMessage("§c" . $session->getName() . " does not has the " . $permission . " permission!");
 									return;
 								}
 								FormManager::getInstance()->sendConfirmation(

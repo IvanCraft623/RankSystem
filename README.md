@@ -12,6 +12,7 @@ Examples and tutorials can be found on the [RankSystem Wiki](https://github.com/
 
 - Multiple Ranks per user support
 - Data migrator from other ranks/groups plugins (PurePerms)
+- An easy to use User Interface
 - Multi-rank inheritance system to allow you to inherit rank permissions
 - Temp-ranks System
 - Temp-ranks System
@@ -28,16 +29,20 @@ Examples and tutorials can be found on the [RankSystem Wiki](https://github.com/
 # Commands
 Command | Description | Permission
 --- | --- | ---
-`/ranks create` | Create a Rank | ranksystem.commands
-`/ranks delete <rank>` | Delete a Rank. | ranksystem.commands
-`/ranks edit <rank>` | Edit a Rank | ranksystem.commands
-`/ranks list` | Show all ranks list. | ranksystem.commands
-`/ranks set <user> <rank> [expTime]` | Set a Rank to a User | ranksystem.commands
-`/ranks remove <user> <rank>` | Remove a Rank of a User | ranksystem.commands
-`/ranks setperm <user> <permission> [expTime]` | Set a Permission to a User | ranksystem.commands
-`/ranks removeperm <user> <permission>` | Remove a Permission of a User | ranksystem.commands
-`/ranks perms <plugin>` | Show a list of all plugin permissions | None
-`/ranks credits` | Show RankSystem Credits | None
+`/ranksystem manage` | Open a form to manage RankSystem | ranksystem.command.manage
+`/ranksystem create` | Create a Rank | ranksystem.command.create
+`/ranksystem delete <rank>` | Delete a Rank. | ranksystem.command.delete
+`/ranksystem edit <rank>` | Edit a Rank | ranksystem.command.edit
+`/ranksystem list` | Show all ranks list. | ranksystem.command.list
+`/ranksystem setrank <user> <rank> [expTime]` | Set a Rank to a User | ranksystem.command.setrank
+`/ranksystem removerank <user> <rank>` | Remove a Rank of a User | ranksystem.command.removerank
+`/ranksystem setpermission <user> <permission> [expTime]` | Set a Permission to a User | ranksystem.command.setpermission
+`/ranksystem removepermission <user> <permission>` | Remove a Permission of a User | ranksystem.commands.removepermission
+`/ranksystem permissions <plugin>` | Show a list of all plugin permissions | ranksystem.command.permissions
+`/ranksystem rankinfo <rank>` | Show info about a rank | ranksystem.command.rankinfo
+`/ranksystem userinfo <user>` | Show info about a user | ranksystem.command.userinfo
+`/ranksystem help` | Show avaible RankSystem commands | ranksystem.command.help
+`/ranksystem credits` | Show RankSystem Credits | ranksystem.command.credits
 
 # ScoreHud Integration
 This plugin supports ScoreHud plugin.

@@ -32,7 +32,7 @@ final class SelectRankForm {
 	}
 
 	/**
-	 * @param Rank[] $rank
+	 * @param ?Rank[] $ranks
 	 *
 	 * @phpstan-return Promise<Rank>
 	 */

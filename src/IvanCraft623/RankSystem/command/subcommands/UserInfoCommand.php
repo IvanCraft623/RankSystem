@@ -18,7 +18,7 @@ final class UserInfoCommand extends BaseSubCommand {
 
 	public function __construct(private RankSystem $plugin) {
 		parent::__construct("userinfo", "Shows info about a user");
-		$this->setPermission("ranksystem.command.rankinfo");
+		$this->setPermission("ranksystem.command.userinfo");
 	}
 
 	protected function prepare() : void {
