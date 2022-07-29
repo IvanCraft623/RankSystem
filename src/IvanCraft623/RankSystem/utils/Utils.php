@@ -22,7 +22,6 @@ use Ifera\ScoreHud\event\PlayerTagsUpdateEvent;
 use Ifera\ScoreHud\scoreboard\ScoreTag;
 use IvanCraft623\RankSystem\session\Session;
 use IvanCraft623\RankSystem\rank\Rank;
-use pocketmine\Server;
 
 final class Utils {
 
@@ -113,7 +112,7 @@ final class Utils {
 
 	public static function updateScoreTags(Session $session): void {
 		if (!isset(self::$scoreHudDetected)) {
-			self::$scoreHudDetected = Server::getInstance()->getPluginManager()->getPlugin("ScoreHud") !== null;
+			self::$scoreHudDetected = class_exists(PlayerTagsUpdateEvent::class);
 		}
 		if (self::$scoreHudDetected) {
 			$player = $session->getPlayer();

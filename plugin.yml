@@ -1,7 +1,7 @@
 ---
 name: RankSystem
 author: IvanCraft623
-version: 1.0.1
+version: 1.1.0
 main: IvanCraft623\RankSystem\RankSystem
 api: "4.4.0"
 softdepend:

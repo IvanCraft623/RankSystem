@@ -32,6 +32,7 @@ use IvanCraft623\RankSystem\provider\Provider;
 use IvanCraft623\RankSystem\provider\libasynql as libasynqlProvider;
 
 use JackMD\ConfigUpdater\ConfigUpdater;
+use JackMD\UpdateNotifier\UpdateNotifier;
 
 use pocketmine\permission\PermissionManager;
 use pocketmine\permission\DefaultPermissions;
@@ -54,6 +55,7 @@ class RankSystem extends PluginBase {
 	public function onLoad() : void {
 		self::setInstance($this);
 
+		UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
 		if (ConfigUpdater::checkUpdate($this, $this->getConfig(), "config-version", self::CONFIG_VERSION)) {
 			$this->reloadConfig();
 		}
