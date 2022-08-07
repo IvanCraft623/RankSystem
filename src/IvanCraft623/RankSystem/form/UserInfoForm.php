@@ -19,6 +19,8 @@ namespace IvanCraft623\RankSystem\form;
 
 use jojoe77777\FormAPI\SimpleForm;
 
+use IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\rank\RankManager;
 use IvanCraft623\RankSystem\session\Session;
@@ -27,8 +29,11 @@ use IvanCraft623\RankSystem\utils\Utils;
 use pocketmine\player\Player;
 
 final class UserInfoForm {
+
+	private Translator $translator;
 	
 	public function __construct() {
+		$this->translator = RankSystem::getInstance()->getTranslator();
 	}
 
 	public function send(Player $player, Session $session, bool $manage = false) : void {
@@ -43,30 +48,28 @@ final class UserInfoForm {
 						foreach (RankManager::getInstance()->getAll() as $rank) {
 							if (!$session->hasRank($rank)) $ranks[] = $rank;
 						}
-						FormManager::getInstance()->sendSelectRank($player, "Set rank", $ranks)->onCompletion(
+						FormManager::getInstance()->sendSelectRank($player, $this->translator->translate($player, "form.set_rank.title"), $ranks)->onCompletion(
 							function (Rank $rank) use ($player, $session) {
-								FormManager::getInstance()->sendConfirmation($player, "Set rank", "Do you want the rank to expire?")->onCompletion(
+								FormManager::getInstance()->sendConfirmation($player, $this->translator->translate($player, "form.set_rank.title"), $this->translator->translate($player, "form.set_rank.expire"))->onCompletion(
 									function (bool $expire) use ($player, $session, $rank) {
 										if ($expire) {
-											FormManager::getInstance()->sendInsertTime($player, "Set rank", "§7The rank will expire after this time has elapsed.")->onCompletion(
+											FormManager::getInstance()->sendInsertTime($player, $this->translator->translate($player, "form.set_rank.title"), $this->translator->translate($player, "form.set_rank.expire.content"))->onCompletion(
 												function (int $time) use ($player, $session, $rank) {
 													$session->setRank($rank, $time + time());
-													$player->sendMessage(
-														"§a---- §6You have given a Rank! §a----"."\n"."\n".
-														"§eUser:§b {$session->getName()}"."\n".
-														"§eRank:§b {$rank->getName()}"."\n".
-														"§eExpire In:§b " . Utils::getTimeTranslated($time)
-													);
+													$player->sendMessage($this->translator->translate($player, "user.set_rank.success", [
+														"{%user}" => $session->getName(),
+														"{%rank}" => $rank->getName(),
+														"{%time}" => Utils::getTimeTranslated($time, $this->translator, $player)
+													]));
 												}, function () {} // No response
 											);
 										} else {
 											$session->setRank($rank);
-											$player->sendMessage(
-												"§a---- §6You have given a Rank! §a----"."\n"."\n".
-												"§eUser:§b {$session->getName()}"."\n".
-												"§eRank:§b {$rank->getName()}"."\n".
-												"§eExpire In:§b Never"
-											);
+											$player->sendMessage($this->translator->translate($player, "user.set_rank.success", [
+												"{%user}" => $session->getName(),
+												"{%rank}" => $rank->getName(),
+												"{%time}" => $this->translator->translate($player, "text.never")
+											]));
 										}
 									}, function () {} // No response
 								);
@@ -75,15 +78,21 @@ final class UserInfoForm {
 						break;
 
 					case 1:
-						FormManager::getInstance()->sendSelectRank($player, "Remove rank", $session->getRanks())->onCompletion(
+						FormManager::getInstance()->sendSelectRank($player, $this->translator->translate($player, "form.remove_rank.title"), $session->getRanks())->onCompletion(
 							function (Rank $rank) use ($player, $session) {
 								FormManager::getInstance()->sendConfirmation(
-									$player, "Remove rank",
-									"Do you want to §cremove §r" . $session->getName() . "'s " . $rank->getName() . " rank?"
+									$player, $this->translator->translate($player, "form.remove_rank.title"),
+									$this->translator->translate($player, "form.remove_rank.confirm", [
+										"{%user}" => $session->getName(),
+										"{%rank}" => $rank->getName()
+									])
 								)->onCompletion(
 									function (bool $remove) use ($player, $session, $rank) {
 										$session->removeRank($rank);
-										$player->sendMessage("§bYou have successfully §cremoved§b §e" . $session->getName() . "§b's §a" . $rank->getName() . " §brank");
+										$player->sendMessage($this->translator->translate($player, "user.remove_rank.success", [
+											"{%user}" => $session->getName(),
+											"{%rank}" => $rank->getName()
+										]));
 									}, function () {} // No response
 								);
 							}, function () {} // No response
@@ -91,33 +100,34 @@ final class UserInfoForm {
 						break;
 
 					case 2:
-						FormManager::getInstance()->sendInsertText($player, "Set permission", "§7Write permission", "Permission:")->onCompletion(
+						FormManager::getInstance()->sendInsertText($player, $this->translator->translate($player, "form.set_permission.title"), $this->translator->translate($player, "form.set_permission.content"), $this->translator->translate($player, "text.permission") . ":")->onCompletion(
 							function (string $permission) use ($player, $session) {
 								if ($session->hasUserPermission($permission)) {
-									$player->sendMessage("§c" . $session->getName() . " already has the " . $permission . " permission!");
+									$player->sendMessage($this->translator->translate($player, "user.set_permission.already_has", [
+										"{%user}" => $session->getName(),
+										"{%permission}" => $permission
+									]));
 								} else {
-									FormManager::getInstance()->sendConfirmation($player, "Set permission", "Do you want the permission to expire?")->onCompletion(
+									FormManager::getInstance()->sendConfirmation($player, $this->translator->translate($player, "form.set_permission.title"), $this->translator->translate($player, "form.set_permission.expire"))->onCompletion(
 										function (bool $expire) use ($player, $session, $permission) {
 											if ($expire) {
-												FormManager::getInstance()->sendInsertTime($player, "Set permission", "§7The permission will expire after this time has elapsed.")->onCompletion(
+												FormManager::getInstance()->sendInsertTime($player, $this->translator->translate($player, "form.set_permission.title"), $this->translator->translate($player, "form.set_permission.expire.content"))->onCompletion(
 													function (int $time) use ($player, $session, $permission) {
 														$session->setPermission($permission, $time + time());
-														$player->sendMessage(
-															"§a---- §6You have given a Permission! §a----"."\n"."\n".
-															"§eUser:§b {$session->getName()}"."\n".
-															"§ePermission:§b {$permission}"."\n".
-															"§eExpire In:§b " . Utils::getTimeTranslated($time)
-														);
+														$player->sendMessage($this->translator->translate($player, "user.set_permission.success", [
+															"{%user}" => $session->getName(),
+															"{%permission}" => $permission,
+															"{%time}" => Utils::getTimeTranslated($time, $this->translator, $player)
+														]));
 													}, function () {} // No response
 												);
 											} else {
 												$session->setPermission($permission);
-												$player->sendMessage(
-													"§a---- §6You have given a Permission! §a----"."\n"."\n".
-													"§eUser:§b {$session->getName()}"."\n".
-													"§ePermission:§b {$permission}"."\n".
-													"§eExpire In:§b Never"
-												);
+												$player->sendMessage($this->translator->translate($player, "user.set_permission.success", [
+													"{%user}" => $session->getName(),
+													"{%permission}" => $permission,
+													"{%time}" => $this->translator->translate($player, "text.never")
+												]));
 											}
 										}, function () {} // No response
 									);
@@ -127,19 +137,28 @@ final class UserInfoForm {
 						break;
 
 					case 3:
-						FormManager::getInstance()->sendInsertText($player, "Remove permission", "§7Write permission", "Permission:")->onCompletion(
+						FormManager::getInstance()->sendInsertText($player, $this->translator->translate($player, "form.remove_permission.title"), $this->translator->translate($player, "form.remove_permission.content"), $this->translator->translate($player, "text.permission") . ":")->onCompletion(
 							function (string $permission) use ($player, $session) {
 								if (!$session->hasUserPermission($permission)) {
-									$player->sendMessage("§c" . $session->getName() . " does not has the " . $permission . " permission!");
+									$player->sendMessage($this->translator->translate($player, "user.remove_permission.no_permission", [
+										"{%user}" => $session->getName(),
+										"{%permission}" => $permission
+									]));
 									return;
 								}
 								FormManager::getInstance()->sendConfirmation(
-									$player, "Remove permission",
-									"Do you want to §cremove §r" . $session->getName() . "'s " . $permission . " permission?"
+									$player, $this->translator->translate($player, "form.remove_permission.title"),
+									$this->translator->translate($player, "user.remove_permission.confirm", [
+										"{%user}" => $session->getName(),
+										"{%permission}" => $permission
+									])
 								)->onCompletion(
 									function (bool $remove) use ($player, $session, $permission) {
 										$session->removePermission($permission);
-										$player->sendMessage("§bYou have successfully §cremoved§b the §e" . $permission . " §bpermission from §a". $session->getName());
+										$player->sendMessage($this->translator->translate($player, "user.remove_permission.success", [
+											"{%user}" => $session->getName(),
+											"{%permission}" => $permission
+										]));
 									}, function () {} // No response
 								);
 							}, function () {} // No response
@@ -151,7 +170,7 @@ final class UserInfoForm {
 						break;
 				}
 			});
-			$form->setTitle("User Information");
+			$form->setTitle($this->translator->translate($player, "form.user_info.title"));
 			$permissions = "";
 			foreach ($session->getUserPermissions() as $permission) {
 				$time = $session->getPermissionExpTime($permission);
@@ -161,7 +180,7 @@ final class UserInfoForm {
 						$time = null;
 					}
 				}
-				$permissions .= "\n §e - " . $permission . " §7(" . ($time === null ? "Never" : Utils::getTimeTranslated($time)) . ")";
+				$permissions .= "\n §e - " . $permission . " §7(" . ($time === null ? $this->translator->translate($player, "text.never") : Utils::getTimeTranslated($time, $this->translator, $player)) . ")";
 			}
 			$ranks = "";
 			foreach ($session->getRanks() as $rank) {
@@ -172,20 +191,20 @@ final class UserInfoForm {
 						$time = null;
 					}
 				}
-				$ranks .= "\n §e - " . $rank->getName() . " §7(" . ($time === null ? "Never" : Utils::getTimeTranslated($time)) . ")";
+				$ranks .= "\n §e - " . $rank->getName() . " §7(" . ($time === null ? $this->translator->translate($player, "text.never") : Utils::getTimeTranslated($time, $this->translator, $player)) . ")";
 			}
 			$form->setContent(
-				"§r§fUser: §a" . $session->getName() . "\n\n" .
-				"§r§fNametag: " . $session->getNameTagFormat() . "\n" .
-				"§r§fChat: " . $session->getChatFormat() . "Hello world!" . "\n\n" .
-				"§r§fRanks: " . $ranks . "\n" .
-				"§r§fPermissions: §a" . $permissions
+				"§r§f" . $this->translator->translate($player, "text.user") . ": §a" . $session->getName() . "\n\n" .
+				"§r§f" . $this->translator->translate($player, "text.nametag") . ": " . $session->getNameTagFormat() . "\n" .
+				"§r§f" . $this->translator->translate($player, "text.chat") . ": " . $session->getChatFormat() . $this->translator->translate($player, "text.hello_world") . "\n\n" .
+				"§r§f" . $this->translator->translate($player, "text.ranks") . ": " . $ranks . "\n" .
+				"§r§f" . $this->translator->translate($player, "text.permissions") . ": §a" . $permissions
 			);
 			if ($manage) {
-				$form->addButton("Set rank", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/book_edit_default");
-				$form->addButton("Remove rank", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/book_edit_default");
-				$form->addButton("Set permission", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/book_edit_default");
-				$form->addButton("Remove permission", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/book_edit_default");
+				$form->addButton($this->translator->translate($player, "form.set_rank.title"), SimpleForm::IMAGE_TYPE_PATH, "textures/ui/book_edit_default");
+				$form->addButton($this->translator->translate($player, "form.remove_rank.title"), SimpleForm::IMAGE_TYPE_PATH, "textures/ui/book_edit_default");
+				$form->addButton($this->translator->translate($player, "form.set_permission.title"), SimpleForm::IMAGE_TYPE_PATH, "textures/ui/book_edit_default");
+				$form->addButton($this->translator->translate($player, "form.remove_permission.title"), SimpleForm::IMAGE_TYPE_PATH, "textures/ui/book_edit_default");
 			}
 			$form->sendToPlayer($player);
 		});

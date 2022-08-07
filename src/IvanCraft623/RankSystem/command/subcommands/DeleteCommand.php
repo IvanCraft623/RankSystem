@@ -27,10 +27,10 @@ final class DeleteCommand extends BaseSubCommand {
 
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		if ($args["rank"] === $this->plugin->getRankManager()->getDefault()) {
-			$sender->sendMessage("§cYou cannot delete the default rank!");
+			$sender->sendMessage($this->plugin->getTranslator()->translate($sender, "rank.delete.default"));
 		} else {
 			$this->plugin->getRankManager()->delete($args["rank"]);
-			$sender->sendMessage("§eYou have successfully deleted the rank §c" . $args["rank"]->getName());
+			$sender->sendMessage($this->plugin->getTranslator()->translate($sender, "rank.delete.success"));
 		}
 	}
 

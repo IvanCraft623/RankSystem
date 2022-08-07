@@ -10,6 +10,7 @@ Examples and tutorials can be found on the [RankSystem Wiki](https://github.com/
 
 # Features
 
+- Multi-language support
 - Multiple Ranks per user support
 - Data migrator from other ranks/groups plugins (PurePerms)
 - An easy to use User Interface

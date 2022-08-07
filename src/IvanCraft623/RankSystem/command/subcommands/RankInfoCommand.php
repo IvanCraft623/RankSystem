@@ -35,12 +35,13 @@ final class RankInfoCommand extends BaseSubCommand {
 			foreach ($args["rank"]->getPermissions() as $permission) {
 				$permissions .= "\n §e - " . $permission;
 			}
+			$translator = $this->plugin->getTranslator();
 			$sender->sendMessage(
-				"§r§fRank: §a" . $args["rank"]->getName() . "\n\n" .
-				"§r§fNametag: " . $nametag["prefix"] . $nametag["nameColor"] . "Steve" . "\n" .
-				"§r§fChat: " . $chat["prefix"] . $chat["nameColor"] . "Steve".$chat["chatFormat"] . "Hello world!" . "\n" 	.
-				"§r§fInheritance: §a" . Utils::ranks2string($args["rank"]->getInheritance()) . "\n" .
-				"§r§fPermissions: §a" . $permissions
+				"§r§f" . $translator->translate($sender, "text.rank") . ": §a" . $args["rank"]->getName() . "\n\n" .
+				"§r§f" . $translator->translate($sender, "text.nametag") . ": " . $nametag["prefix"] . $nametag["nameColor"] . "Steve" . "\n" .
+				"§r§f" . $translator->translate($sender, "text.chat") . ": " . $chat["prefix"] . $chat["nameColor"] . $translator->translate($sender, "text.steve") . $chat["chatFormat"] . $translator->translate($sender, "text.hello_world") . "\n" 	.
+				"§r§f" . $translator->translate($sender, "text.inheritance") . ": §a" . Utils::ranks2string($args["rank"]->getInheritance()) . "\n" .
+				"§r§f" . $translator->translate($sender, "text.permissions") . ": §a" . $permissions
 			);
 		}
 	}

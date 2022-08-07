@@ -29,25 +29,28 @@ final class SetPermissionCommand extends BaseSubCommand {
 	}
 
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
+		$translator = $this->plugin->getTranslator();
 		if (array_key_exists("time", $args) && $args["time"] === null) {
 			$sender->sendMessage(
-				"§cInvalid time provided!"."\n".
-				"§aDuration arguments: y = year, M = month, w = week, d = day, h = hour, m = minute"."\n".
-				"§eFor instance, 1y3M means one year and three months (this is the same as 15M). 1w2d12h means one week, two days, and twelve hours (this is the same as 9d12h)."
+				$translator->translate($sender, "time.invalid")."\n".
+				$translator->translate($sender, "time.arguments")."\n".
+				$translator->translate($sender, "time.example")
 			);
 		} else {
 			$session = $this->plugin->getSessionManager()->get($args["user"]);
-			$session->onInitialize(function () use ($session, $sender, $args) {
+			$session->onInitialize(function () use ($session, $sender, $args, $translator) {
 				if ($session->hasUserPermission($args["permission"])) {
-					$sender->sendMessage("§c" . $args["user"] . " already has the " . $args["permission"] . " permission!");
+					$sender->sendMessage($translator->translate($sender, "user.set_permission.already_has", [
+						"{%user}" => $session->getName(),
+						"{%permission}" => $args["permission"]
+					]));
 				} else {
 					$session->setPermission($args["permission"], $args["time"] ?? null);
-					$sender->sendMessage(
-						"§a---- §6You have given a Permission! §a----"."\n"."\n".
-						"§eUser:§b {$args["user"]}"."\n".
-						"§ePermission:§b {$args["permission"]}"."\n".
-						"§eExpire In:§b " . (isset($args["time"]) ? Utils::getTimeTranslated($args["time"] - time()) : "Never")
-					);
+					$sender->sendMessage($translator->translate($sender, "user.set_permission.success", [
+						"{%user}" => $session->getName(),
+						"{%permission}" => $args["permission"],
+						"{%time}" => (isset($args["time"]) ? Utils::getTimeTranslated($args["time"] - time(), $translator, $sender) : $translator->translate($sender, "text.never"))
+					]));
 				}
 			});
 		}

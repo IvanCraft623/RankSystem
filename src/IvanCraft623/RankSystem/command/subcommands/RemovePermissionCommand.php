@@ -28,11 +28,18 @@ final class RemovePermissionCommand extends BaseSubCommand {
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$session = $this->plugin->getSessionManager()->get($args["user"]);
 		$session->onInitialize(function () use ($session, $sender, $args) {
+			$translator = $this->plugin->getTranslator();
 			if (!$session->hasUserPermission($args["permission"])) {
-				$sender->sendMessage("§c" . $args["user"] . " does not has the " . $args["permission"] . " permission!");
+				$sender->sendMessage($translator->translate($sender, "user.remove_permission.no_permission", [
+					"{%user}" => $args["user"],
+					"{%permission}" => $args["permission"]
+				]));
 			} else {
 				$session->removePermission($args["permission"]);
-				$sender->sendMessage("§bYou have successfully §cremoved§b the §e" . $args["permission"] . " §bpermission from §a". $args["user"]);
+				$sender->sendMessage($translator->translate($sender, "user.remove_permission.success", [
+					"{%user}" => $args["user"],
+					"{%permission}" => $args["permission"]
+				]));
 			}
 		});
 	}

@@ -20,6 +20,7 @@ namespace IvanCraft623\RankSystem\form;
 use jojoe77777\FormAPI\SimpleForm;
 
 use IvanCraft623\RankSystem\rank\Rank;
+use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\utils\Utils;
 
 use pocketmine\player\Player;
@@ -30,8 +31,9 @@ final class RankInfoForm {
 	}
 
 	public function send(Player $player, Rank $rank) : void {
+		$translator = RankSystem::getInstance()->getTranslator();
 		$form = new SimpleForm(null);
-		$form->setTitle("Rank Info");
+		$form->setTitle($translator->translate($player, "form.rank_info.title"));
 		$nametag = $rank->getNameTagFormat();
 		$chat = $rank->getChatFormat();
 		$permissions = "";
@@ -39,11 +41,11 @@ final class RankInfoForm {
 			$permissions .= "\n §e - " . $permission;
 		}
 		$form->setContent(
-			"§r§fRank: §a" . $rank->getName() . "\n\n" .
-			"§r§fNametag: " . $nametag["prefix"] . $nametag["nameColor"] . "Steve" . "\n" .
-			"§r§fChat: " . $chat["prefix"] . $chat["nameColor"] . "Steve".$chat["chatFormat"] . "Hello world!" . "\n" .
-			"§r§fInheritance: §a" . Utils::ranks2string($rank->getInheritance()) . "\n" .
-			"§r§fPermissions: §a" . $permissions
+			"§r§f" . $translator->translate($player, "text.rank") . ": §a" . $args["rank"]->getName() . "\n\n" .
+			"§r§f" . $translator->translate($player, "text.nametag") . ": " . $nametag["prefix"] . $nametag["nameColor"] . "Steve" . "\n" .
+			"§r§f" . $translator->translate($player, "text.chat") . ": " . $chat["prefix"] . $chat["nameColor"] . $translator->translate($player, "text.steve") . $chat["chatFormat"] . $translator->translate($player, "text.hello_world") . "\n" 	.
+			"§r§f" . $translator->translate($player, "text.inheritance") . ": §a" . Utils::ranks2string($args["rank"]->getInheritance()) . "\n" .
+			"§r§f" . $translator->translate($player, "text.permissions") . ": §a" . $permissions
 		);
 		$form->sendToPlayer($player);
 	}

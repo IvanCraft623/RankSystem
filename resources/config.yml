@@ -4,7 +4,13 @@
 
 #Do not edit this value!
 #Only for internal use.
-config-version: 1
+config-version: 2
+
+#Default language used
+default-language: en_US
+
+#Notifying the user when his rank has expired
+rank-expire-notification: true
 
 #Automatically migrate other plugins data
 auto-migrator: true

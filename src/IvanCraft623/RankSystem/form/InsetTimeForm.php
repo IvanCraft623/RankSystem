@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\form;
 
+use IvanCraft623\RankSystem\RankSystem;
+
 use jojoe77777\FormAPI\CustomForm;
 
 use pocketmine\player\Player;
@@ -45,14 +47,16 @@ final class InsetTimeForm {
 				$resolver->resolve($time);
 			}
 		});
+		$translator = RankSystem::getInstance()->getTranslator();
 		$form->setTitle($title);
 		if ($content !== "") {
 			$form->addLabel($content, "content");
 		}
-		$form->addInput("Months:", "", "0", "2628000");
-		$form->addInput("Days:", "", "0", "86400");
-		$form->addInput("Minutes:", "", "0", "60");
-		$form->addInput("Seconds:", "", "0", "1");
+		# TODO: Upper case the first letter
+		$form->addInput($translator->translate($player, "text.time.months") . ":", "", "0", "2628000");
+		$form->addInput($translator->translate($player, "text.time.days") . ":", "", "0", "86400");
+		$form->addInput($translator->translate($player, "text.time.minutes") . ":", "", "0", "60");
+		$form->addInput($translator->translate($player, "text.time.seconds") . ":", "", "0", "1");
 		$form->sendToPlayer($player);
 		return $resolver->getPromise();
 	}

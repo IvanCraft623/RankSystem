@@ -8,12 +8,14 @@ use CortexPE\Commando\args\IntegerArgument;
 use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\BaseSubCommand;
 
+use IvanCraft623\RankSystem\RankSystem;
+
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 
 final class HelpCommand extends BaseSubCommand {
 
-	public function __construct() {
+	public function __construct(private RankSystem $plugin) {
 		parent::__construct("help", "See RankSystem command", ["?"]);
 		$this->setPermission("ranksystem.command.help");
 	}
@@ -40,7 +42,10 @@ final class HelpCommand extends BaseSubCommand {
 		} else {
 			$pageNumber = $args["page"];
 		}
-		$sender->sendMessage("§2--- Showing RankSystem help page " . $pageNumber . " of " . $maxPageNumber . " (/ranksystem help <page>) ---");
+		$sender->sendMessage($this->plugin->getTranslator()->translate($sender, "command.help.text", [
+			"{%page}" => $pageNumber,
+			"{%total_pages}" => $maxPageNumber
+		]));
 		foreach ($chunkedCommands[$pageNumber - 1] as $subCommand) {
 			$sender->sendMessage("/ranksystem " . $subCommand->getName() . " §7(" . $subCommand->getDescription() . ")");
 		}

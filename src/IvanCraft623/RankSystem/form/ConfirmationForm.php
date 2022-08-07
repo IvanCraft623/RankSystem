@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\form;
 
+use IvanCraft623\RankSystem\RankSystem;
+
 use jojoe77777\FormAPI\ModalForm;
 
 use pocketmine\player\Player;
@@ -40,10 +42,11 @@ final class ConfirmationForm {
 				$resolver->resolve($result);
 			}
 		});
+		$translator = RankSystem::getInstance()->getTranslator();
 		$form->setTitle($title);
 		$form->setContent($content);
-		$form->setButton1("Yes");
-		$form->setButton2("No");
+		$form->setButton1($translator->translate($player, "text.yes"));
+		$form->setButton2($translator->translate($player, "text.no"));
 		$form->sendToPlayer($player);
 		return $resolver->getPromise();
 	}

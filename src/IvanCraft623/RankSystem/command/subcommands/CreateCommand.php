@@ -31,7 +31,9 @@ final class CreateCommand extends BaseSubCommand {
 	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		if ($this->plugin->getRankManager()->exists($args["rank"])) {
-			$sender->sendMessage("§c" . $args["rank"] . " rank already exist!");
+			$sender->sendMessage($this->plugin->getTranslator()->translate($sender, "rank.already_exists", [
+				"{%rank}" => $args["rank"]
+			]));
 		} else {
 			$this->plugin->getFormManager()->sendRankEditor(
 				$sender,

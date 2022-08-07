@@ -19,6 +19,9 @@ namespace IvanCraft623\RankSystem;
 
 use CortexPE\Commando\PacketHooker;
 
+use IvanCraft623\languages\Language;
+use IvanCraft623\languages\Translator;
+
 use IvanCraft623\RankSystem\command\RankSystemCommand;
 use IvanCraft623\RankSystem\form\FormManager;
 use IvanCraft623\RankSystem\session\SessionManager;
@@ -38,19 +41,24 @@ use pocketmine\permission\PermissionManager;
 use pocketmine\permission\DefaultPermissions;
 use pocketmine\plugin\DisablePluginException;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
 
 class RankSystem extends PluginBase {
 	use SingletonTrait;
 
-	public const CONFIG_VERSION = 1;
+	public const CONFIG_VERSION = 2;
+
+	public const DEFAULT_LANGUAGE = "en_US";
 
 	private static array $globalPerms = [];
 
 	private static array $pmDefaultPerms = [];
 
 	private Provider $provider;
+
+	private Translator $translator;
 
 	public function onLoad() : void {
 		self::setInstance($this);
@@ -62,6 +70,7 @@ class RankSystem extends PluginBase {
 
 		self::$globalPerms = $this->getConfig()->get("Global_Perms");
 		$this->saveResources();
+		$this->loadTranslations();
 		$this->getRankManager()->load();
 	}
 
@@ -77,8 +86,12 @@ class RankSystem extends PluginBase {
 		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 60);
 	}
 
-	public function getProvider() : Provider{
+	public function getProvider() : Provider {
 		return $this->provider;
+	}
+
+	public function getTranslator() : Translator {
+		return $this->translator;
 	}
 
 	public function getSessionManager() : SessionManager {
@@ -132,6 +145,24 @@ class RankSystem extends PluginBase {
 	public function saveResources() : void {
 		$this->saveResource("config.yml");
 		$this->saveResource("ranks.yml");
+		$this->saveResource("languages/en_US.ini", true);
+		$this->saveResource("languages/es_MX.ini", true);
+	}
+
+	private function loadTranslations() : void {
+		$this->translator = new Translator($this);
+		foreach (glob($this->getDataFolder() . "languages" . DIRECTORY_SEPARATOR . "*.ini") as $file) {
+			$locale = basename($file, ".ini");
+			$content = parse_ini_file($file, false, INI_SCANNER_RAW);
+			if ($content === false) {
+				throw new AssumptionFailedError("Missing or inaccessible required resource files");
+			}
+			$data = array_map('\stripcslashes', $content);
+			$this->translator->registerLanguage(new Language($locale, $data));
+		}
+		$l = $this->getConfig()->get("default-language", self::DEFAULT_LANGUAGE);
+		$lang = $this->translator->getLanguage($l) ?? throw new \InvalidArgumentException("Language $l not found");
+		$this->translator->setDefaultLanguage($lang);
 	}
 
 	private function loadCommands() : void {
@@ -173,11 +204,17 @@ class RankSystem extends PluginBase {
 
 		foreach ($migrator->getAll() as $migrator) {
 			if ($migrator->canMigrate() && !$migrator->hasMigrated()) {
-				$this->getLogger()->notice("Migrating data from: " . $migrator->getName());
+				$this->getLogger()->notice($this->translator->translate(null, "migrator.start", [
+					"{%source}" => $migrator->getName()
+				]));
 				if ($migrator->migrate()) {
-					$this->getLogger()->info("§a" . $migrator->getName() . " data has migrated successfully!");
+					$this->getLogger()->info($this->translator->translate(null, "migrator.success", [
+						"{%source}" => $migrator->getName()
+					]));
 				} else {
-					$this->getLogger()->warning("Failed to migrate data from " . $migrator->getName());
+					$this->getLogger()->warning($this->translator->translate(null, "migrator.fail", [
+						"{%source}" => $migrator->getName()
+					]));
 				}
 			}
 		}
@@ -190,6 +227,8 @@ class RankSystem extends PluginBase {
 		}
 		$provider->load();
 		$this->provider = $provider;
-		$this->getLogger()->info("User provider was set to: " . $provider->getName());
+		$this->getLogger()->info($this->translator->translate(null, "provider.set", [
+			"{%provider}" => $provider->getName()
+		]));
 	}
 }

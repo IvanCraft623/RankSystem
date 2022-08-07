@@ -69,11 +69,13 @@ class EventListener implements Listener {
 	 * @priority HIGH
 	 */
 	public function onRankExpire(UserRankExpireEvent $event) : void {
+		if (!((bool) $this->plugin->getConfig()->get("rank-expire-notification", true))) return;
 		$session = $event->getSession();
-		$rank = $event->getRank();
-		$player = $this->plugin->getServer()->getPlayerByPrefix($session->getName());
-		if ($player !== null) {
-			$player->sendMessage("§c» §eYour §b".$rank->getName()."§e rank has expired!");
+		$player = $session->getPlayer();
+		if ($player !== null && $player->isOnline()) {
+			$player->sendMessage($this->plugin->getTranslator()->translate($player, "user.rank.expire", [
+				"{%rank}" => $event->getRank()->getName()
+			]));
 		}
 	}
 }

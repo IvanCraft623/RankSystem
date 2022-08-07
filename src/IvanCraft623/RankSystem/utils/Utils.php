@@ -20,8 +20,10 @@ namespace IvanCraft623\RankSystem\utils;
 use InvalidArgumentException;
 use Ifera\ScoreHud\event\PlayerTagsUpdateEvent;
 use Ifera\ScoreHud\scoreboard\ScoreTag;
+use IvanCraft623\languages\Translator;
 use IvanCraft623\RankSystem\session\Session;
 use IvanCraft623\RankSystem\rank\Rank;
+use pocketmine\command\CommandSender;
 
 final class Utils {
 
@@ -52,11 +54,15 @@ final class Utils {
 		];
 	}
 
-	public static function getTimeTranslated(int $seconds) : string {
+	public static function getTimeTranslated(int $seconds, ?Translator $translator = null, ?CommandSender $sender = null) : string {
 		$time = [];
 		foreach (self::getTime($seconds) as $key => $value) {
 			if ($value !== 0 || $key === "seconds") {
-				$time[] = $value . " " . $key;
+				if ($translator !== null) {
+					$time[] = $value . " " . $translator->translate($sender, "text.time." . $key);
+				} else {
+					$time[] = $value . " " . $key;
+				}
 			}
 		}
 		return implode(", ", $time);
@@ -67,9 +73,20 @@ final class Utils {
 	 * @return ?Int UNIX timestamp corresponding to the duration (1y will return the timestamp one year from now)
 	 * Credits for adeynes
 	 */
-	public static function parseDuration(string $duration): ?int {
+	public static function parseDuration(string $duration, ?Translator $translator = null, ?CommandSender $sender = null): ?int {
 		$time_units = ['y' => 'year', 'M' => 'month', 'w' => 'week', 'd' => 'day', 'h' => 'hour', 'm' => 'minute'];
-		$regex = '/^([0-9]+y)?([0-9]+M)?([0-9]+w)?([0-9]+d)?([0-9]+h)?([0-9]+m)?$/';
+		if ($translator !== null) {
+			$new_units = [];
+			foreach ($time_units as $key => $unit) {
+				$new_units[$translator->translate($sender, "time.argument." . $unit)] = $unit;
+			}
+			$time_units = $new_units;
+		}
+		$regex = "/^";
+		foreach ($time_units as $key => $unit) {
+			$regex .= "([0-9]+" . $key . ")?";
+		}
+		$regex .= "$/";
 		$matches = [];
 		$is_matching = preg_match($regex, $duration, $matches);
 		if (!$is_matching) {

@@ -31,6 +31,7 @@ final class UserInfoCommand extends BaseSubCommand {
 			$this->plugin->getFormManager()->sendUserInfo($sender, $session, $sender->hasPermission("ranksystem.command.manage"));
 		} else {
 			$session->onInitialize(function () use ($sender, $session) {
+				$translator = $this->plugin->getTranslator();
 				$permissions = "";
 				foreach ($session->getUserPermissions() as $permission) {
 					$time = $session->getPermissionExpTime($permission);
@@ -40,7 +41,7 @@ final class UserInfoCommand extends BaseSubCommand {
 							$time = null;
 						}
 					}
-					$permissions .= "\n §e - " . $permission . " §7(" . ($time === null ? "Never" : Utils::getTimeTranslated($time)) . ")";
+					$permissions .= "\n §e - " . $permission . " §7(" . ($time === null ? $translator->translate($sender, "text.never") : Utils::getTimeTranslated($time, $translator, $sender)) . ")";
 				}
 				$ranks = "";
 				foreach ($session->getRanks() as $rank) {
@@ -51,14 +52,14 @@ final class UserInfoCommand extends BaseSubCommand {
 							$time = null;
 						}
 					}
-					$ranks .= "\n §e - " . $rank->getName() . " §7(" . ($time === null ? "Never" : Utils::getTimeTranslated($time)) . ")";
+					$ranks .= "\n §e - " . $rank->getName() . " §7(" . ($time === null ? $translator->translate($sender, "text.never") : Utils::getTimeTranslated($time, $translator, $sender)) . ")";
 				}
 				$sender->sendMessage(
-					"§r§fUser: §a" . $session->getName() . "\n\n" .
-					"§r§fNametag: " . $session->getNameTagFormat() . "\n" .
-					"§r§fChat: " . $session->getChatFormat() . "Hello world!" . "\n\n" .
-					"§r§fRanks: " . $ranks . "\n" .
-					"§r§fPermissions: §a" . $permissions
+					"§r§f" . $translator->translate($sender, "text.user") . ": §a" . $session->getName() . "\n\n" .
+					"§r§f" . $translator->translate($sender, "text.nametag") . ": " . $session->getNameTagFormat() . "\n" .
+					"§r§f" . $translator->translate($sender, "text.chat") . ": " . $session->getChatFormat() . $translator->translate($sender, "text.hello_world") . "\n\n" .
+					"§r§f" . $translator->translate($sender, "text.ranks") . ": " . $ranks . "\n" .
+					"§r§f" . $translator->translate($sender, "text.permissions") . ": §a" . $permissions
 				);
 			});
 		}

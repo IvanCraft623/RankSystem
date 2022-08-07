@@ -19,14 +19,19 @@ namespace IvanCraft623\RankSystem\form;
 
 use jojoe77777\FormAPI\SimpleForm;
 
+use IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\session\Session;
 use IvanCraft623\RankSystem\session\SessionManager;
 
 use pocketmine\player\Player;
 
 final class UserManageForm {
+
+	private Translator $translator;
 	
 	public function __construct() {
+		$this->translator = RankSystem::getInstance()->getTranslator();
 	}
 
 	public function send(Player $player) : void {
@@ -37,7 +42,7 @@ final class UserManageForm {
 			switch ($result) {
 				case 0:
 					FormManager::getInstance()->sendInsertText(
-						$player, "User Manager", "§7Insert a user.", "User:"
+						$player, $this->translator->translate($player, "form.user_manage.title"), $this->translator->translate($player, "form.user_manage.insert_user"), $this->translator->translate($player, "text.user") . ":"
 					)->onCompletion(
 						function (string $user) use ($player) {
 							FormManager::getInstance()->sendUserInfo($player, SessionManager::getInstance()->get($user), true);
@@ -62,12 +67,12 @@ final class UserManageForm {
 					break;
 			}
 		});
-		$form->setTitle("User Manager");
-		$form->setContent("Select an action");
-		$form->addButton("Insert user", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/infobulb");
-		$form->addButton("Online users", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/World");
-		$form->addButton("Loaded users", SimpleForm::IMAGE_TYPE_PATH, "textures/ui/icon_map");
-		$form->addButton("Exit", SimpleForm::IMAGE_TYPE_PATH, "textures/blocks/barrier");
+		$form->setTitle($this->translator->translate($player, "form.user_manage.title"));
+		$form->setContent($this->translator->translate($player, "form.user_manage.content"));
+		$form->addButton($this->translator->translate($player, "form.user_manage.insert_user"), SimpleForm::IMAGE_TYPE_PATH, "textures/ui/infobulb");
+		$form->addButton($this->translator->translate($player, "form.user_manage.online_users"), SimpleForm::IMAGE_TYPE_PATH, "textures/ui/World");
+		$form->addButton($this->translator->translate($player, "form.user_manage.loaded_users"), SimpleForm::IMAGE_TYPE_PATH, "textures/ui/icon_map");
+		$form->addButton($this->translator->translate($player, "text.exit"), SimpleForm::IMAGE_TYPE_PATH, "textures/blocks/barrier");
 		$form->sendToPlayer($player);
 	}
 
@@ -81,8 +86,8 @@ final class UserManageForm {
 			}
 			FormManager::getInstance()->sendUserInfo($player, $session, true);
 		});
-		$form->setTitle("User Manager");
-		$form->setContent("Select an user.");
+		$form->setTitle($this->translator->translate($player, "form.user_manage.title"));
+		$form->setContent($this->translator->translate($player, "form.user_manage.select_user"));
 		foreach ($sessions as $session) {
 			$form->addButton($session->getName(), -1, "", $session);
 		}

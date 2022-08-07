@@ -35,11 +35,11 @@ final class RankSystemCommand extends BaseCommand {
 
 	public function prepare() : void {
 		$this->registerSubCommand(new CreateCommand($this->plugin));
-		$this->registerSubCommand(new CreditsCommand());
+		$this->registerSubCommand(new CreditsCommand($this->plugin));
 		$this->registerSubCommand(new DeleteCommand($this->plugin));
 		$this->registerSubCommand(new EditCommand($this->plugin));
-		$this->registerSubCommand(new HelpCommand());
-		$this->registerSubCommand(new ListCommand());
+		$this->registerSubCommand(new HelpCommand($this->plugin));
+		$this->registerSubCommand(new ListCommand($this->plugin));
 		$this->registerSubCommand(new ManageCommand($this->plugin));
 		$this->registerSubCommand(new PermissionsCommand($this->plugin));
 		$this->registerSubCommand(new RankInfoCommand($this->plugin));

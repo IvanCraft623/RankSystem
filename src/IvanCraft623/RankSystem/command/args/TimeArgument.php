@@ -6,6 +6,7 @@ namespace IvanCraft623\RankSystem\command\args;
 
 use CortexPE\Commando\args\RawStringArgument;
 
+use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\utils\Utils;
 
 use pocketmine\command\CommandSender;
@@ -17,6 +18,6 @@ final class TimeArgument extends RawStringArgument {
 	}
 
 	public function parse(string $argument, CommandSender $sender) : ?int {
-		return Utils::parseDuration($argument);
+		return Utils::parseDuration($argument, RankSystem::getInstance()->getTranslator(), $sender);
 	}
 }

@@ -19,6 +19,7 @@ namespace IvanCraft623\RankSystem\form;
 
 use jojoe77777\FormAPI\SimpleForm;
 
+use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\rank\RankManager;
 
@@ -46,7 +47,7 @@ final class SelectRankForm {
 			}
 		});
 		$form->setTitle($title);
-		$form->setContent("Select a rank.");
+		$form->setContent(RankSystem::getInstance()->getTranslator()->translate($player, "form.select_rank.content"));
 		foreach (($ranks ?? RankManager::getInstance()->getAll()) as $rank) {
 			$form->addButton($rank->getName(), -1, "", $rank);
 		}

@@ -15,6 +15,8 @@ projects:
         branch: master
       - src: ifera-mc/UpdateNotifier/UpdateNotifier
         version: ^3.0.0
+      - src: IvanCraft623/languages/languages
+        version: ^0.0.2
       - src: LatamPMDevs/FormAPI/libFormAPI
         version: ^2.1.0
       - src: poggit/libasynql/libasynql
