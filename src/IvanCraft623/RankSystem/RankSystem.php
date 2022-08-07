@@ -24,8 +24,9 @@ use IvanCraft623\languages\Translator;
 
 use IvanCraft623\RankSystem\command\RankSystemCommand;
 use IvanCraft623\RankSystem\form\FormManager;
-use IvanCraft623\RankSystem\session\SessionManager;
 use IvanCraft623\RankSystem\rank\RankManager;
+use IvanCraft623\RankSystem\session\SessionManager;
+use IvanCraft623\RankSystem\tag\TagManager;
 use IvanCraft623\RankSystem\task\UpdateTask;
 use IvanCraft623\RankSystem\migrator\LegacyRankSystem;
 use IvanCraft623\RankSystem\migrator\Migrator;
@@ -72,6 +73,7 @@ class RankSystem extends PluginBase {
 		$this->saveResources();
 		$this->loadTranslations();
 		$this->getRankManager()->load();
+		$this->getTagManager()->registerDefaults();
 	}
 
 	public function onEnable() : void {
@@ -96,6 +98,10 @@ class RankSystem extends PluginBase {
 
 	public function getSessionManager() : SessionManager {
 		return SessionManager::getInstance();
+	}
+
+	public function getTagManager() : TagManager {
+		return TagManager::getInstance();
 	}
 
 	public function getFormManager() : FormManager {

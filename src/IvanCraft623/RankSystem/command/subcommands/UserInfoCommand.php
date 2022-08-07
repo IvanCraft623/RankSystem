@@ -57,7 +57,7 @@ final class UserInfoCommand extends BaseSubCommand {
 				$sender->sendMessage(
 					"§r§f" . $translator->translate($sender, "text.user") . ": §a" . $session->getName() . "\n\n" .
 					"§r§f" . $translator->translate($sender, "text.nametag") . ": " . $session->getNameTagFormat() . "\n" .
-					"§r§f" . $translator->translate($sender, "text.chat") . ": " . $session->getChatFormat() . $translator->translate($sender, "text.hello_world") . "\n\n" .
+					"§r§f" . $translator->translate($sender, "text.chat") . ": " . str_replace("{message}", $translator->translate($sender, "text.hello_world"), $session->getChatFormat()) . "\n\n" .
 					"§r§f" . $translator->translate($sender, "text.ranks") . ": " . $ranks . "\n" .
 					"§r§f" . $translator->translate($sender, "text.permissions") . ": §a" . $permissions
 				);

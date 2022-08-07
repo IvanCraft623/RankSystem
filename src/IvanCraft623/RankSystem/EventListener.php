@@ -60,9 +60,11 @@ class EventListener implements Listener {
 	 * @ignoreCancelled
 	 */
 	public function onChat(PlayerChatEvent $event) : void {
-		$player = $event->getPlayer();
-		$session = $this->plugin->getSessionManager()->get($player);
-		$event->setFormat($session->getChatFormat().$event->getMessage());
+		if ($this->plugin->getConfig()->getNested("chat.enabled", true)) {
+			$player = $event->getPlayer();
+			$session = $this->plugin->getSessionManager()->get($player);
+			$event->setFormat(str_replace("{message}", $event->getMessage(), $session->getChatFormat()));
+		}
 	}
 
 	/**

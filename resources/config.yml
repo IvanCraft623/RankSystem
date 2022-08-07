@@ -49,4 +49,28 @@ Hierarchy:
   - Owner #Highest rank
   - Admin
   - Guest #Lower rank
+
+#Tags:
+# Tags can be used both in nametag and chat. (These are not related to ScoreHud)
+# Defaults are:
+# {name} - The user's name
+# {nametag_ranks_prefix} - Set of all rank prefixes in nametag
+# {nametag_highest-rank_prefix} - Highest rank prefix in nametag
+# {nametag_name-color} - The color of the name in nametag
+# {chat_ranks_prefix} - Set of all rank prefixes in chat
+# {chat_highest-rank_prefix} - Highest rank prefix in chat
+# {chat_name-color} - The color of the name in chat
+# {chat_format} - Stuff that goes before the message (Can be a colon)
+
+#Other plugins can register custom tags
+
+#Configure users's nametag
+nametag:
+  enabled: true
+  format: "{nametag_ranks_prefix}{nametag_name-color}{name}"
+
+#Configure users's chat
+chat:
+  enabled: true
+  format: "{chat_ranks_prefix}{chat_name-color}{name}{chat_format}{message}"
 ...

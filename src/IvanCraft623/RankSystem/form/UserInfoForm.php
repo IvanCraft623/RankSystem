@@ -196,7 +196,7 @@ final class UserInfoForm {
 			$form->setContent(
 				"§r§f" . $this->translator->translate($player, "text.user") . ": §a" . $session->getName() . "\n\n" .
 				"§r§f" . $this->translator->translate($player, "text.nametag") . ": " . $session->getNameTagFormat() . "\n" .
-				"§r§f" . $this->translator->translate($player, "text.chat") . ": " . $session->getChatFormat() . $this->translator->translate($player, "text.hello_world") . "\n\n" .
+				"§r§f" . $this->translator->translate($player, "text.chat") . ": " . str_replace("{message}", $this->translator->translate($player, "text.hello_world"), $session->getChatFormat()) . "\n\n" .
 				"§r§f" . $this->translator->translate($player, "text.ranks") . ": " . $ranks . "\n" .
 				"§r§f" . $this->translator->translate($player, "text.permissions") . ": §a" . $permissions
 			);

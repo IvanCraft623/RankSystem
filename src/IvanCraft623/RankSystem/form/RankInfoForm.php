@@ -41,10 +41,10 @@ final class RankInfoForm {
 			$permissions .= "\n §e - " . $permission;
 		}
 		$form->setContent(
-			"§r§f" . $translator->translate($player, "text.rank") . ": §a" . $args["rank"]->getName() . "\n\n" .
+			"§r§f" . $translator->translate($player, "text.rank") . ": §a" . $rank->getName() . "\n\n" .
 			"§r§f" . $translator->translate($player, "text.nametag") . ": " . $nametag["prefix"] . $nametag["nameColor"] . "Steve" . "\n" .
 			"§r§f" . $translator->translate($player, "text.chat") . ": " . $chat["prefix"] . $chat["nameColor"] . $translator->translate($player, "text.steve") . $chat["chatFormat"] . $translator->translate($player, "text.hello_world") . "\n" 	.
-			"§r§f" . $translator->translate($player, "text.inheritance") . ": §a" . Utils::ranks2string($args["rank"]->getInheritance()) . "\n" .
+			"§r§f" . $translator->translate($player, "text.inheritance") . ": §a" . Utils::ranks2string($rank->getInheritance()) . "\n" .
 			"§r§f" . $translator->translate($player, "text.permissions") . ": §a" . $permissions
 		);
 		$form->sendToPlayer($player);

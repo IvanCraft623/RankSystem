@@ -172,30 +172,20 @@ final class Session {
 		$this->player = $player;
 	}
 
-	public function getNameTagPrefix() : string {
-		$prefix = "";
-		foreach ($this->getRanks() as $rank) {
-			$prefix .= $rank->getNameTagFormat()["prefix"];
-		}
-		return $prefix;
-	}
-
-	public function getChatPrefix() : string {
-		$prefix = "";
-		foreach ($this->getRanks() as $rank) {
-			$prefix .= $rank->getChatFormat()["prefix"];
-		}
-		return $prefix;
-	}
-
 	public function getNameTagFormat() : string {
-		$highestFormat = $this->getHighestRank()->getNameTagFormat();
-		return $this->getNameTagPrefix().$highestFormat["nameColor"].$this->name;
+		$format = $this->plugin->getConfig()->getNested("nametag.format", "{nametag_ranks_prefix}{nametag_name-color}{name}");
+		foreach ($this->plugin->getTagManager()->getTags() as $tag) {
+			$format = str_replace($tag->getId(), $tag->getValue($this), $format);
+		}
+		return $format;
 	}
 
 	public function getChatFormat() : string {
-		$highestFormat = $this->getHighestRank()->getChatFormat();
-		return $this->getChatPrefix().$highestFormat["nameColor"].$this->name.$highestFormat["chatFormat"];
+		$format = $this->plugin->getConfig()->getNested("nametag.format", "{chat_ranks_prefix}{chat_name-color}{name}{chat_format}{message}");
+		foreach ($this->plugin->getTagManager()->getTags() as $tag) {
+			$format = str_replace($tag->getId(), $tag->getValue($this), $format);
+		}
+		return $format;
 	}
 
 	/**
@@ -414,7 +404,7 @@ final class Session {
 		$player = $this->getPlayer();
 		if ($player !== null) {
 			$this->updatePermissions();
-			$player->setNameTag($this->getNameTagFormat());
+			$this->updateNameTag();
 			Utils::updateScoreTags($this);
 		}
 	}
@@ -429,6 +419,13 @@ final class Session {
 			foreach ($this->permissions as $permission) {
 				$this->attachments[] = $player->addAttachment($this->plugin, $permission, true);
 			}
+		}
+	}
+
+	public function updateNameTag() : void {
+		$player = $this->getPlayer();
+		if ($player !== null && $this->plugin->getConfig()->getNested("nametag.enabled", true)) {
+			$player->setNameTag($this->getNameTagFormat());
 		}
 	}
 }
