@@ -1,3 +1,6 @@
+[![](https://poggit.pmmp.io/shield.state/RankSystem)](https://poggit.pmmp.io/p/RankSystem)
+[![](https://poggit.pmmp.io/shield.dl.total/RankSystem)](https://poggit.pmmp.io/p/RankSystem)
+
 <div align="center">
   <h1> 👑 RankSystem 🔧</h1>
   <p>An amazing Rank and Permissions Manager</p>
@@ -15,14 +18,13 @@ Examples and tutorials can be found on the [RankSystem Wiki](https://github.com/
 - Data migrator from other ranks/groups plugins (PurePerms)
 - An easy to use User Interface
 - Multi-rank inheritance system to allow you to inherit rank permissions
-- Temp-ranks System
-- Temp-ranks System
+- Temp-ranks
+- Temp-permissions
 - SQLite3 Provider Support
 - MySQL Provider Support
 - Easy Rank Creation / Edit System
-- Ranks inheritance system to allow you to inherit rank permissions
+- Ranks inheritance system to allow inherit other ranks permissions
 - Permissions per User
-- Profile System
 - Provides simple and flexible API for plugin developers
 - ScoreHud Integration
 - And more...!
