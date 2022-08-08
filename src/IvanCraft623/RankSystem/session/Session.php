@@ -181,7 +181,7 @@ final class Session {
 	}
 
 	public function getChatFormat() : string {
-		$format = $this->plugin->getConfig()->getNested("nametag.format", "{chat_ranks_prefix}{chat_name-color}{name}{chat_format}{message}");
+		$format = $this->plugin->getConfig()->getNested("chat.format", "{chat_ranks_prefix}{chat_name-color}{name}{chat_format}{message}");
 		foreach ($this->plugin->getTagManager()->getTags() as $tag) {
 			$format = str_replace($tag->getId(), $tag->getValue($this), $format);
 		}
