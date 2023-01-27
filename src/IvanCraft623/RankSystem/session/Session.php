@@ -44,13 +44,8 @@ final class Session {
 	/** @var \Closure[] */
 	private array $onInits = [];
 
-	/** @var Rank[] */
+	/** @var RankWrapper[] */
 	private array $ranks = [];
-
-	/** @var Rank[] */
-	private array $tempRanks = [];
-
-	private array $tempRanksDuration = [];
 
 	/** @var String[] */
 	private array $permissions = [];
@@ -118,18 +113,11 @@ final class Session {
 	 */
 	public function syncRanks(array $ranksdata) : void {
 		$this->ranks = [];
-		$this->tempRanks = [];
-		$this->tempRanksDuration = [];
 		$manager = $this->plugin->getRankManager();
 		foreach ($ranksdata as $name => $expTime) {
 			$rank = $manager->getRank($name);
 			if ($rank !== null) {
-				$id = spl_object_id($rank);
-				if (is_numeric($expTime)) {
-					$this->tempRanks[$id] = $rank;
-					$this->tempRanksDuration[$id] = $expTime;
-				}
-				$this->ranks[$id] = $rank;
+				$this->ranks[spl_object_id($rank)] = new RankWrapper($rank, $expTime);
 			}
 		}
 		$this->updateRanks();
@@ -194,9 +182,13 @@ final class Session {
 	 * @return Rank[]
 	 */
 	public function getRanks() : array {
-		$default = $this->plugin->getRankManager()->getDefault();
-		$ranks = (count($this->ranks) === 0 ? [$default] : array_values($this->ranks));
-		return $ranks;
+		$ranks = array_map(function(RankWrapper $wrapper) {
+			return $wrapper->getRank();
+		}, $this->ranks);
+		if (count($ranks) !== 0) {
+			return $ranks;
+		}
+		return [$this->plugin->getRankManager()->getDefault()];
 	}
 
 	public function getHighestRank() : Rank {
@@ -205,12 +197,19 @@ final class Session {
 	}
 
 	public function getTempRanks() : array {
-		return array_values($this->tempRanks);
+		return array_map(function(RankWrapper $wrapper) {
+			return $wrapper->getRank();
+		}, array_filter($this->ranks, function(RankWrapper $wrapper) {
+			return $wrapper->isTemporary();
+		}));
 	}
 
 	public function isTempRank(Rank|string $rank) : bool {
 		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getRank($rank);
-		return $rank !== null && isset($this->tempRanks[spl_object_id($rank)]);
+		if ($rank !== null && isset($this->ranks[spl_object_id($rank)])) {
+			return $this->ranks[spl_object_id($rank)]->isTemporary();
+		}
+		return false;
 	}
 
 	public function hasRank(Rank|string $rank) : bool {
@@ -220,8 +219,8 @@ final class Session {
 
 	public function getRankExpTime(Rank|string $rank) : ?int {
 		$rank = ($rank instanceof Rank) ? $rank : $this->plugin->getRankManager()->getRank($rank);
-		if ($rank !== null) {
-			return $this->tempRanksDuration[spl_object_id($rank)] ?? null;
+		if ($rank !== null && isset($this->ranks[spl_object_id($rank)])) {
+			return $this->ranks[spl_object_id($rank)]->getExpTime();
 		}
 		return null;
 	}
