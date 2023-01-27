@@ -399,7 +399,10 @@ final class Session {
 	}
 
 	public function updateRanks() {
-		$this->ranks = $this->plugin->getRankManager()->getHierarchical($this->ranks);
+		$this->ranks = array_map(function(Rank $rank) {
+			return new RankWrapper($rank, $this->getRankExpTime($rank));
+		}, $this->plugin->getRankManager()->getHierarchical($this->getRanks()));
+
 		$player = $this->getPlayer();
 		if ($player !== null) {
 			$this->updatePermissions();

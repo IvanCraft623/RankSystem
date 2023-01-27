@@ -23,7 +23,7 @@ final class RankWrapper {
 
 	public function __construct(
 		private Rank $rank,
-		?int $expTime = null
+		private ?int $expTime = null
 	) {
 	}
 
