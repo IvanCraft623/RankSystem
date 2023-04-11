@@ -35,6 +35,11 @@ final class SessionManager {
 		return $session;
 	}
 
+	public function remove(Player|string $player){
+		$player = ($player instanceof Player) ? $player->getName() : $player;
+		unset($this->sessions[$player]);
+	}
+
 	public function getAll() : array {
 		return $this->sessions;
 	}
