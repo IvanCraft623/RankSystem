@@ -26,7 +26,6 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
-use pocketmine\event\player\PlayerQuitEvent;
 
 class EventListener implements Listener {
 
@@ -46,13 +45,6 @@ class EventListener implements Listener {
 		$session->onInitialize(function () use ($session) {
 			$session->updateRanks();
 		});
-	}
-
-	/**
-	 * @priority LOW
-	 */
-	public function onQuit(PlayerQuitEvent $event) : void {
-		$this->plugin->getSessionManager()->remove($event->getPlayer());
 	}
 
 	/**
