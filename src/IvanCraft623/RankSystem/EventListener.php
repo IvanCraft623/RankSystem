@@ -40,10 +40,12 @@ class EventListener implements Listener {
 	 */
 	public function onJoin(PlayerJoinEvent $event) : void {
 		$player = $event->getPlayer();
+		$alreadyExists = $this->plugin->getSessionManager()->contains($player);
 		$session = $this->plugin->getSessionManager()->get($player);
 		$session->setPlayer($player);
-		$session->onInitialize(function () use ($session) {
-			$session->updateRanks();
+		$session->onInitialize(function () use ($session, $alreadyExists) {
+			if ($alreadyExists) $session->loadUserData();
+			else $session->updateRanks();
 		});
 	}
 
