@@ -77,8 +77,10 @@ final class Session {
 			$this->onInits[spl_object_id($onInit)] = $onInit;
 		}
 	}
-
-	private function loadUserData() : void {
+	/**
+	 * @internal
+	 */
+	public function loadUserData() : void {
 		$this->plugin->getProvider()->getUserData($this->name)->onCompletion(
 			function (?UserData $userData) {
 				$permissions = [];
