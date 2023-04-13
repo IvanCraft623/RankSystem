@@ -27,12 +27,16 @@ final class SessionManager {
 
 	public function get(Player|string $player) : Session {
 		$player = ($player instanceof Player) ? $player->getName() : $player;
-		if (isset($this->sessions[$player])) {
-			return $this->sessions[$player];
+		if (isset($this->sessions[mb_strtolower($player)])) {
+			return $this->sessions[mb_strtolower($player)];
 		}
 		$session = new Session($player);
 		$this->sessions[$player] = $session;
 		return $session;
+	}
+	
+	public function contains(Player|string $player): bool{
+		return isset($this->sessions[mb_strtolower(($player instanceof Player) ? $player->getName() : $player)]);
 	}
 
 	public function getAll() : array {
@@ -42,7 +46,7 @@ final class SessionManager {
 	public function reload() {
 		$sessions = [];
 		foreach ($this->sessions as $user => $ss) {
-			$sessions[$user] = new Session($user);
+			$sessions[mb_strtolower($user)] = new Session($user);
 		}
 		$this->sessions = $sessions;
 	}
