@@ -7,18 +7,18 @@ projects:
   RankSystem:
     path: ""
     libs:
-      - src: CortexPE/Commando/Commando
-        version: ^3.0.0
-        branch: PM4
-      - src: ifera-mc/ConfigUpdater/ConfigUpdater
-        version: ^2.0.0
+      - src: LatamPMDevs/Commando/Commando
+        version: ^3.1.0
+        branch: pm5
+      - src: LatamPMDevs/ConfigUpdater/ConfigUpdater
+        version: ^2.0.1
         branch: master
-      - src: ifera-mc/UpdateNotifier/UpdateNotifier
+      - src: LatamPMDevs/UpdateNotifier/UpdateNotifier
         version: ^3.0.0
       - src: IvanCraft623/languages/languages
-        version: ^0.0.2
+        version: ^0.0.3
       - src: LatamPMDevs/FormAPI/libFormAPI
-        version: ^2.1.0
+        version: ^2.1.1
       - src: poggit/libasynql/libasynql
         version: ^4.1.6
 ...

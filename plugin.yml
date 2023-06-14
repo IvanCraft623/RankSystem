@@ -3,7 +3,7 @@ name: RankSystem
 author: IvanCraft623
 version: 1.1.0
 main: IvanCraft623\RankSystem\RankSystem
-api: "4.4.0"
+api: "5.0.0"
 softdepend:
   - ScoreHud
 permissions:
