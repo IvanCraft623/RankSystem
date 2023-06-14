@@ -3,6 +3,7 @@ build-by-default: true
 branches:
 - PM3
 - PM4
+- PM5
 projects:
   RankSystem:
     path: ""
