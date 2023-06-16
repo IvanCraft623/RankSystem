@@ -50,52 +50,96 @@ class PurePerms extends Migrator {
 			return false;
 		}
 		$pperms = $this->dataPath . "PurePerms";
+
+		$success = false;
 		$groupsFile = $pperms . DIRECTORY_SEPARATOR . "groups.yml";
-		if (file_exists($groupsFile)) {
-			$groupsData = new Config($groupsFile, Config::YAML);
-			foreach ($groupsData->getAll() as $groupName => $data) {
-				if (!$this->rankManager->exists($groupName)) {
-					$nameTag = [ //Hacks! >:D
-						"prefix" => "§8[" . $groupName . "] §r",
-						"nameColor" => "§f"
-					];
-					$chat = $nameTag;
-					$chat["chatFormat"] = "§f: §7";
-					$permissions = $data["permissions"] ?? [];
-					$inheritance = $data["inheritance"] ?? [];
-					$this->rankManager->create($groupName, $nameTag, $chat, $permissions, $inheritance);
+
+		// Look for groups data...
+		foreach ([
+			$pperms . DIRECTORY_SEPARATOR . "groups.yml",
+			$pperms . DIRECTORY_SEPARATOR . "ranks.yml"
+		] as $groupsFile) {
+			if (file_exists($groupsFile)) {
+				foreach ((new Config($groupsFile, Config::YAML))->getAll() as $groupName => $data) {
+					if (!$this->rankManager->exists($groupName)) {
+						$nameTag = [ //Hacks! >:D
+							"prefix" => "§8[" . $groupName . "] §r",
+							"nameColor" => "§f"
+						];
+						$chat = $nameTag;
+						$chat["chatFormat"] = "§f: §7";
+						$permissions = $data["permissions"] ?? [];
+						$inheritance = $data["inheritance"] ?? [];
+						$this->rankManager->create($groupName, $nameTag, $chat, $permissions, $inheritance);
+					}
+					if ($data["isDefault"] ?? false) {
+						$this->rankManager->setDefault($groupName);
+					}
 				}
-				if ($data["isDefault"] ?? false) {
-					$this->rankManager->setDefault($groupName);
-				}
+
+				$success = true;
 			}
-			$playersFolder = $pperms . DIRECTORY_SEPARATOR . "players" . DIRECTORY_SEPARATOR;
-			if ($handle = opendir($playersFolder)) {
-				while (false !== ($entry = readdir($handle))) {
-					if ($entry !== '.' && $entry !== '..') {
-						$playerData = new Config($playersFolder . $entry, Config::DETECT);
-						$data = $playerData->getAll();
-						if (isset($data["userName"]) && isset($data["group"])) {
-							$session = $this->sessionManager->get($data["userName"]);
-							$rank = $this->rankManager->getRank($data["group"]);
-							$permissions = $data["permissions"] ?? [];
-							$session->onInitialize(function() use ($session, $rank, $permissions) {
-								if ($rank !== null) {
-									$session->setRank($rank);
+		}
+
+		// Look for players data on players directory...
+		$playersFolder = $pperms . DIRECTORY_SEPARATOR . "players" . DIRECTORY_SEPARATOR;
+		if ($handle = opendir($playersFolder)) {
+			while (false !== ($entry = readdir($handle))) {
+				if ($entry !== '.' && $entry !== '..') {
+					$playerData = new Config($playersFolder . $entry, Config::DETECT);
+					$data = $playerData->getAll();
+					if (isset($data["userName"]) && isset($data["group"])) {
+						$session = $this->sessionManager->get($data["userName"]);
+						$rank = $this->rankManager->getRank($data["group"]);
+						$permissions = $data["permissions"] ?? [];
+
+						$session->onInitialize(function() use ($session, $rank, $permissions) {
+							if ($rank !== null) {
+								$session->setRank($rank);
+							}
+							if (count($permissions) !== 0) {
+								foreach ($permissions as $permission) {
+									$session->setPermission($permission);
 								}
-								if (count($permissions) !== 0) {
-									foreach ($permissions as $permission) {
-										$session->setPermission($permission);
-									}
-								}
-							});
-						}
+							}
+						});
 					}
 				}
 			}
-			$this->setMigrated();
-			return true;
+
+			$success = true;
 		}
-		return false;
+
+		// Look for players data on JSON and YAML files...
+		foreach ([
+			$pperms . DIRECTORY_SEPARATOR . "players.yml" => Config::YAML,
+			$pperms . DIRECTORY_SEPARATOR . "players.json" => Config::JSON
+		] as $groupsFile => $format) {
+			if (file_exists($groupsFile)) {
+				foreach ((new Config($groupsFile, $format))->getAll() as $username => $data) {
+					if (isset($data["group"])) {
+						$session = $this->sessionManager->get($username);
+						$rank = $this->rankManager->getRank($data["group"]);
+						$permissions = $data["permissions"] ?? [];
+
+						$session->onInitialize(function() use ($session, $rank, $permissions) {
+							if ($rank !== null) {
+								$session->setRank($rank);
+							}
+							if (count($permissions) !== 0) {
+								foreach ($permissions as $permission) {
+									$session->setPermission($permission);
+								}
+							}
+						});
+					}
+				}
+
+				$success = true;
+			}
+		}
+
+		$this->setMigrated();
+		return $success;
 	}
 }
