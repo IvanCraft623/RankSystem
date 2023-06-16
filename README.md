@@ -59,4 +59,4 @@ Tag | Description
 # Project information
 Version | Pocketmine API | PHP | Status
 --- | --- | --- | ---
-1.0.0 | [PM4](https://github.com/pmmp/PocketMine-MP/tree/stable) & [PM3](https://github.com/pmmp/PocketMine-MP/tree/legacy/pm3) | 8 | Functional
+1.1.2 | [PM5](https://github.com/pmmp/PocketMine-MP/tree/stable) | 8 | Functional
