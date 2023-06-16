@@ -30,7 +30,7 @@ final class SetPermissionCommand extends BaseSubCommand {
 
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$translator = $this->plugin->getTranslator();
-		if (array_key_exists("time", $args) && $args["time"] === null) {
+		if (array_key_exists("time", $args) && $args["time"] === "null") {
 			$sender->sendMessage(
 				$translator->translate($sender, "time.invalid")."\n".
 				$translator->translate($sender, "time.arguments")."\n".
@@ -45,11 +45,13 @@ final class SetPermissionCommand extends BaseSubCommand {
 						"{%permission}" => $args["permission"]
 					]));
 				} else {
+					$time = isset($args["time"]) ? ((int) ($args["time"])) : null;
+
 					$session->setPermission($args["permission"], $args["time"] ?? null);
 					$sender->sendMessage($translator->translate($sender, "user.set_permission.success", [
 						"{%user}" => $session->getName(),
 						"{%permission}" => $args["permission"],
-						"{%time}" => (isset($args["time"]) ? Utils::getTimeTranslated($args["time"] - time(), $translator, $sender) : $translator->translate($sender, "text.never"))
+						"{%time}" => (isset($args["time"]) ? Utils::getTimeTranslated($time - time(), $translator, $sender) : $translator->translate($sender, "text.never"))
 					]));
 				}
 			});

@@ -63,7 +63,7 @@ class EventListener implements Listener {
 		if ($this->plugin->getConfig()->getNested("chat.enabled", true)) {
 			$player = $event->getPlayer();
 			$session = $this->plugin->getSessionManager()->get($player);
-			$event->setFormat(str_replace("{message}", $event->getMessage(), $session->getChatFormat()));
+			$event->setFormatter($session->getChatFormatter());
 		}
 	}
 

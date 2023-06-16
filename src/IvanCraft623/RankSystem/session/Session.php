@@ -39,6 +39,8 @@ final class Session {
 
 	private ?Player $player = null;
 
+	private SessionChatFormatter $chatFormatter;
+
 	private bool $initialized = false;
 
 	/** @var \Closure[] */
@@ -63,6 +65,8 @@ final class Session {
 	public function __construct(string $name) {
 		$this->plugin = RankSystem::getInstance();
 		$this->name = $name;
+		$this->chatFormatter = new SessionChatFormatter($this);
+
 		$this->loadUserData();
 	}
 
@@ -166,6 +170,10 @@ final class Session {
 			$format = str_replace($tag->getId(), $tag->getValue($this), $format);
 		}
 		return $format;
+	}
+
+	public function getChatFormatter() : SessionChatFormatter {
+		return $this->chatFormatter;
 	}
 
 	public function getChatFormat() : string {

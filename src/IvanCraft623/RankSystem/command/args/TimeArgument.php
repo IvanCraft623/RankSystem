@@ -17,7 +17,9 @@ final class TimeArgument extends RawStringArgument {
 		return "time";
 	}
 
-	public function parse(string $argument, CommandSender $sender) : ?int {
-		return Utils::parseDuration($argument, RankSystem::getInstance()->getTranslator(), $sender);
+	public function parse(string $argument, CommandSender $sender) : string {
+		//Hacky, but Commando no longer allow us to set our owns return types :(
+		$result = Utils::parseDuration($argument, RankSystem::getInstance()->getTranslator(), $sender);
+		return $result !== null ? ((string) $result) : "null";
 	}
 }

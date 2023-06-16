@@ -32,7 +32,7 @@ final class SetRankCommand extends BaseSubCommand {
 
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$translator = $this->plugin->getTranslator();
-		if (array_key_exists("time", $args) && $args["time"] === null) {
+		if (array_key_exists("time", $args) && $args["time"] === "null") {
 			$sender->sendMessage(
 				$translator->translate($sender, "time.invalid")."\n".
 				$translator->translate($sender, "time.arguments")."\n".
@@ -47,11 +47,13 @@ final class SetRankCommand extends BaseSubCommand {
 						"{%rank}" => $args["rank"]->getName()
 					]));
 				} else {
-					$session->setRank($args["rank"], $args["time"] ?? null);
+					$time = isset($args["time"]) ? ((int) ($args["time"])) : null;
+
+					$session->setRank($args["rank"], $time);
 					$sender->sendMessage($translator->translate($sender, "user.set_rank.success", [
 						"{%user}" => $session->getName(),
 						"{%rank}" => $args["rank"]->getName(),
-						"{%time}" => (isset($args["time"]) ? Utils::getTimeTranslated($args["time"] - time(), $translator, $sender) : $translator->translate($sender, "text.never"))
+						"{%time}" => (isset($args["time"]) ? Utils::getTimeTranslated($time - time(), $translator, $sender) : $translator->translate($sender, "text.never"))
 					]));
 				}
 			});
