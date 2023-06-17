@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc65154f946782a7add576a501cebc2e",
+    "content-hash": "af93424b9abbdf0fbd695032daa34290",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -121,38 +121,6 @@
             "time": "2023-01-15T23:12:38+00:00"
         },
         {
-            "name": "cortexpe/commando",
-            "version": "dev-pm5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/LatamPMDevs/Commando.git",
-                "reference": "357850c2a412600c7788acf93e5cd5fc6b899b8e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/LatamPMDevs/Commando/zipball/357850c2a412600c7788acf93e5cd5fc6b899b8e",
-                "reference": "357850c2a412600c7788acf93e5cd5fc6b899b8e",
-                "shasum": ""
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CortexPE\\Commando\\": [
-                        "src/CortexPE/Commando/"
-                    ]
-                }
-            },
-            "license": [
-                "LGPL-3.0-only"
-            ],
-            "description": "A Command Framework virion for PocketMine-MP ",
-            "support": {
-                "source": "https://github.com/LatamPMDevs/Commando/tree/pm5"
-            },
-            "time": "2023-06-04T14:51:53+00:00"
-        },
-        {
             "name": "fgrosse/phpasn1",
             "version": "v2.5.0",
             "source": {
@@ -229,104 +197,6 @@
             "time": "2022-12-19T11:08:26+00:00"
         },
         {
-            "name": "ifera-mc/config-updater",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/LatamPMDevs/ConfigUpdater.git",
-                "reference": "2ad8e51d47ce162554abda3d90827249f7169ee9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/LatamPMDevs/ConfigUpdater/zipball/2ad8e51d47ce162554abda3d90827249f7169ee9",
-                "reference": "2ad8e51d47ce162554abda3d90827249f7169ee9",
-                "shasum": ""
-            },
-            "require": {
-                "pocketmine/pocketmine-mp": "^5.0.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "virion": {
-                    "spec": "3.0",
-                    "namespace-root": "JackMD\\ConfigUpdater"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src"
-                ]
-            },
-            "license": [
-                "GPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Ifera",
-                    "email": "contact@tayyab.dev"
-                }
-            ],
-            "description": "A handy virion for PocketMine-MP plugin developers that checks if a new version of config is available. If so then it notifies the user about the new update and updates the config.",
-            "support": {
-                "source": "https://github.com/LatamPMDevs/ConfigUpdater/tree/master"
-            },
-            "time": "2023-06-17T19:22:53+00:00"
-        },
-        {
-            "name": "ifera-mc/update-notifier",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/LatamPMDevs/UpdateNotifier.git",
-                "reference": "3f74fac555da2e1b1172b011b5113242afe501a5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/LatamPMDevs/UpdateNotifier/zipball/3f74fac555da2e1b1172b011b5113242afe501a5",
-                "reference": "3f74fac555da2e1b1172b011b5113242afe501a5",
-                "shasum": ""
-            },
-            "require": {
-                "pocketmine/pocketmine-mp": "^5.0.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "virion": {
-                    "spec": "3.0",
-                    "namespace-root": "JackMD\\UpdateNotifier"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src"
-                ]
-            },
-            "license": [
-                "LGPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "JackMD",
-                    "email": "jackmtaylor.jmt@gmail.com"
-                },
-                {
-                    "name": "Ifera",
-                    "email": "contact@tayyab.dev"
-                },
-                {
-                    "name": "Sandertv",
-                    "email": "st.ten.veldhuis@gmail.com"
-                }
-            ],
-            "description": "A handy virion for PocketMine-MP plugin developers that checks if a new release for a plugin is available on Poggit. If so then it notifies the user about the new release.",
-            "support": {
-                "source": "https://github.com/LatamPMDevs/UpdateNotifier/tree/master"
-            },
-            "time": "2023-06-17T19:24:29+00:00"
-        },
-        {
             "name": "ivancraft623/languages",
             "version": "dev-main",
             "source": {
@@ -373,17 +243,94 @@
             "time": "2023-06-17T19:26:08+00:00"
         },
         {
-            "name": "jojoe77777/formapi",
+            "name": "latampmdevs/commando",
+            "version": "dev-pm5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LatamPMDevs/Commando.git",
+                "reference": "43a6b9e01af6425bfd3ee4f6ebf2229012c0c026"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LatamPMDevs/Commando/zipball/43a6b9e01af6425bfd3ee4f6ebf2229012c0c026",
+                "reference": "43a6b9e01af6425bfd3ee4f6ebf2229012c0c026",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CortexPE\\Commando\\": [
+                        "src/CortexPE/Commando/"
+                    ]
+                }
+            },
+            "license": [
+                "LGPL-3.0-only"
+            ],
+            "description": "A Command Framework virion for PocketMine-MP ",
+            "support": {
+                "source": "https://github.com/LatamPMDevs/Commando/tree/pm5"
+            },
+            "time": "2023-06-17T19:55:03+00:00"
+        },
+        {
+            "name": "latampmdevs/config-updater",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LatamPMDevs/ConfigUpdater.git",
+                "reference": "44cbbec61a047e3120884f8410c154a4182c4426"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LatamPMDevs/ConfigUpdater/zipball/44cbbec61a047e3120884f8410c154a4182c4426",
+                "reference": "44cbbec61a047e3120884f8410c154a4182c4426",
+                "shasum": ""
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "^5.0.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "virion": {
+                    "spec": "3.0",
+                    "namespace-root": "JackMD\\ConfigUpdater"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Ifera",
+                    "email": "contact@tayyab.dev"
+                }
+            ],
+            "description": "A handy virion for PocketMine-MP plugin developers that checks if a new version of config is available. If so then it notifies the user about the new update and updates the config.",
+            "support": {
+                "source": "https://github.com/LatamPMDevs/ConfigUpdater/tree/master"
+            },
+            "time": "2023-06-17T19:56:08+00:00"
+        },
+        {
+            "name": "latampmdevs/formapi",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LatamPMDevs/FormAPI.git",
-                "reference": "c86b76f2654aa45a7d7ce5fc68f04250c35875b1"
+                "reference": "5fb171eda1157fefb76e67c1f9b734c5561b2ce2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LatamPMDevs/FormAPI/zipball/c86b76f2654aa45a7d7ce5fc68f04250c35875b1",
-                "reference": "c86b76f2654aa45a7d7ce5fc68f04250c35875b1",
+                "url": "https://api.github.com/repos/LatamPMDevs/FormAPI/zipball/5fb171eda1157fefb76e67c1f9b734c5561b2ce2",
+                "reference": "5fb171eda1157fefb76e67c1f9b734c5561b2ce2",
                 "shasum": ""
             },
             "require": {
@@ -419,7 +366,60 @@
             "support": {
                 "source": "https://github.com/LatamPMDevs/FormAPI/tree/master"
             },
-            "time": "2023-06-17T19:25:22+00:00"
+            "time": "2023-06-17T19:56:46+00:00"
+        },
+        {
+            "name": "latampmdevs/update-notifier",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LatamPMDevs/UpdateNotifier.git",
+                "reference": "c3a71ae577df5b5f174e4c2bb99d76182d05b420"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LatamPMDevs/UpdateNotifier/zipball/c3a71ae577df5b5f174e4c2bb99d76182d05b420",
+                "reference": "c3a71ae577df5b5f174e4c2bb99d76182d05b420",
+                "shasum": ""
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "^5.0.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "virion": {
+                    "spec": "3.0",
+                    "namespace-root": "JackMD\\UpdateNotifier"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "JackMD",
+                    "email": "jackmtaylor.jmt@gmail.com"
+                },
+                {
+                    "name": "Ifera",
+                    "email": "contact@tayyab.dev"
+                },
+                {
+                    "name": "Sandertv",
+                    "email": "st.ten.veldhuis@gmail.com"
+                }
+            ],
+            "description": "A handy virion for PocketMine-MP plugin developers that checks if a new release for a plugin is available on Poggit. If so then it notifies the user about the new release.",
+            "support": {
+                "source": "https://github.com/LatamPMDevs/UpdateNotifier/tree/master"
+            },
+            "time": "2023-06-17T19:55:42+00:00"
         },
         {
             "name": "pocketmine/bedrock-block-upgrade-schema",
@@ -1664,6 +1664,11 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "latampmdevs/commando": 20,
+        "latampmdevs/config-updater": 20,
+        "latampmdevs/update-notifier": 20,
+        "latampmdevs/formapi": 20,
+        "ivancraft623/languages": 20,
         "sof3/libasynql": 20
     },
     "prefer-stable": false,

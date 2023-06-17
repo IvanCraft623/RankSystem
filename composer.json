@@ -5,10 +5,10 @@
     "version": "1.1.2",
     "license": "Apache-2.0",
     "require": {
-        "cortexpe/commando": "dev-pm5",
-        "ifera-mc/config-updater": "dev-master",
-        "ifera-mc/update-notifier": "dev-master",
-        "jojoe77777/formapi": "dev-master",
+        "latampmdevs/commando": "dev-pm5",
+        "latampmdevs/config-updater": "dev-master",
+        "latampmdevs/update-notifier": "dev-master",
+        "latampmdevs/formapi": "dev-master",
         "ivancraft623/languages": "dev-main",
         "sof3/libasynql": "dev-pm5"
     },
