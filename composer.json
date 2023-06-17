@@ -2,7 +2,6 @@
     "name": "ivancraft623/ranksystem",
     "description": "A rank and permissions manager for PocketMine-MP",
     "type": "project",
-    "version": "1.1.2",
     "license": "Apache-2.0",
     "require": {
         "latampmdevs/commando": "dev-pm5",
