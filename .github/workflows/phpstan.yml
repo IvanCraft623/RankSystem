@@ -1,0 +1,32 @@
+name: PHPStan CI
+
+on: push
+
+jobs:
+  phpstan:
+    name: PHPStan Analysis
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+
+    steps:
+      - name: Startup
+        uses: actions/checkout@v3
+
+      - name: Download PHP Release
+        uses: dsaltares/fetch-gh-release-asset@1.1.0
+        with:
+          file: PHP-Linux-x86_64-PM4.tar.gz
+          repo: pmmp/PHP-Binaries
+          version: "tags/php-8.2-latest"
+
+      - name: Unpack PHP Release
+        run: tar -xzvf PHP-Linux-x86_64-PM4.tar.gz
+
+      - name: Download Composer
+        run: curl -o composer.phar "https://getcomposer.org/composer-stable.phar"
+
+      - name: Install Composer dependencies
+        run: ./bin/php7/bin/php composer.phar install --prefer-dist --no-interaction
+
+      - name: Run PHPStan
+        run: ./bin/php7/bin/php vendor/bin/phpstan.phar analyze --no-progress
