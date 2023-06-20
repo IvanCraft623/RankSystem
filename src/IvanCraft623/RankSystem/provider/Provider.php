@@ -55,6 +55,9 @@ abstract class Provider {
 	 */
 	abstract public function setRank(string $name, string $rank, ?int $expTime = null) : Promise;
 
+	/**
+	 * @phpstan-return Promise<array<string, ?int>>
+	 */
 	abstract public function removeRank(string $name, string $rank) : Promise;
 	
 	/**
@@ -67,6 +70,9 @@ abstract class Provider {
 	 */
 	abstract public function setPermission(string $name, string $permission, ?int $expTime = null) : Promise;
 
+	/**
+	 * @phpstan-return Promise<array<string, ?int>>
+	 */
 	abstract public function removePermission(string $name, string $permission) : Promise;
 
 	abstract public function delete(string $name, ?callable $onSuccess = null, ?callable $onError = null) : void;

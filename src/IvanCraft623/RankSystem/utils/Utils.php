@@ -103,8 +103,15 @@ final class Utils {
 		}
 
 		$time = trim($time);
+		if ($time === "") {
+			return time();
+		}
 
-		return $time === '' ? time() : strtotime($time);
+		$result = strtotime($time);
+		if ($result === false) {
+			$result = null;
+		}
+		return $result;
 	}
 
 	/**
@@ -134,10 +141,10 @@ final class Utils {
 		if (self::$scoreHudDetected) {
 			$player = $session->getPlayer();
 			if ($player !== null) {
-				(new PlayerTagsUpdateEvent($player, [
-					new ScoreTag("ranksystem.ranks", self::ranks2string($session->getRanks())),
-					new ScoreTag("ranksystem.highest_rank", $session->getHighestRank()->getName()),
-					new ScoreTag("ranksystem.nametag", $session->getNameTagFormat())
+				(new PlayerTagsUpdateEvent($player, [ // @phpstan-ignore-line
+					new ScoreTag("ranksystem.ranks", self::ranks2string($session->getRanks())), // @phpstan-ignore-line
+					new ScoreTag("ranksystem.highest_rank", $session->getHighestRank()->getName()), // @phpstan-ignore-line
+					new ScoreTag("ranksystem.nametag", $session->getNameTagFormat()) // @phpstan-ignore-line
 				]))->call();
 			}
 		}

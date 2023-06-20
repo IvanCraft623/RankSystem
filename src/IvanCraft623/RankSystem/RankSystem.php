@@ -160,7 +160,7 @@ class RankSystem extends PluginBase {
 
 		$files = glob($this->getDataFolder() . "languages" . DIRECTORY_SEPARATOR . "*.ini");
 		if ($files === false) {
-			throw new \RuntimException("Failed to get language files");
+			throw new \RuntimeException("Failed to get language files");
 		}
 
 		foreach ($files as $file) {

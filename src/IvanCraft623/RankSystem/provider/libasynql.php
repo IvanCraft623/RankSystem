@@ -132,7 +132,7 @@ class libasynql extends Provider {
 	}
 
 	/**
-	 * @phpstan-return Promise<array>
+	 * @phpstan-return Promise<array<string, ?int>>
 	 */
 	public function removeRank(string $name, string $rank) : Promise {
 		$resultPromise = new PromiseResolver();
@@ -196,6 +196,9 @@ class libasynql extends Provider {
 		return $resultPromise->getPromise();
 	}
 
+	/**
+	 * @phpstan-return Promise<array<string, ?int>>
+	 */
 	public function removePermission(string $name, string $permission) : Promise {
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(

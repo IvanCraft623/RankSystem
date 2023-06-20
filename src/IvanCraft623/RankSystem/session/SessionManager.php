@@ -39,7 +39,7 @@ final class SessionManager {
 		return $this->sessions;
 	}
 
-	public function reload() {
+	public function reload() : void {
 		$sessions = [];
 		foreach ($this->sessions as $user => $ss) {
 			$sessions[$user] = new Session($user);

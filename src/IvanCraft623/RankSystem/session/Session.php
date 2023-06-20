@@ -406,7 +406,7 @@ final class Session {
 		return true;
 	}
 
-	public function updateRanks() {
+	public function updateRanks() : void {
 		$this->ranks = array_map(function(Rank $rank) {
 			return new RankWrapper($rank, $this->getRankExpTime($rank));
 		}, $this->plugin->getRankManager()->getHierarchical($this->getRanks()));
@@ -419,7 +419,7 @@ final class Session {
 		}
 	}
 
-	public function updatePermissions() {
+	public function updatePermissions() : void {
 		$player = $this->getPlayer();
 		if ($player !== null) {
 			foreach ($this->attachments as $attachment) {

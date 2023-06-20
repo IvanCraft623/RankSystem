@@ -7,6 +7,8 @@ branches:
 projects:
   RankSystem:
     path: ""
+    lint:
+      phpstan: false
     libs:
       - src: LatamPMDevs/Commando/Commando
         version: ^3.1.0

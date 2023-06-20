@@ -49,6 +49,7 @@ final class RankManager {
 		$this->data = $this->plugin->getConfigs("ranks.yml");
 		$ranksData = $this->data->getAll();
 	 	foreach ($ranksData as $name => $data) {
+	 		$name = (string) $name;
 	 		$this->ranks[strtolower($name)] = new Rank($name, $data["nametag"], $data["chat"], $data["permissions"]);
 	 	}
 
@@ -90,10 +91,12 @@ final class RankManager {
 			if ($name === false) {
 				throw new RuntimeException("The default rank is not specified!");
 			}
-			if (!$this->exists((string) $name)) {
+
+			$rank = $this->getRank((string) $name);
+			if ($rank === null) {
 				throw new RuntimeException("The rank: ".$name." specified as default does not exist!");
 			}
-			$this->defaultRank = $this->getRank($name);
+			$this->defaultRank = $rank;
 		}
 		return $this->defaultRank;
 	}
@@ -173,16 +176,13 @@ final class RankManager {
 		}
 	}
 
-	/**
-	 * @param String|Rank $rank
-	 */
-	public function delete($rank) {
+	public function delete(Rank|string $rank) : void {
 		$rank = ($rank instanceof Rank) ? $rank->getName() : $rank;
 		$this->data->remove($rank);
 		$this->data->save();
 	}
 
-	public function saveRankData(string $name, array $nametag, array $chat, array $permissions = [], array $inheritance = []) {
+	public function saveRankData(string $name, array $nametag, array $chat, array $permissions = [], array $inheritance = []) : void {
 		$data = [
 			"nametag" => $nametag,
 			"chat" => $chat,
