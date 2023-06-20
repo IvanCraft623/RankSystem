@@ -38,18 +38,32 @@ final class FormManager {
 		(new UserInfoForm())->send($player, $session, $manage);
 	}
 
+	/**
+	 * @phpstan-return Promise<string>
+	 */
 	public function sendInsertText(Player $player, string $title, string $content, string $text, string $placeholder = "", ?string $default = null) : Promise {
 		return (new InsetTextForm())->send($player, $title, $content, $text, $placeholder, $default);
 	}
 
+	/**
+	 * @phpstan-return Promise<int>
+	 */
 	public function sendInsertTime(Player $player, string $title, string $content) : Promise {
 		return (new InsetTimeForm())->send($player, $title, $content);
 	}
 
+	/**
+	 * @param ?Rank[] $ranks
+	 *
+	 * @phpstan-return Promise<Rank>
+	 */
 	public function sendSelectRank(Player $player, string $title, ?array $ranks = null) : Promise {
 		return (new SelectRankForm())->send($player, $title, $ranks);
 	}
 
+	/**
+	 * @phpstan-return Promise<bool>
+	 */
 	public function sendConfirmation(Player $player, string $title, string $content) : Promise {
 		return (new ConfirmationForm())->send($player, $title, $content);
 	}

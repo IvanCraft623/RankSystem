@@ -39,13 +39,15 @@
         }
     ],
     "minimum-stability": "dev",
-    "autoload": {
-        "IvanCraft623\\RankSystem": "src"
-    },
     "config": {
         "platform": {
             "php": "8.1"
         },
         "sort-packages": true
+    },
+    "autoload": {
+        "psr-0": {
+            "IvanCraft623\\RankSystem\\": "src"
+        }
     }
 }

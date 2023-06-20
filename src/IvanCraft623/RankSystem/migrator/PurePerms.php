@@ -61,19 +61,20 @@ class PurePerms extends Migrator {
 		] as $groupsFile) {
 			if (file_exists($groupsFile)) {
 				foreach ((new Config($groupsFile, Config::YAML))->getAll() as $groupName => $data) {
-					if (!$this->rankManager->exists($groupName)) {
+					$group = (string) $groupName;
+					if (!$this->rankManager->exists($group)) {
 						$nameTag = [ //Hacks! >:D
-							"prefix" => "§8[" . $groupName . "] §r",
+							"prefix" => "§8[" . $group . "] §r",
 							"nameColor" => "§f"
 						];
 						$chat = $nameTag;
 						$chat["chatFormat"] = "§f: §7";
 						$permissions = $data["permissions"] ?? [];
 						$inheritance = $data["inheritance"] ?? [];
-						$this->rankManager->create($groupName, $nameTag, $chat, $permissions, $inheritance);
+						$this->rankManager->create($group, $nameTag, $chat, $permissions, $inheritance);
 					}
 					if ($data["isDefault"] ?? false) {
-						$this->rankManager->setDefault($groupName);
+						$this->rankManager->setDefault($group);
 					}
 				}
 
@@ -118,7 +119,7 @@ class PurePerms extends Migrator {
 			if (file_exists($groupsFile)) {
 				foreach ((new Config($groupsFile, $format))->getAll() as $username => $data) {
 					if (isset($data["group"])) {
-						$session = $this->sessionManager->get($username);
+						$session = $this->sessionManager->get((string) $username);
 						$rank = $this->rankManager->getRank($data["group"]);
 						$permissions = $data["permissions"] ?? [];
 

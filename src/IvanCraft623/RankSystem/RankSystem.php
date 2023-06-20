@@ -157,7 +157,13 @@ class RankSystem extends PluginBase {
 
 	private function loadTranslations() : void {
 		$this->translator = new Translator($this);
-		foreach (glob($this->getDataFolder() . "languages" . DIRECTORY_SEPARATOR . "*.ini") as $file) {
+
+		$files = glob($this->getDataFolder() . "languages" . DIRECTORY_SEPARATOR . "*.ini");
+		if ($files === false) {
+			throw new \RuntimException("Failed to get language files");
+		}
+
+		foreach ($files as $file) {
 			$locale = basename($file, ".ini");
 			$content = parse_ini_file($file, false, INI_SCANNER_RAW);
 			if ($content === false) {
@@ -166,6 +172,7 @@ class RankSystem extends PluginBase {
 			$data = array_map('\stripcslashes', $content);
 			$this->translator->registerLanguage(new Language($locale, $data));
 		}
+
 		$l = $this->getConfig()->get("default-language", self::DEFAULT_LANGUAGE);
 		$lang = $this->translator->getLanguage($l) ?? throw new \InvalidArgumentException("Language $l not found");
 		$this->translator->setDefaultLanguage($lang);
@@ -197,7 +204,7 @@ class RankSystem extends PluginBase {
 
 				default:
 					$this->getLogger()->critical("Unknown database type: " . $name);
-					throw new DisablePluginException("Unknown database type: " . $name); // @phpstan-ignore-line
+					throw new DisablePluginException("Unknown database type: " . $name);
 			}
 			$this->setProvider($provider::getInstance());
 		}

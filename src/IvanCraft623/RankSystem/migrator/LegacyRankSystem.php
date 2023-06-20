@@ -59,6 +59,10 @@ class LegacyRankSystem extends Migrator {
 		if (file_exists($dataFolder . "Ranks.db")) {
 			$db = new \SQLite3($dataFolder . "Ranks.db");
 			$results = $db->query("SELECT * FROM users");
+			if ($results === false) {
+				return false;
+			}
+
 			while ($row = $results->fetchArray()) {
 				$user = $row["user"] ?? null;
 				if ($user !== null) {
@@ -101,12 +105,12 @@ class LegacyRankSystem extends Migrator {
 		if (file_exists($dataFolder . "users.yml")) {
 			$usersData = new Config($dataFolder . "users.yml", Config::YAML);
 			foreach ($usersData->getAll() as $user => $data) {
-				$session = $this->sessionManager->get($user);
+				$session = $this->sessionManager->get((string) $user);
 				$session->onInitialize(function() use ($session, $data) {
 					foreach ($data["ranks"] as $name => $expTime) {
 						$rank = $this->rankManager->getRank($name);
 						if ($rank !== null) {
-							$session->setRank($rank, is_numeric($expTime) ? $expTime : null);
+							$session->setRank($rank, is_numeric($expTime) ? ((int) $expTime) : null);
 						}
 						foreach ($data["permissions"] as $permission) {
 							$session->setPermission($permission);
