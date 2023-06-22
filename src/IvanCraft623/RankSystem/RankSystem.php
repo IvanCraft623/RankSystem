@@ -179,11 +179,7 @@ class RankSystem extends PluginBase {
 	}
 
 	private function loadCommands() : void {
-		$values = [new RankSystemCommand($this)];
-		foreach ($values as $commands) {
-			$this->getServer()->getCommandMap()->register('RankSystem', $commands);
-		}
-		unset($values);
+		$this->getServer()->getCommandMap()->register('RankSystem', new RankSystemCommand($this));
 	}
 
 	private function loadListeners() : void {
