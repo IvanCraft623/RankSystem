@@ -21,5 +21,5 @@ projects:
       - src: LatamPMDevs/FormAPI/libFormAPI
         version: ^2.1.1
       - src: poggit/libasynql/libasynql
-        version: ^4.1.6
+        version: 4.1.6
 ...
