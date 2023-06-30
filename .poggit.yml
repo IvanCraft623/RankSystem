@@ -19,7 +19,7 @@ projects:
       - src: IvanCraft623/languages/languages
         version: ^0.0.2
       - src: LatamPMDevs/FormAPI/libFormAPI
-        version: ^2.1.0
+        version: ^2.1.1
       - src: poggit/libasynql/libasynql
         version: ^4.1.6
 ...
