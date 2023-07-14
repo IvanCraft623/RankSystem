@@ -11,7 +11,7 @@ projects:
       phpstan: false
     libs:
       - src: LatamPMDevs/Commando/Commando
-        version: ^3.1.0
+        version: ^3.1.1
         branch: pm5
       - src: LatamPMDevs/ConfigUpdater/ConfigUpdater
         version: ^2.0.1
