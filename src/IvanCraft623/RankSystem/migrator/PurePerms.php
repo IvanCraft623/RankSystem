@@ -87,7 +87,10 @@ class PurePerms extends Migrator {
 		if ($handle = opendir($playersFolder)) {
 			while (false !== ($entry = readdir($handle))) {
 				if ($entry !== '.' && $entry !== '..') {
-					$playerData = new Config($playersFolder . $entry, Config::DETECT);
+
+					// PurePerms always stored data in YAML format, even though it used .json extension.
+					$playerData = new Config($playersFolder . $entry, Config::YAML);
+
 					$data = $playerData->getAll();
 					if (isset($data["userName"]) && isset($data["group"])) {
 						$session = $this->sessionManager->get($data["userName"]);
@@ -139,6 +142,8 @@ class PurePerms extends Migrator {
 				$success = true;
 			}
 		}
+
+		// PurePerms never supported MySQL properly, so we don't care about it.
 
 		$this->setMigrated();
 		return $success;
