@@ -25,7 +25,7 @@ use pocketmine\player\Player;
 class TagPiggyFactions
 {
 	/**
-	 * @PiggyFactions
+	 * @return PiggyFactions
 	 */
     public static function getAPI() : ?PiggyFactions {
 		$config = RankSystem::getInstance()->getConfig()->get("piggy-factions", boolval(false));
@@ -39,7 +39,7 @@ class TagPiggyFactions
 	 */
 	public static function getPlayerFaction(Player $player) : string {
 		$piggyFactions = self::getAPI();
-		if ($piggyFactions === null) return "{fac_name}";
+		if ($piggyFactions === null) return "";
 		$member = $piggyFactions->getPlayerManager()->getPlayer($player);
 		if ($member === null) return "";
 		if ($member !== null)
@@ -56,7 +56,7 @@ class TagPiggyFactions
 	 */
 	public static function getPlayerFactionPower(Player $player) : string {
 		$piggyFactions = self::getAPI();
-		if ($piggyFactions === null) return "{fac_power}";
+		if ($piggyFactions === null) return "";
 		$member = $piggyFactions->getPlayerManager()->getPlayer($player);
 		if ($member === null) return "";
 		if ($member !== null)
