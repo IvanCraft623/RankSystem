@@ -27,8 +27,7 @@ class TagPiggyFactions
 	/**
 	 * @PiggyFactions
 	 */
-    public static function getAPI() : ?PiggyFactions
-	{
+    public static function getAPI() : ?PiggyFactions {
 		$config = RankSystem::getInstance()->getConfig()->get("piggy-factions", boolval(false));
 		if ($config === false) return null;
 		return RankSystem::getPiggyFactions();
@@ -38,8 +37,7 @@ class TagPiggyFactions
 	 * @param Player $player
 	 * @return string
 	 */
-	public static function getPlayerFaction(Player $player) : string
-	{
+	public static function getPlayerFaction(Player $player) : string {
 		$piggyFactions = self::getAPI();
 		if ($piggyFactions === null) return "{fac_name}";
 		$member = $piggyFactions->getPlayerManager()->getPlayer($player);
@@ -56,8 +54,7 @@ class TagPiggyFactions
 	 * @param Player $player
 	 * @return string
 	 */
-	public static function getPlayerFactionPower(Player $player) : string
-	{
+	public static function getPlayerFactionPower(Player $player) : string {
 		$piggyFactions = self::getAPI();
 		if ($piggyFactions === null) return "{fac_power}";
 		$member = $piggyFactions->getPlayerManager()->getPlayer($player);

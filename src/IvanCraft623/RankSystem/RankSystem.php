@@ -98,8 +98,7 @@ class RankSystem extends PluginBase {
 		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 60);
 	}
 
-	public static function getPiggyFactions() : ?PiggyFactions
-	{
+	public static function getPiggyFactions() : ?PiggyFactions {
 		return Server::getInstance()->getPluginManager()->getPlugin("PiggyFactions");
 	}
 
