@@ -17,16 +17,19 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem;
 
-use CortexPE\Commando\PacketHooker;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 
-use IvanCraft623\languages\Language;
-use IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\libs\CortexPE\Commando\PacketHooker;
+
+use IvanCraft623\RankSystem\libs\IvanCraft623\languages\Language;
+use IvanCraft623\RankSystem\libs\IvanCraft623\languages\Translator;
 
 use IvanCraft623\RankSystem\command\RankSystemCommand;
 use IvanCraft623\RankSystem\form\FormManager;
 use IvanCraft623\RankSystem\rank\RankManager;
 use IvanCraft623\RankSystem\session\SessionManager;
 use IvanCraft623\RankSystem\tag\TagManager;
+use IvanCraft623\RankSystem\tag\TagPiggyFactions;
 use IvanCraft623\RankSystem\task\UpdateTask;
 use IvanCraft623\RankSystem\migrator\LegacyRankSystem;
 use IvanCraft623\RankSystem\migrator\Migrator;
@@ -35,9 +38,8 @@ use IvanCraft623\RankSystem\migrator\PurePerms;
 use IvanCraft623\RankSystem\provider\Provider;
 use IvanCraft623\RankSystem\provider\libasynql as libasynqlProvider;
 
-use JackMD\ConfigUpdater\ConfigUpdater;
-use JackMD\UpdateNotifier\UpdateNotifier;
-
+use IvanCraft623\RankSystem\libs\JackMD\ConfigUpdater\ConfigUpdater;
+use IvanCraft623\RankSystem\libs\JackMD\UpdateNotifier\UpdateNotifier;
 use pocketmine\permission\PermissionManager;
 use pocketmine\permission\DefaultPermissions;
 use pocketmine\plugin\DisablePluginException;
@@ -45,6 +47,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
+use pocketmine\Server;
 
 class RankSystem extends PluginBase {
 	use SingletonTrait;
@@ -81,11 +84,23 @@ class RankSystem extends PluginBase {
 			PacketHooker::register($this);
 		}
 
+		if ($this->getConfig()->get("piggy-factions", boolval(false)) === false or self::getPiggyFactions() === null)
+		{
+			$this->getLogger()->notice("PiggyFactions custom tags support disabled.");
+		} else {
+			$this->getLogger()->notice("PiggyFactions custom tags support enabled.");
+		}
+
 		$this->loadCommands();
 		$this->loadListeners();
 		$this->loadProvider();
 		$this->loadMigrators();
 		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 60);
+	}
+
+	public static function getPiggyFactions() : ?PiggyFactions
+	{
+		return Server::getInstance()->getPluginManager()->getPlugin("PiggyFactions");
 	}
 
 	public function getProvider() : Provider {

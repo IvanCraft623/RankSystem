@@ -61,16 +61,20 @@ Hierarchy:
 # {chat_highest-rank_prefix} - Highest rank prefix in chat
 # {chat_name-color} - The color of the name in chat
 # {chat_format} - Stuff that goes before the message (Can be a colon)
+# {fac_name} - Player faction name
+# {fac_power} - Player faction power
 
 #Other plugins can register custom tags
+
+#Configure PiggyFactions custom tags
+piggy-factions: false
 
 #Configure users's nametag
 nametag:
   enabled: true
-  format: "{nametag_ranks_prefix}{nametag_name-color}{name}"
+  format: "{nametag_ranks_prefix}{nametag_name-color}{name}§e[§3{fac_name}§f:§c{fac_power}§e]§r"
 
 #Configure users's chat
 chat:
   enabled: true
-  format: "{chat_ranks_prefix}{chat_name-color}{name}{chat_format}{message}"
-...
+  format: "{chat_ranks_prefix}{chat_name-color}{name}§e[§3{fac_name}§f:§c{fac_power}§e]§r{chat_format}{message}"

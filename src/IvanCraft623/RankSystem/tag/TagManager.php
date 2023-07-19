@@ -20,6 +20,7 @@ namespace IvanCraft623\RankSystem\tag;
 use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\session\Session;
 
+use pocketmine\player\Player;
 use pocketmine\utils\SingletonTrait;
 
 final class TagManager {
@@ -67,6 +68,22 @@ final class TagManager {
 		}));
 		$this->registerTag(new Tag("chat_format", static function(Session $user) : string {
 			return $user->getHighestRank()->getChatFormat()["chatFormat"];
+		}));
+		$this->registerTag(new Tag("fac_name", static function(Session $user) : string {
+			$player = $user->getPlayer();
+			if ($player === null) return "";
+			if ($player instanceof Player)
+			{
+				return TagPiggyFactions::getPlayerFaction($player);
+			}
+		}));
+		$this->registerTag(new Tag("fac_power", static function(Session $user) : string {
+			$player = $user->getPlayer();
+			if ($player === null) return "";
+			if ($player instanceof Player)
+			{
+				return TagPiggyFactions::getPlayerFactionPower($player);
+			}
 		}));
 	}
 }
