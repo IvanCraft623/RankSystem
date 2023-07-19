@@ -19,10 +19,10 @@ namespace IvanCraft623\RankSystem;
 
 use DaPigGuy\PiggyFactions\PiggyFactions;
 
-use IvanCraft623\RankSystem\libs\CortexPE\Commando\PacketHooker;
+use CortexPE\Commando\PacketHooker;
 
-use IvanCraft623\RankSystem\libs\IvanCraft623\languages\Language;
-use IvanCraft623\RankSystem\libs\IvanCraft623\languages\Translator;
+use IvanCraft623\languages\Language;
+use IvanCraft623\languages\Translator;
 
 use IvanCraft623\RankSystem\command\RankSystemCommand;
 use IvanCraft623\RankSystem\form\FormManager;
@@ -38,8 +38,8 @@ use IvanCraft623\RankSystem\migrator\PurePerms;
 use IvanCraft623\RankSystem\provider\Provider;
 use IvanCraft623\RankSystem\provider\libasynql as libasynqlProvider;
 
-use IvanCraft623\RankSystem\libs\JackMD\ConfigUpdater\ConfigUpdater;
-use IvanCraft623\RankSystem\libs\JackMD\UpdateNotifier\UpdateNotifier;
+use JackMD\ConfigUpdater\ConfigUpdater;
+use JackMD\UpdateNotifier\UpdateNotifier;
 use pocketmine\permission\PermissionManager;
 use pocketmine\permission\DefaultPermissions;
 use pocketmine\plugin\DisablePluginException;
