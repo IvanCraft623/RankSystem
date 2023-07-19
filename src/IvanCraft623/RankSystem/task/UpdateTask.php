@@ -52,6 +52,16 @@ class UpdateTask extends Task {
 					$session->removePermission($permission);
 				}
 			}
+
+			$session->updateNameTag();
+
+			#PiggyFactions
+			$player = $session->getPlayer();
+			if ($player === null) return;
+			if ($player instanceof Player) {
+				TagPiggyFactions::getPlayerFaction($player);
+				TagPiggyFactions::getPlayerFactionPower($player);
+			}
 		}
 	}
 }

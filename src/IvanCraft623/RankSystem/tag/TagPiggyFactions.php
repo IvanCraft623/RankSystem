@@ -61,7 +61,7 @@ class TagPiggyFactions
 		if ($member === null) return "";
 		if ($member !== null)
 		{
-			$fpower = $member->getPower();
+			$fpower = round($member->getPower(), 1);
 			return "$fpower";
 		}
 	}
