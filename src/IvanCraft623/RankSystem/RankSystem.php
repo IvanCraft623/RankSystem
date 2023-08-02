@@ -154,6 +154,7 @@ class RankSystem extends PluginBase {
 		$this->saveResource("languages/en_US.ini", true);
 		$this->saveResource("languages/es_MX.ini", true);
 		$this->saveResource("languages/ru_RU.ini", true);
+		$this->saveResource("languages/tr_TR.ini", true);
 	}
 
 	private function loadTranslations() : void {
