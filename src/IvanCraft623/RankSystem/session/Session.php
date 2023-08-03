@@ -138,12 +138,12 @@ final class Session {
 	public function syncPermissions(array $userPermissions) : void {
 		$this->permissions = [];
 		$this->userPermissions = $userPermissions;
+
 		foreach ($this->getRanks() as $rank) {
 			$this->permissions = array_merge($this->permissions, $rank->getPermissions());
 		}
-		foreach ($userPermissions as $perm => $expTime) {
-			$this->permissions[] = $perm;
-		}
+		$this->permissions = array_merge($this->permissions, array_keys($userPermissions));
+
 		$this->updatePermissions();
 	}
 
@@ -350,7 +350,7 @@ final class Session {
 	}
 
 	public function hasUserPermission(string $perm) : bool {
-		return isset($this->userPermissions[$perm]);
+		return array_key_exists($perm, $this->userPermissions);
 	}
 
 	public function setPermission(string $perm, ?int $expTime = null) : bool {
