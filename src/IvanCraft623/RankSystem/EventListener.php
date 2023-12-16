@@ -65,6 +65,8 @@ class EventListener implements Listener {
 			$session = $this->plugin->getSessionManager()->get($player);
 			$event->setFormatter($session->getChatFormatter());
 		}
+		$Message = $event->getMessage();
+		$event->setMessage(str_replace("§","",$Message));
 	}
 
 	/**
