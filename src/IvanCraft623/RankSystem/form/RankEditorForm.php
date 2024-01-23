@@ -116,8 +116,8 @@ final class RankEditorForm {
 		});
 		$form->setTitle($this->translator->translate($player, "form.rank_editor.title"));
 		$form->addLabel($this->translator->translate($player, "form.rank_editor.content"));
-		$form->addInput($this->translator->translate($player, "text.prefix") . ":", "", $this->nametag["prefix"], "prefix");
-		$form->addInput($this->translator->translate($player, "text.name_color") . ":", "", $this->nametag["nameColor"], "nameColor");
+		$form->addInput($this->translator->translate($player, "text.prefix") . ":", "", $this->chat["prefix"], "prefix");
+		$form->addInput($this->translator->translate($player, "text.name_color") . ":", "", $this->chat["nameColor"], "nameColor");
 		$form->addInput($this->translator->translate($player, "text.chat_format") . ":", "", $this->chat["chatFormat"], "chatFormat");
 		$form->sendToPlayer($player);
 	}
