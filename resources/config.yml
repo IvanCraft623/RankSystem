@@ -54,6 +54,7 @@ Hierarchy:
 # Tags can be used both in nametag and chat. (These are not related to ScoreHud)
 # Defaults are:
 # {name} - The user's name
+# {display_name} - The player's display name
 # {nametag_ranks_prefix} - Set of all rank prefixes in nametag
 # {nametag_highest-rank_prefix} - Highest rank prefix in nametag
 # {nametag_name-color} - The color of the name in nametag
