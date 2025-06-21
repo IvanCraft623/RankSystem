@@ -422,6 +422,9 @@ final class Session {
 	public function updatePermissions() : void {
 		$player = $this->getPlayer();
 		if ($player !== null) {
+			$callbacks = $player->getPermissionRecalculationCallbacks();
+			$previous = $callbacks->toArray();
+			$callbacks->clear();
 			foreach ($this->attachments as $attachment) {
 				$player->removeAttachment($attachment);
 			}
@@ -429,6 +432,8 @@ final class Session {
 			foreach ($this->permissions as $permission) {
 				$this->attachments[] = $player->addAttachment($this->plugin, $permission, true);
 			}
+			$callbacks->add(...$previous);
+			$player->recalculatePermissions();
 		}
 	}
 
