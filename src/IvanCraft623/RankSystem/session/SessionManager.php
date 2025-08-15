@@ -26,12 +26,23 @@ final class SessionManager {
 	private array $sessions = [];
 
 	public function get(Player|string $player) : Session {
-		$player = ($player instanceof Player) ? $player->getName() : $player;
-		if (isset($this->sessions[$player])) {
-			return $this->sessions[$player];
+		$playerName = ($player instanceof Player) ? $player->getName() : $player;
+
+		// First, try a direct match (most common case)
+		if (isset($this->sessions[$playerName])) {
+			return $this->sessions[$playerName];
 		}
-		$session = new Session($player);
-		$this->sessions[$player] = $session;
+
+		// If not found, try a case-insensitive search
+		foreach ($this->sessions as $name => $session) {
+			if (strcasecmp($name, $playerName) === 0) {
+				return $session; // Found! Returning existing session.
+			}
+		}
+
+		// If still not found, create a new one
+		$session = new Session($playerName);
+		$this->sessions[$playerName] = $session;
 		return $session;
 	}
 

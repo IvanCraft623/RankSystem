@@ -45,7 +45,8 @@ final class UserManageForm {
 						$player, $this->translator->translate($player, "form.user_manage.title"), $this->translator->translate($player, "form.user_manage.insert_user"), $this->translator->translate($player, "text.user") . ":"
 					)->onCompletion(
 						function (string $user) use ($player) {
-							FormManager::getInstance()->sendUserInfo($player, SessionManager::getInstance()->get($user), true);
+							$sanitizedUser = trim($user);
+							FormManager::getInstance()->sendUserInfo($player, SessionManager::getInstance()->get($sanitizedUser), true);
 						}, function () {} // No response
 					);
 					break;
