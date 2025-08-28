@@ -265,15 +265,13 @@ final class Session {
 			$rank,
 			$expTime
 		);
-		$ev->call();
-
-		if ($ev->isCancelled()) {
-			return false;
-		}
-
 		$default = $this->plugin->getRankManager()->getDefault();
 		if ($rank === $default || $this->hasRank($rank)) {
 			$ev->cancel();
+		}
+		$ev->call();
+
+		if ($ev->isCancelled()) {
 			return false;
 		}
 
@@ -299,15 +297,13 @@ final class Session {
 			$this,
 			$rank
 		);
-		$ev->call();
-
-		if ($ev->isCancelled()) {
-			return false;
-		}
-
 		$default = $this->plugin->getRankManager()->getDefault();
 		if ($rank === $default || !$this->hasRank($rank)) {
 			$ev->cancel();
+		}
+		$ev->call();
+
+		if ($ev->isCancelled()) {
 			return false;
 		}
 
