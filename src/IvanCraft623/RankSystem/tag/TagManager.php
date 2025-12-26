@@ -48,7 +48,7 @@ final class TagManager {
 			return $user->getName();
 		}));
 		$this->registerTag(new Tag("display_name", static function (Session $user): string {
-			return $user->getPlayer()->getDisplayName();
+			return $user->getPlayer()?->getDisplayName() ?? "Error";
 		}));
 		$this->registerTag(new Tag("nametag_ranks_prefix", static function(Session $user) : string {
 			return implode("", array_map(fn(Rank $rank) => $rank->getNameTagFormat()["prefix"], $user->getRanks()));

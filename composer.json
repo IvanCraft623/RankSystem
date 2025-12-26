@@ -4,16 +4,16 @@
     "type": "project",
     "license": "Apache-2.0",
     "require": {
-        "latampmdevs/commando": "dev-pm5",
-        "latampmdevs/config-updater": "dev-master",
-        "latampmdevs/update-notifier": "dev-master",
-        "latampmdevs/formapi": "dev-master",
+        "cortexpe/commando": "dev-master",
         "ivancraft623/languages": "dev-main",
+        "latampmdevs/config-updater": "dev-master",
+        "latampmdevs/formapi": "dev-master",
+        "latampmdevs/update-notifier": "dev-master",
         "sof3/libasynql": "dev-pm5"
     },
     "require-dev": {
         "php": "^8.0",
-        "pocketmine/pocketmine-mp": "^5.3.0",
+        "pocketmine/pocketmine-mp": "^5.36.0",
         "phpstan/phpstan": "1.10.25"
     },
     "repositories": [
