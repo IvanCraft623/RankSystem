@@ -20,6 +20,7 @@ Examples and tutorials can be found on the [RankSystem Wiki](https://github.com/
 - Multi-rank inheritance system to allow you to inherit rank permissions
 - Temp-ranks
 - Temp-permissions
+- PlaceholderAPI Support
 - SQLite3 Provider Support
 - MySQL Provider Support
 - Easy Rank Creation / Edit System

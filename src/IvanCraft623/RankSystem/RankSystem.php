@@ -35,9 +35,11 @@ use IvanCraft623\RankSystem\migrator\PurePerms;
 use IvanCraft623\RankSystem\provider\Provider;
 use IvanCraft623\RankSystem\provider\libasynql as libasynqlProvider;
 
+use IvanCraft623\RankSystem\utils\PlaceholderUtils;
 use JackMD\ConfigUpdater\ConfigUpdater;
 use JackMD\UpdateNotifier\UpdateNotifier;
 
+use MohamadRZ4\Placeholder\PlaceholderAPI;
 use pocketmine\permission\PermissionManager;
 use pocketmine\permission\DefaultPermissions;
 use pocketmine\plugin\DisablePluginException;
@@ -80,6 +82,10 @@ class RankSystem extends PluginBase {
 		if (!PacketHooker::isRegistered()) {
 			PacketHooker::register($this);
 		}
+
+        if ($this->getServer()->getPluginManager()->getPlugin("PlaceholderAPI") !== null) {
+            PlaceholderAPI::getInstance()->registerExpansion(new PlaceholderUtils($this));
+        }
 
 		$this->loadCommands();
 		$this->loadListeners();
