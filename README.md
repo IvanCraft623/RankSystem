@@ -2,15 +2,14 @@
 [![](https://poggit.pmmp.io/shield.dl.total/RankSystem)](https://poggit.pmmp.io/p/RankSystem)
 
 <div align="center">
-	<h1> 👑 RankSystem 🔧</h1>
-	<p><strong>The most powerful and flexible Rank & Permissions Manager for PocketMine-MP</strong></p>
-	
-	<a href="https://poggit.pmmp.io/p/RankSystem">
-		<img src="https://img.shields.io/badge/Download-Poggit-2292ee?style=for-the-badge&logo=pocketmine&logoColor=white" alt="Download on Poggit">
-	</a>
+  <h1> 👑 RankSystem 🔧</h1>
+  <p><strong>The most powerful and flexible Rank & Permissions Manager for PocketMine-MP</strong></p>
+  
+  <a href="https://poggit.pmmp.io/p/RankSystem">
+    <img src="https://img.shields.io/badge/Download-Poggit-2292ee?style=for-the-badge&logo=pocketmine&logoColor=white" alt="Download on Poggit">
+  </a>
 </div>
 
----
 
 ## 📖 Description
 
@@ -20,13 +19,12 @@
 
 RankSystem is and will always be **free and open-source**. If this project helps your server grow, consider supporting me and its development.
 
-<p align="center">s
-	<a href="https://donate.endergames.org/IvanCraft623">
-		<img src="https://img.shields.io/badge/Tip-Support%20Project-orange?style=for-the-badge&logo=heart" alt="Tip">
-	</a>
+<p align="center">
+  <a href="https://donate.endergames.org/IvanCraft623">
+    <img src="https://img.shields.io/badge/Tip-Support%20Project-orange?style=for-the-badge&logo=heart" alt="Tip">
+  </a>
 </p>
 
----
 
 ## ✨ Features
 
@@ -40,7 +38,6 @@ RankSystem is and will always be **free and open-source**. If this project helps
 * 💻 **API Ready:** Flexible API designed for plugin developers.
 * 📊 **Integrations:** Full ScoreHud integration to display ranks on scoreboards.
 
----
 
 ## 🤖 Commands
 
@@ -62,7 +59,6 @@ RankSystem is and will always be **free and open-source**. If this project helps
 > [!TIP]
 > You can use `/ranks` as a shortcut for the `/ranksystem` command.
 
----
 
 ## 📊 ScoreHud Integration
 
@@ -74,7 +70,6 @@ Use these tags to display information in [ScoreHud](https://poggit.pmmp.io/p/Sco
 | `{ranksystem.highest_rank}` | Shows the player's highest rank. |
 | `{ranksystem.nametag}` | Shows the RankSystem assigned NameTag. |
 
----
 ## 📋 FAQ (Frequently Asked Questions)
 
 <details>
@@ -96,12 +91,12 @@ This is currently <b>outside the scope</b> of this plugin. While it's not diffic
 <summary><b>How does the 'time' argument work in /setrank or /setpermission?</b></summary>
 If no time is specified, the rank/permission will be permanent. The format used is:
 <ul>
-	<li><code>y</code> = year, <code>M</code> = month, <code>w</code> = week, <code>d</code> = day, <code>h</code> = hour, <code>m</code> = minute.</li>
+  <li><code>y</code> = year, <code>M</code> = month, <code>w</code> = week, <code>d</code> = day, <code>h</code> = hour, <code>m</code> = minute.</li>
 </ul>
 <b>Examples:</b>
 <ul>
-	<li><code>1y3M</code>: One year and three months (same as 15M).</li>
-	<li><code>1w2d12h</code>: One week, two days, and twelve hours (same as 9d12h).</li>
+  <li><code>1y3M</code>: One year and three months (same as 15M).</li>
+  <li><code>1w2d12h</code>: One week, two days, and twelve hours (same as 9d12h).</li>
 </ul>
 </details>
 
@@ -111,8 +106,8 @@ The hierarchy is determined by the order of the ranks in the <code>config.yml</c
 
 This hierarchy is used to determine which rank's prefix or nametag should be displayed first. It is especially important when using placeholders like:
 <ul>
-	<li><code>{nametag_highest-rank_prefix}</code></li>
-	<li><code>{chat_highest-rank_prefix}</code></li>
+  <li><code>{nametag_highest-rank_prefix}</code></li>
+  <li><code>{chat_highest-rank_prefix}</code></li>
 </ul>
 These will automatically display the prefix of the player's most powerful rank according to your hierarchy list.
 </details>
@@ -137,10 +132,7 @@ Please <b>report the issue on GitHub</b>. Make sure to include the crash dump an
 Don't hesitate to <b>ping me on the official PMMP Discord</b>. I'm usually around to help with configuration questions.
 </details>
 
----
 
 ## 🛠 For Developers
 
 Find examples, API methods, and tutorials on **[RankSystem Wiki](https://github.com/IvanCraft623/RankSystem/wiki)**.
-
----
