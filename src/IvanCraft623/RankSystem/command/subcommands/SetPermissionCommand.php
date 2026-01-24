@@ -47,7 +47,7 @@ final class SetPermissionCommand extends BaseSubCommand {
 				} else {
 					$time = isset($args["time"]) ? ((int) ($args["time"])) : null;
 
-					$session->setPermission($args["permission"], $args["time"] ?? null);
+					$session->setPermission($args["permission"], $time);
 					$sender->sendMessage($translator->translate($sender, "user.set_permission.success", [
 						"{%user}" => $session->getName(),
 						"{%permission}" => $args["permission"],
