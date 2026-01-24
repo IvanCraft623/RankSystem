@@ -27,6 +27,7 @@ use IvanCraft623\RankSystem\form\FormManager;
 use IvanCraft623\RankSystem\rank\RankManager;
 use IvanCraft623\RankSystem\session\SessionManager;
 use IvanCraft623\RankSystem\tag\TagManager;
+use IvanCraft623\RankSystem\task\SponsorsListTask;
 use IvanCraft623\RankSystem\task\UpdateTask;
 use IvanCraft623\RankSystem\migrator\LegacyRankSystem;
 use IvanCraft623\RankSystem\migrator\Migrator;
@@ -49,6 +50,8 @@ use pocketmine\utils\SingletonTrait;
 class RankSystem extends PluginBase {
 	use SingletonTrait;
 
+	public const DONATIONS_URL = "https://donate.endergames.org/IvanCraft623";
+
 	public const CONFIG_VERSION = 2;
 
 	public const DEFAULT_LANGUAGE = "en_US";
@@ -60,6 +63,9 @@ class RankSystem extends PluginBase {
 	private Provider $provider;
 
 	private Translator $translator;
+
+	/** @var string[] */
+	private array $sponsors = [];
 
 	public function onLoad() : void {
 		self::setInstance($this);
@@ -86,6 +92,15 @@ class RankSystem extends PluginBase {
 		$this->loadProvider();
 		$this->loadMigrators();
 		$this->getScheduler()->scheduleRepeatingTask(new UpdateTask(), 60);
+		$this->getServer()->getAsyncPool()->submitTask(
+			new SponsorsListTask(self::DONATIONS_URL . "?info=members", function(?array $sponsors) {
+				if ($sponsors !== null) {
+					$this->sponsors = $sponsors;
+				} else {
+					$this->getLogger()->warning("Failed to fetch sponsors list");
+				}
+			})
+		);
 	}
 
 	public function getProvider() : Provider {
@@ -146,6 +161,13 @@ class RankSystem extends PluginBase {
 			}
 		}
 		return $pluginPerms;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getSponsors() : array {
+		return $this->sponsors;
 	}
 
 	public function saveResources() : void {
