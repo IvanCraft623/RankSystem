@@ -1,5 +1,30 @@
 <?php
 
+/*
+ *   ____             _     ____
+ *  |  _ \ __ _ _ __ | | __/ ___| _   _ ___| |_ ___ _ __ ___
+ *  | |_) / _` | '_ \| |/ /\___ \| | | / __| __/ _ \ '_ ` _ \
+ *  |  _ < (_| | | | |   <  ___) | |_| \__ \ ||  __/ | | | | |
+ *  |_| \_\__,_|_| |_|_|\_\|____/ \__, |___/\__\___|_| |_| |_|
+ *                                |___/
+ *
+ * An amazing rank and permissions manager for PocketMine-MP.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @author IvanCraft623
+ */
+
 declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\command\subcommands;
@@ -39,7 +64,7 @@ final class RankInfoCommand extends BaseSubCommand {
 			$sender->sendMessage(
 				"§r§f" . $translator->translate($sender, "text.rank") . ": §a" . $args["rank"]->getName() . "\n\n" .
 				"§r§f" . $translator->translate($sender, "text.nametag") . ": " . $nametag["prefix"] . $nametag["nameColor"] . "Steve" . "\n" .
-				"§r§f" . $translator->translate($sender, "text.chat") . ": " . $chat["prefix"] . $chat["nameColor"] . $translator->translate($sender, "text.steve") . $chat["chatFormat"] . $translator->translate($sender, "text.hello_world") . "\n" 	.
+				"§r§f" . $translator->translate($sender, "text.chat") . ": " . $chat["prefix"] . $chat["nameColor"] . $translator->translate($sender, "text.steve") . $chat["chatFormat"] . $translator->translate($sender, "text.hello_world") . "\n" .
 				"§r§f" . $translator->translate($sender, "text.inheritance") . ": §a" . Utils::ranks2string($args["rank"]->getInheritance()) . "\n" .
 				"§r§f" . $translator->translate($sender, "text.permissions") . ": §a" . $permissions
 			);
