@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f9dde0ade1cea3e68992fdc45d96bfd",
+    "content-hash": "18a5fb4a3590776b38ab99b449db814f",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -307,59 +307,6 @@
                 "source": "https://github.com/LatamPMDevs/FormAPI/tree/master"
             },
             "time": "2024-07-24T01:27:44+00:00"
-        },
-        {
-            "name": "latampmdevs/update-notifier",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/LatamPMDevs/UpdateNotifier.git",
-                "reference": "c3a71ae577df5b5f174e4c2bb99d76182d05b420"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/LatamPMDevs/UpdateNotifier/zipball/c3a71ae577df5b5f174e4c2bb99d76182d05b420",
-                "reference": "c3a71ae577df5b5f174e4c2bb99d76182d05b420",
-                "shasum": ""
-            },
-            "require": {
-                "pocketmine/pocketmine-mp": "^5.0.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "virion": {
-                    "spec": "3.0",
-                    "namespace-root": "JackMD\\UpdateNotifier"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src"
-                ]
-            },
-            "license": [
-                "LGPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "JackMD",
-                    "email": "jackmtaylor.jmt@gmail.com"
-                },
-                {
-                    "name": "Ifera",
-                    "email": "contact@tayyab.dev"
-                },
-                {
-                    "name": "Sandertv",
-                    "email": "st.ten.veldhuis@gmail.com"
-                }
-            ],
-            "description": "A handy virion for PocketMine-MP plugin developers that checks if a new release for a plugin is available on Poggit. If so then it notifies the user about the new release.",
-            "support": {
-                "source": "https://github.com/LatamPMDevs/UpdateNotifier/tree/master"
-            },
-            "time": "2023-06-17T19:55:42+00:00"
         },
         {
             "name": "netresearch/jsonmapper",
@@ -1400,7 +1347,6 @@
         "ivancraft623/languages": 20,
         "latampmdevs/config-updater": 20,
         "latampmdevs/formapi": 20,
-        "latampmdevs/update-notifier": 20,
         "sof3/libasynql": 20
     },
     "prefer-stable": false,

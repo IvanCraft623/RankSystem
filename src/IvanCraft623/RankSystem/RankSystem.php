@@ -48,7 +48,6 @@ use IvanCraft623\RankSystem\task\SponsorsListTask;
 use IvanCraft623\RankSystem\task\UpdateTask;
 
 use JackMD\ConfigUpdater\ConfigUpdater;
-use JackMD\UpdateNotifier\UpdateNotifier;
 
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
@@ -95,7 +94,6 @@ class RankSystem extends PluginBase {
 	public function onLoad() : void {
 		self::setInstance($this);
 
-		UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
 		if (ConfigUpdater::checkUpdate($this, $this->getConfig(), "config-version", self::CONFIG_VERSION)) {
 			$this->reloadConfig();
 		}
