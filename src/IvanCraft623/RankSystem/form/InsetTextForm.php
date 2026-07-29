@@ -44,6 +44,7 @@ final class InsetTextForm {
 	 * @phpstan-return Promise<string>
 	 */
 	public function send(Player $player, string $title, string $content, string $text, string $placeholder = "", ?string $default = null) : Promise {
+		/** @var PromiseResolver<string> $resolver */
 		$resolver = new PromiseResolver();
 		$form = new CustomForm(function (Player $player, array $result = null) use ($resolver) {
 			if ($result === null) {

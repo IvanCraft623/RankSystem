@@ -39,8 +39,11 @@ use IvanCraft623\RankSystem\RankSystem;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\AssumptionFailedError;
 use function array_chunk;
 use function count;
+use function is_int;
+use function is_string;
 use function strtolower;
 
 final class PermissionsCommand extends BaseSubCommand {
@@ -55,8 +58,15 @@ final class PermissionsCommand extends BaseSubCommand {
 		$this->registerArgument(1, new IntegerArgument("page", true));
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
-		$plugin = (strtolower($args["source"]) === 'pocketmine' || strtolower($args["source"]) === 'pmmp') ? 'pocketmine' : $this->plugin->getServer()->getPluginManager()->getPlugin($args["source"]);
+		$source = $args["source"];
+		if (!is_string($source)) {
+			throw new AssumptionFailedError("Expected string argument \"source\"");
+		}
+		$plugin = (strtolower($source) === 'pocketmine' || strtolower($source) === 'pmmp') ? 'pocketmine' : $this->plugin->getServer()->getPluginManager()->getPlugin($source);
 		if ($plugin === null) {
 			$sender->sendMessage($this->plugin->getTranslator()->translate($sender, "command.permissions.plugin_not_found"));
 			return;
@@ -69,7 +79,7 @@ final class PermissionsCommand extends BaseSubCommand {
 		$pageHeight = $sender instanceof Player ? 6 : 48;
 		$chunkedPermissions = array_chunk($permissions, $pageHeight);
 		$maxPageNumber = count($chunkedPermissions);
-		if (!isset($args["page"]) || $args["page"] <= 0) {
+		if (!isset($args["page"]) || !is_int($args["page"]) || $args["page"] <= 0) {
 			$pageNumber = 1;
 		} elseif ($args["page"] > $maxPageNumber) {
 			$pageNumber = $maxPageNumber;
@@ -77,7 +87,7 @@ final class PermissionsCommand extends BaseSubCommand {
 			$pageNumber = $args["page"];
 		}
 			$sender->sendMessage($this->plugin->getTranslator()->translate($sender, "command.permissions.list", [
-				"{%source}" => $args["source"],
+				"{%source}" => $source,
 				"{%page}" => $pageNumber,
 				"{%total_pages}" => $maxPageNumber
 			]));

@@ -50,6 +50,7 @@ final class SelectRankForm {
 	 * @phpstan-return Promise<Rank>
 	 */
 	public function send(Player $player, string $title, ?array $ranks = null) : Promise {
+		/** @var PromiseResolver<Rank> $resolver */
 		$resolver = new PromiseResolver();
 		$form = new SimpleForm(function (Player $player, ?Rank $rank = null) use ($resolver) {
 			if ($rank === null) {

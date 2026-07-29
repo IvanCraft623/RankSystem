@@ -47,6 +47,9 @@ final class CreditsCommand extends BaseSubCommand {
 	protected function prepare() : void {
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$translator = $this->plugin->getTranslator();
 		$sender->sendMessage(

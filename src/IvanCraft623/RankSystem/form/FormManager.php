@@ -36,6 +36,10 @@ use pocketmine\player\Player;
 use pocketmine\promise\Promise;
 use pocketmine\utils\SingletonTrait;
 
+/**
+ * @phpstan-import-type NameTagFormat from Rank
+ * @phpstan-import-type ChatFormat from Rank
+ */
 final class FormManager {
 	use SingletonTrait;
 
@@ -51,6 +55,12 @@ final class FormManager {
 		(new UserManageForm())->send($player);
 	}
 
+	/**
+	 * @param NameTagFormat $nametag
+	 * @param ChatFormat    $chat
+	 * @param string[]      $permissions
+	 * @param string[]      $inheritance
+	 */
 	public function sendRankEditor(Player $player, string $name, array $nametag = ["prefix" => "", "nameColor" => "§f"], array $chat = ["prefix" => "", "nameColor" => "§f", "chatFormat" => "§e: §7"], array $permissions = [], array $inheritance = []) : void {
 		(new RankEditorForm($name, $nametag, $chat, $permissions, $inheritance))->send($player);
 	}

@@ -29,11 +29,15 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\migrator;
 
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Config;
+use pocketmine\utils\Utils as PMUtils;
 use function count;
 use function file_exists;
 use function file_put_contents;
+use function is_array;
 use function is_dir;
+use function is_string;
 use function opendir;
 use function readdir;
 use function unlink;
@@ -81,6 +85,10 @@ class PurePerms extends Migrator {
 		] as $groupsFile) {
 			if (file_exists($groupsFile)) {
 				foreach ((new Config($groupsFile, Config::YAML))->getAll() as $groupName => $data) {
+					if (!is_array($data)) {
+						throw new AssumptionFailedError("Expected array for group data");
+					}
+
 					$group = (string) $groupName;
 					if (!$this->rankManager->exists($group)) {
 						$nameTag = [ //Hacks! >:D
@@ -91,6 +99,19 @@ class PurePerms extends Migrator {
 						$chat["chatFormat"] = "§f: §7";
 						$permissions = $data["permissions"] ?? [];
 						$inheritance = $data["inheritance"] ?? [];
+
+						if (!is_array($permissions)) {
+							throw new AssumptionFailedError("Expected array for permissions");
+						}
+						/** @var string[] $permissions */
+						PMUtils::validateArrayValueType($permissions, static function(string $_) : void {});
+
+						if (!is_array($inheritance)) {
+							throw new AssumptionFailedError("Expected array for inheritance");
+						}
+						/** @var string[] $inheritance */
+						PMUtils::validateArrayValueType($inheritance, static function(string $_) : void {});
+
 						$this->rankManager->create($group, $nameTag, $chat, $permissions, $inheritance);
 					}
 					if ($data["isDefault"] ?? false) {
@@ -113,9 +134,20 @@ class PurePerms extends Migrator {
 
 					$data = $playerData->getAll();
 					if (isset($data["userName"]) && isset($data["group"])) {
+						if (!is_string($data["userName"])) {
+							throw new AssumptionFailedError("Expected string for userName");
+						}
+
+						if (!is_string($data["group"])) {
+							throw new AssumptionFailedError("Expected string for group");
+						}
+
 						$session = $this->sessionManager->get($data["userName"]);
 						$rank = $this->rankManager->getRank($data["group"]);
 						$permissions = $data["permissions"] ?? [];
+						if (!is_array($permissions)) {
+							throw new AssumptionFailedError("Expected array for permissions");
+						}
 
 						$session->onInitialize(function() use ($session, $rank, $permissions) {
 							if ($rank !== null) {
@@ -123,6 +155,9 @@ class PurePerms extends Migrator {
 							}
 							if (count($permissions) !== 0) {
 								foreach ($permissions as $permission) {
+									if (!is_string($permission)) {
+										throw new AssumptionFailedError("Expected string for permission");
+									}
 									$session->setPermission($permission);
 								}
 							}
@@ -141,10 +176,21 @@ class PurePerms extends Migrator {
 		] as $groupsFile => $format) {
 			if (file_exists($groupsFile)) {
 				foreach ((new Config($groupsFile, $format))->getAll() as $username => $data) {
+					if (!is_array($data)) {
+						throw new AssumptionFailedError("Expected array for player data");
+					}
+
 					if (isset($data["group"])) {
+						if (!is_string($data["group"])) {
+							throw new AssumptionFailedError("Expected string for group");
+						}
+
 						$session = $this->sessionManager->get((string) $username);
 						$rank = $this->rankManager->getRank($data["group"]);
 						$permissions = $data["permissions"] ?? [];
+						if (!is_array($permissions)) {
+							throw new AssumptionFailedError("Expected array for permissions");
+						}
 
 						$session->onInitialize(function() use ($session, $rank, $permissions) {
 							if ($rank !== null) {
@@ -152,6 +198,9 @@ class PurePerms extends Migrator {
 							}
 							if (count($permissions) !== 0) {
 								foreach ($permissions as $permission) {
+									if (!is_string($permission)) {
+										throw new AssumptionFailedError("Expected string for permission");
+									}
 									$session->setPermission($permission);
 								}
 							}

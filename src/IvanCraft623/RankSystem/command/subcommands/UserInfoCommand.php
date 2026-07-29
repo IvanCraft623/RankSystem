@@ -38,6 +38,8 @@ use IvanCraft623\RankSystem\utils\Utils;
 
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
+use pocketmine\utils\AssumptionFailedError;
+use function is_string;
 use function str_replace;
 use function time;
 
@@ -52,8 +54,16 @@ final class UserInfoCommand extends BaseSubCommand {
 		$this->registerArgument(0, new RawStringArgument("user"));
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
-		$session = $this->plugin->getSessionManager()->get($args["user"]);
+		$user = $args["user"];
+		if (!is_string($user)) {
+			throw new AssumptionFailedError("Expected string argument \"user\"");
+		}
+
+		$session = $this->plugin->getSessionManager()->get($user);
 		if ($sender instanceof Player) {
 			$this->plugin->getFormManager()->sendUserInfo($sender, $session, $sender->hasPermission("ranksystem.command.manage"));
 		} else {

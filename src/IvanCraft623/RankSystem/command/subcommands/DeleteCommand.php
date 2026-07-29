@@ -33,9 +33,11 @@ use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\BaseSubCommand;
 
 use IvanCraft623\RankSystem\command\args\RankArgument;
+use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\command\CommandSender;
+use pocketmine\utils\AssumptionFailedError;
 
 final class DeleteCommand extends BaseSubCommand {
 
@@ -48,11 +50,19 @@ final class DeleteCommand extends BaseSubCommand {
 		$this->registerArgument(0, new RankArgument("rank"));
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
-		if ($args["rank"] === $this->plugin->getRankManager()->getDefault()) {
+		$rank = $args["rank"];
+		if (!$rank instanceof Rank) {
+			throw new AssumptionFailedError("Expected Rank argument \"rank\"");
+		}
+
+		if ($rank === $this->plugin->getRankManager()->getDefault()) {
 			$sender->sendMessage($this->plugin->getTranslator()->translate($sender, "rank.delete.default"));
 		} else {
-			$this->plugin->getRankManager()->delete($args["rank"]);
+			$this->plugin->getRankManager()->delete($rank);
 			$sender->sendMessage($this->plugin->getTranslator()->translate($sender, "rank.delete.success"));
 		}
 	}

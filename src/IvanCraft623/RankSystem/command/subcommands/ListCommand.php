@@ -47,6 +47,9 @@ final class ListCommand extends BaseSubCommand {
 	protected function prepare() : void {
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$ranks = $this->plugin->getRankManager()->getAll();
 		$sender->sendMessage("§a" . $this->plugin->getTranslator()->translate($sender, "text.ranks") . " (" . count($ranks) . "):");

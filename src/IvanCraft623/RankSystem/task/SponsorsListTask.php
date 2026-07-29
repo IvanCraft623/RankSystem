@@ -63,6 +63,7 @@ class SponsorsListTask extends AsyncTask {
 		}
 
 		try {
+			/** @var string[] $data */
 			Utils::validateArrayValueType($data, static function(string $_) : void{});
 			$this->setResult($data);
 		} catch(\TypeError $e) {

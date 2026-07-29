@@ -47,6 +47,7 @@ final class InsetTimeForm {
 	 * @phpstan-return Promise<int>
 	 */
 	public function send(Player $player, string $title, string $content) : Promise {
+		/** @var PromiseResolver<int> $resolver */
 		$resolver = new PromiseResolver();
 		$form = new CustomForm(function (Player $player, array $result = null) use ($resolver) {
 			if ($result === null) {

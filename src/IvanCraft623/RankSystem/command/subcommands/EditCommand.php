@@ -34,11 +34,13 @@ use CortexPE\Commando\BaseSubCommand;
 use CortexPE\Commando\constraint\InGameRequiredConstraint;
 
 use IvanCraft623\RankSystem\command\args\RankArgument;
+use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\utils\Utils;
 
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
+use pocketmine\utils\AssumptionFailedError;
 
 final class EditCommand extends BaseSubCommand {
 
@@ -53,16 +55,22 @@ final class EditCommand extends BaseSubCommand {
 	}
 
 	/**
-	 * @param Player $sender
+	 * @param Player  $sender
+	 * @param mixed[] $args
 	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
+		$rank = $args["rank"];
+		if (!$rank instanceof Rank) {
+			throw new AssumptionFailedError("Expected Rank argument \"rank\"");
+		}
+
 		$this->plugin->getFormManager()->sendRankEditor(
 			$sender,
-			$args["rank"]->getName(),
-			$args["rank"]->getNameTagFormat(),
-			$args["rank"]->getChatFormat(),
-			$args["rank"]->getPermissions(),
-			Utils::getRanksNames($args["rank"]->getInheritance())
+			$rank->getName(),
+			$rank->getNameTagFormat(),
+			$rank->getChatFormat(),
+			$rank->getPermissions(),
+			Utils::getRanksNames($rank->getInheritance())
 		);
 	}
 

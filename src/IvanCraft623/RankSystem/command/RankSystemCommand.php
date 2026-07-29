@@ -79,6 +79,9 @@ final class RankSystemCommand extends BaseCommand {
 		$this->registerSubCommand(new UserInfoCommand($this->plugin));
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$sender->sendMessage("§cNo subcommand provided, try using: /" . $aliasUsed . " help");
 	}

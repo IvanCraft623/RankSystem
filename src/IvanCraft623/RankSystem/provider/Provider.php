@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\provider;
 
+use Closure;
+
 use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\promise\Promise;
@@ -58,9 +60,11 @@ abstract class Provider {
 	abstract public function isInDb(string $name) : Promise;
 
 	/**
-	 * @param array<string, ?int> $ranks
+	 * @param array<string, ?int>  $ranks
+	 * @param null|Closure(): void $onSuccess
+	 * @param null|Closure(): void $onError
 	 */
-	abstract public function setRanks(string $name, array $ranks, ?callable $onSuccess = null, ?callable $onError = null) : void;
+	abstract public function setRanks(string $name, array $ranks, ?Closure $onSuccess = null, ?Closure $onError = null) : void;
 
 	/**
 	 * @phpstan-return Promise<array<string, ?int>>
@@ -73,9 +77,11 @@ abstract class Provider {
 	abstract public function removeRank(string $name, string $rank) : Promise;
 
 	/**
-	 * @param array<string, ?int> $permisions
+	 * @param array<string, ?int>  $permisions
+	 * @param null|Closure(): void $onSuccess
+	 * @param null|Closure(): void $onError
 	 */
-	abstract public function setPermissions(string $name, array $permisions, ?callable $onSuccess = null, ?callable $onError = null) : void;
+	abstract public function setPermissions(string $name, array $permisions, ?Closure $onSuccess = null, ?Closure $onError = null) : void;
 
 	/**
 	 * @phpstan-return Promise<array<string, ?int>>
@@ -87,5 +93,9 @@ abstract class Provider {
 	 */
 	abstract public function removePermission(string $name, string $permission) : Promise;
 
-	abstract public function delete(string $name, ?callable $onSuccess = null, ?callable $onError = null) : void;
+	/**
+	 * @param null|Closure(): void $onSuccess
+	 * @param null|Closure(): void $onError
+	 */
+	abstract public function delete(string $name, ?Closure $onSuccess = null, ?Closure $onError = null) : void;
 }

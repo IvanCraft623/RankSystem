@@ -55,6 +55,9 @@ final class SetRankCommand extends BaseSubCommand {
 		$this->registerArgument(2, new TimeArgument("time", true));
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$translator = $this->plugin->getTranslator();
 		if (array_key_exists("time", $args) && $args["time"] === "null") {

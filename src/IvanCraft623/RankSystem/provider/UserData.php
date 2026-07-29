@@ -30,6 +30,9 @@ declare(strict_types=1);
 namespace IvanCraft623\RankSystem\provider;
 
 use JsonSerializable;
+
+use pocketmine\utils\Utils as PMUtils;
+use function is_array;
 use function json_decode;
 use function time;
 
@@ -94,10 +97,26 @@ class UserData implements JsonSerializable {
 	 * } $data
 	 */
 	public static function jsonDeserialize(array $data) : UserData {
+		$intOrNullValidator = static function(?int $_) : void{};
+
+		/** @var array<string, ?int> $ranks */
+		$ranks = isset($data["ranks"]) ? json_decode($data["ranks"], true) : [];
+		if (!is_array($ranks)) {
+			throw new \TypeError("Expected array for \"ranks\"");
+		}
+		PMUtils::validateArrayValueType($ranks, $intOrNullValidator);
+
+		/** @var array<string, ?int> $permissions */
+		$permissions = isset($data["permissions"]) ? json_decode($data["permissions"], true) : [];
+		if (!is_array($permissions)) {
+			throw new \TypeError("Expected array for \"permissions\"");
+		}
+		PMUtils::validateArrayValueType($permissions, $intOrNullValidator);
+
 		return new UserData(
 			(string) $data["name"],
-			(array) ($data["ranks"] === null ? [] : json_decode($data["ranks"], true)),
-			(array) ($data["permissions"] === null ? [] : json_decode($data["permissions"], true)),
+			$ranks,
+			$permissions,
 			(int) ($data["generationTime"] ?? time())
 		);
 	}

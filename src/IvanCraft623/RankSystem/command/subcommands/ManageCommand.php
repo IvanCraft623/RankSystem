@@ -50,7 +50,8 @@ final class ManageCommand extends BaseSubCommand {
 	}
 
 	/**
-	 * @param Player $sender
+	 * @param Player  $sender
+	 * @param mixed[] $args
 	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$this->plugin->getFormManager()->sendManager($sender);

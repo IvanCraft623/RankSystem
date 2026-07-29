@@ -46,6 +46,7 @@ final class ConfirmationForm {
 	 * @phpstan-return Promise<bool>
 	 */
 	public function send(Player $player, string $title, string $content) : Promise {
+		/** @var PromiseResolver<bool> $resolver */
 		$resolver = new PromiseResolver();
 		$form = new ModalForm(function (Player $player, ?bool $result = null) use ($resolver) {
 			if ($result === null) {

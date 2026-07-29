@@ -31,11 +31,15 @@ namespace IvanCraft623\RankSystem\utils;
 
 use Ifera\ScoreHud\event\PlayerTagsUpdateEvent;
 use Ifera\ScoreHud\scoreboard\ScoreTag;
+
 use InvalidArgumentException;
+
 use IvanCraft623\languages\Translator;
 use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\session\Session;
+
 use pocketmine\command\CommandSender;
+
 use function ceil;
 use function class_exists;
 use function floor;
@@ -47,10 +51,23 @@ use function substr;
 use function time;
 use function trim;
 
+/**
+ * @phpstan-type Time array{
+ * 	years: int,
+ * 	months: int,
+ * 	days: int,
+ * 	hours: int,
+ * 	minutes: int,
+ * 	seconds: int
+ * }
+ */
 final class Utils {
 
 	public static bool $scoreHudDetected;
 
+	/**
+	 * @return Time
+	 */
 	public static function getTime(int $seconds) : array {
 		if ($seconds < 0) {
 			throw new InvalidArgumentException("Seconds is lower than 0");

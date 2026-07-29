@@ -36,6 +36,8 @@ use CortexPE\Commando\BaseSubCommand;
 use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\command\CommandSender;
+use pocketmine\utils\AssumptionFailedError;
+use function is_string;
 
 final class RemovePermissionCommand extends BaseSubCommand {
 
@@ -49,20 +51,33 @@ final class RemovePermissionCommand extends BaseSubCommand {
 		$this->registerArgument(1, new RawStringArgument("permission"));
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
-		$session = $this->plugin->getSessionManager()->get($args["user"]);
-		$session->onInitialize(function () use ($session, $sender, $args) {
+		$user = $args["user"];
+		if (!is_string($user)) {
+			throw new AssumptionFailedError("Expected string argument \"user\"");
+		}
+
+		$permission = $args["permission"];
+		if (!is_string($permission)) {
+			throw new AssumptionFailedError("Expected string argument \"permission\"");
+		}
+
+		$session = $this->plugin->getSessionManager()->get($user);
+		$session->onInitialize(function () use ($session, $sender, $user, $permission) {
 			$translator = $this->plugin->getTranslator();
-			if (!$session->hasUserPermission($args["permission"])) {
+			if (!$session->hasUserPermission($permission)) {
 				$sender->sendMessage($translator->translate($sender, "user.remove_permission.no_permission", [
-					"{%user}" => $args["user"],
-					"{%permission}" => $args["permission"]
+					"{%user}" => $user,
+					"{%permission}" => $permission
 				]));
 			} else {
-				$session->removePermission($args["permission"]);
+				$session->removePermission($permission);
 				$sender->sendMessage($translator->translate($sender, "user.remove_permission.success", [
-					"{%user}" => $args["user"],
-					"{%permission}" => $args["permission"]
+					"{%user}" => $user,
+					"{%permission}" => $permission
 				]));
 			}
 		});

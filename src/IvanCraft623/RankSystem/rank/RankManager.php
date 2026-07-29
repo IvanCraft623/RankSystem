@@ -32,14 +32,28 @@ namespace IvanCraft623\RankSystem\rank;
 use InvalidArgumentException;
 
 use IvanCraft623\RankSystem\RankSystem;
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Config;
 
 use pocketmine\utils\SingletonTrait;
 use RuntimeException;
 use function in_array;
+use function is_array;
+use function is_string;
 use function spl_object_id;
 use function strtolower;
 
+/**
+ * @phpstan-import-type NameTagFormat from Rank
+ * @phpstan-import-type ChatFormat from Rank
+ *
+ * @phpstan-type RankData array{
+ * 	nametag: NameTagFormat,
+ * 	chat: ChatFormat,
+ * 	permissions: string[],
+ * 	inheritance?: string[]
+ * }
+ */
 final class RankManager {
 	use SingletonTrait;
 
@@ -52,6 +66,7 @@ final class RankManager {
 
 	private Rank $defaultRank;
 
+	/** @var array<string, Rank> */
 	private array $hierarchy;
 
 	public function __construct() {
@@ -60,6 +75,7 @@ final class RankManager {
 
 	public function load() : void {
 		$this->data = $this->plugin->getConfigs("ranks.yml");
+		/** @var array<string, RankData> $ranksData */
 		$ranksData = $this->data->getAll();
 		foreach ($ranksData as $name => $data) {
 			$name = (string) $name;
@@ -104,8 +120,11 @@ final class RankManager {
 			if ($name === false) {
 				throw new RuntimeException("The default rank is not specified!");
 			}
+			if (!is_string($name)) {
+				throw new AssumptionFailedError("Expected string for \"Default_Rank\" config");
+			}
 
-			$rank = $this->getRank((string) $name);
+			$rank = $this->getRank($name);
 			if ($rank === null) {
 				throw new RuntimeException("The rank: " . $name . " specified as default does not exist!");
 			}
@@ -137,7 +156,14 @@ final class RankManager {
 	public function getHierarchy() : array {
 		if (!isset($this->hierarchy)) {
 			$this->hierarchy = [];
-			foreach ($this->plugin->getConfig()->get("Hierarchy", []) as $name) {
+			$hierarchyConfig = $this->plugin->getConfig()->get("Hierarchy", []);
+			if (!is_array($hierarchyConfig)) {
+				throw new AssumptionFailedError("Expected array for \"Hierarchy\" config");
+			}
+			foreach ($hierarchyConfig as $name) {
+				if (!is_string($name)) {
+					throw new AssumptionFailedError("Expected string for hierarchy rank name");
+				}
 				$rank = $this->getRank($name);
 				if ($rank !== null) {
 					$this->hierarchy[$name] = $rank;
@@ -181,7 +207,13 @@ final class RankManager {
 	 *
 	 * $permissions = ["example.perm", "example.perm2"]:
 	 *
-	 * $inheritance = ["Guest"]:
+	 * $inheritance = ["Guest"];
+	 */
+	/**
+	 * @param NameTagFormat $nametag
+	 * @param ChatFormat    $chat
+	 * @param string[]      $permissions
+	 * @param string[]      $inheritance
 	 */
 	public function create(string $name, array $nametag, array $chat, array $permissions = [], array $inheritance = []) : void {
 		if (!$this->exists($name)) {
@@ -195,6 +227,12 @@ final class RankManager {
 		$this->data->save();
 	}
 
+	/**
+	 * @param NameTagFormat $nametag
+	 * @param ChatFormat    $chat
+	 * @param string[]      $permissions
+	 * @param string[]      $inheritance
+	 */
 	public function saveRankData(string $name, array $nametag, array $chat, array $permissions = [], array $inheritance = []) : void {
 		$data = [
 			"nametag" => $nametag,

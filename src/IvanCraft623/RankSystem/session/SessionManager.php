@@ -35,18 +35,21 @@ use pocketmine\utils\SingletonTrait;
 final class SessionManager {
 	use SingletonTrait;
 
+	/** @var array<string, Session> */
 	private array $sessions = [];
 
 	public function get(Player|string $player) : Session {
-		$player = ($player instanceof Player) ? $player->getName() : $player;
-		if (isset($this->sessions[$player])) {
-			return $this->sessions[$player];
+		$name = ($player instanceof Player) ? $player->getName() : $player;
+		if (isset($this->sessions[$name])) {
+			return $this->sessions[$name];
 		}
-		$session = new Session($player);
-		$this->sessions[$player] = $session;
-		return $session;
+
+		return $this->sessions[$name] = new Session($name);
 	}
 
+	/**
+	 * @return array<string, Session>
+	 */
 	public function getAll() : array {
 		return $this->sessions;
 	}
