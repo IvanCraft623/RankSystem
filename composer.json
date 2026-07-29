@@ -8,7 +8,6 @@
         "ivancraft623/languages": "dev-main",
         "latampmdevs/config-updater": "dev-master",
         "latampmdevs/formapi": "dev-master",
-        "latampmdevs/update-notifier": "dev-master",
         "sof3/libasynql": "dev-pm5"
     },
     "require-dev": {
@@ -24,10 +23,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/LatamPMDevs/ConfigUpdater.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/LatamPMDevs/UpdateNotifier.git"
         },
         {
             "type": "vcs",
