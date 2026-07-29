@@ -46,7 +46,6 @@ class UserPermissionSetEvent extends Event implements Cancellable {
 
 	/**
 	 * UserPermissionSetEvent constructor.
-	 * @param ?int $expTime
 	 */
 	public function __construct(Session $session, string $permission, ?int $expTime) {
 		$this->session = $session;
@@ -62,9 +61,6 @@ class UserPermissionSetEvent extends Event implements Cancellable {
 		return $this->permission;
 	}
 
-	/**
-	 * @return ?Int
-	 */
 	public function getExpTime() : ?int {
 		return $this->expTime;
 	}

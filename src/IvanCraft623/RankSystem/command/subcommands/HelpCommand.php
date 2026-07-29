@@ -39,6 +39,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use function array_chunk;
 use function count;
+use function is_int;
 use function spl_object_id;
 
 final class HelpCommand extends BaseSubCommand {
@@ -52,6 +53,9 @@ final class HelpCommand extends BaseSubCommand {
 		$this->registerArgument(0, new IntegerArgument("page", true));
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
 		$avaiable = [];
 		foreach ($this->parent->getSubCommands() as $subCommand) {
@@ -63,7 +67,7 @@ final class HelpCommand extends BaseSubCommand {
 		$pageHeight = $sender instanceof Player ? 6 : 48;
 		$chunkedCommands = array_chunk($avaiable, $pageHeight);
 		$maxPageNumber = count($chunkedCommands);
-		if (!isset($args["page"]) || $args["page"] <= 0) {
+		if (!isset($args["page"]) || !is_int($args["page"]) || $args["page"] <= 0) {
 			$pageNumber = 1;
 		} elseif ($args["page"] > $maxPageNumber) {
 			$pageNumber = $maxPageNumber;

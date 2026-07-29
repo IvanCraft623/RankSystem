@@ -50,6 +50,9 @@ final class TagManager {
 		return $this->tags[$tagId] ?? null;
 	}
 
+	/**
+	 * @return Tag[]
+	 */
 	public function getTags() : array {
 		return $this->tags;
 	}

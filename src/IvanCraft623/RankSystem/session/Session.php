@@ -39,9 +39,11 @@ use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\utils\Utils;
 
+use pocketmine\permission\PermissionAttachment;
 use pocketmine\player\Player;
 use pocketmine\promise\Promise;
 use pocketmine\promise\PromiseResolver;
+use pocketmine\utils\AssumptionFailedError;
 use function array_filter;
 use function array_key_exists;
 use function array_key_first;
@@ -50,6 +52,7 @@ use function array_map;
 use function array_merge;
 use function count;
 use function in_array;
+use function is_string;
 use function spl_object_id;
 use function str_replace;
 
@@ -65,21 +68,22 @@ final class Session {
 
 	private bool $initialized = false;
 
-	/** @var \Closure[] */
+	/** @var array<int, \Closure(): void> */
 	private array $onInits = [];
 
 	/** @var RankWrapper[] */
 	private array $ranks = [];
 
-	/** @var String[] */
+	/** @var string[] */
 	private array $permissions = [];
 
 	/** @var array<string, ?int> */
 	private array $userPermissions = [];
 
+	/** @var PermissionAttachment[] */
 	private array $attachments = [];
 
-	/** @var \Closure[] */
+	/** @var array<int, \Closure(): Promise<bool>> */
 	private array $syncQueue = [];
 
 	private bool $synchronized = false;
@@ -96,6 +100,9 @@ final class Session {
 		return $this->initialized;
 	}
 
+	/**
+	 * @param \Closure(): void $onInit
+	 */
 	public function onInitialize(\Closure $onInit) : void {
 		if ($this->initialized) {
 			$onInit();
@@ -188,6 +195,9 @@ final class Session {
 
 	public function getNameTagFormat() : string {
 		$format = $this->plugin->getConfig()->getNested("nametag.format", "{nametag_ranks_prefix}{nametag_name-color}{name}");
+		if (!is_string($format)) {
+			throw new AssumptionFailedError("Expected string for \"nametag.format\" config");
+		}
 		foreach ($this->plugin->getTagManager()->getTags() as $tag) {
 			$format = str_replace($tag->getId(), $tag->getValue($this), $format);
 		}
@@ -200,6 +210,9 @@ final class Session {
 
 	public function getChatFormat() : string {
 		$format = $this->plugin->getConfig()->getNested("chat.format", "{chat_ranks_prefix}{chat_name-color}{name}{chat_format}{message}");
+		if (!is_string($format)) {
+			throw new AssumptionFailedError("Expected string for \"chat.format\" config");
+		}
 		foreach ($this->plugin->getTagManager()->getTags() as $tag) {
 			$format = str_replace($tag->getId(), $tag->getValue($this), $format);
 		}
@@ -226,6 +239,9 @@ final class Session {
 		return $ranks[array_key_first($ranks)];
 	}
 
+	/**
+	 * @return Rank[]
+	 */
 	public function getTempRanks() : array {
 		return array_map(function(RankWrapper $wrapper) {
 			return $wrapper->getRank();
@@ -255,6 +271,9 @@ final class Session {
 		return null;
 	}
 
+	/**
+	 * @param \Closure(): Promise<bool> $closure
+	 */
 	private function addToSyncQueue(\Closure $closure) : void {
 		$this->syncQueue[] = $closure;
 		if ($this->synchronized) {
@@ -300,6 +319,7 @@ final class Session {
 		}
 
 		$this->addToSyncQueue(function () use ($rank, $expTime) : Promise {
+			/** @var PromiseResolver<bool> $resolver */
 			$resolver = new PromiseResolver();
 			$this->plugin->getProvider()->setRank($this->name, $rank->getName(), $expTime)->onCompletion(
 				function (array $ranks) use ($resolver) {
@@ -334,6 +354,7 @@ final class Session {
 		}
 
 		$this->addToSyncQueue(function () use ($rank) : Promise {
+			/** @var PromiseResolver<bool> $resolver */
 			$resolver = new PromiseResolver();
 				$this->plugin->getProvider()->removeRank($this->name, $rank->getName())->onCompletion(
 				function (array $ranks) use ($resolver) {
@@ -348,6 +369,9 @@ final class Session {
 		return true;
 	}
 
+	/**
+	 * @return string[]
+	 */
 	public function getPermissions() : array {
 		return $this->permissions;
 	}
@@ -389,6 +413,7 @@ final class Session {
 		}
 
 		$this->addToSyncQueue(function () use ($perm, $expTime) : Promise {
+			/** @var PromiseResolver<bool> $resolver */
 			$resolver = new PromiseResolver();
 				$this->plugin->getProvider()->setPermission($this->name, $perm, $expTime)->onCompletion(
 				function (array $permissions) use ($resolver) {
@@ -415,6 +440,7 @@ final class Session {
 		}
 
 		$this->addToSyncQueue(function () use ($perm) : Promise {
+			/** @var PromiseResolver<bool> $resolver */
 			$resolver = new PromiseResolver();
 				$this->plugin->getProvider()->removePermission($this->name, $perm)->onCompletion(
 				function (array $permissions) use ($resolver) {

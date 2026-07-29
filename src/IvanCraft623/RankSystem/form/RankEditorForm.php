@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace IvanCraft623\RankSystem\form;
 
 use IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\RankSystem;
 
 use jojoe77777\FormAPI\CustomForm;
@@ -39,10 +40,20 @@ use pocketmine\player\Player;
 use function explode;
 use function implode;
 
+/**
+ * @phpstan-import-type NameTagFormat from Rank
+ * @phpstan-import-type ChatFormat from Rank
+ */
 final class RankEditorForm {
 
 	private Translator $translator;
 
+	/**
+	 * @param NameTagFormat $nametag
+	 * @param ChatFormat    $chat
+	 * @param string[]      $permissions
+	 * @param string[]      $inheritance
+	 */
 	public function __construct(
 		private string $name,
 		private array $nametag = ["prefix" => "", "nameColor" => "§f"],
@@ -108,6 +119,7 @@ final class RankEditorForm {
 			if ($result !== null) {
 				$data = $result;
 				unset($data[0]);
+				/** @phpstan-var NameTagFormat $data */
 				$this->nametag = $data;
 			}
 			$this->send($player);
@@ -124,6 +136,7 @@ final class RankEditorForm {
 			if ($result !== null) {
 				$data = $result;
 				unset($data[0]);
+				/** @phpstan-var ChatFormat $data */
 				$this->chat = $data;
 			}
 			$this->send($player);

@@ -29,10 +29,13 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\migrator;
 
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Config;
 use function explode;
 use function file_exists;
+use function is_array;
 use function is_numeric;
+use function is_string;
 use function rename;
 
 /**
@@ -82,13 +85,17 @@ class LegacyRankSystem extends Migrator {
 			while ($row = $results->fetchArray()) {
 				$user = $row["user"] ?? null;
 				if ($user !== null) {
+					if (!is_string($user)) {
+						throw new AssumptionFailedError("Expected string for user field");
+					}
 					$session = $this->sessionManager->get($user);
 					$ranks = [];
 					$ranksExpTime = [];
-					$permissions = explode(", ", ($row["permissions"] ?? ""));
+					$rawPermissions = $row["permissions"] ?? "";
+					$permissions = explode(", ", is_string($rawPermissions) ? $rawPermissions : "");
 					$stringRanks = $row["ranks"] ?? "";
 					if ($stringRanks !== "") {
-						$stringRanks = explode(", ", $stringRanks);
+						$stringRanks = explode(", ", is_string($stringRanks) ? $stringRanks : "");
 						foreach ($stringRanks as $stringRank) {
 							$data = explode(";", $stringRank);
 							$expTime = $data[1] ?? null;
@@ -123,12 +130,27 @@ class LegacyRankSystem extends Migrator {
 			foreach ($usersData->getAll() as $user => $data) {
 				$session = $this->sessionManager->get((string) $user);
 				$session->onInitialize(function() use ($session, $data) {
-					foreach ($data["ranks"] as $name => $expTime) {
-						$rank = $this->rankManager->getRank($name);
+					if (!is_array($data)) {
+						throw new AssumptionFailedError("Expected array for user data");
+					}
+					$ranks = $data["ranks"] ?? [];
+					if (!is_array($ranks)) {
+						throw new AssumptionFailedError("Expected array for ranks field");
+					}
+					$dataPermissions = $data["permissions"] ?? [];
+					if (!is_array($dataPermissions)) {
+						throw new AssumptionFailedError("Expected array for permissions field");
+					}
+					foreach ($ranks as $name => $expTime) {
+						$rankName = (string) $name;
+						$rank = $this->rankManager->getRank($rankName);
 						if ($rank !== null) {
 							$session->setRank($rank, is_numeric($expTime) ? ((int) $expTime) : null);
 						}
-						foreach ($data["permissions"] as $permission) {
+						foreach ($dataPermissions as $permission) {
+							if (!is_string($permission)) {
+								throw new AssumptionFailedError("Expected string for permission");
+							}
 							$session->setPermission($permission);
 						}
 					}

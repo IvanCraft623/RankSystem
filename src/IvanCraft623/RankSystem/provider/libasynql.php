@@ -33,12 +33,15 @@ use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\promise\Promise;
 use pocketmine\promise\PromiseResolver;
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\SingletonTrait;
 
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql as libasynqlDatabase;
 use poggit\libasynql\SqlError;
 use function count;
+use function is_array;
+use function is_string;
 use function json_encode;
 use function strtolower;
 use const JSON_THROW_ON_ERROR;
@@ -54,11 +57,18 @@ class libasynql extends Provider {
 		$this->plugin = RankSystem::getInstance();
 
 		$configData = $this->plugin->getConfig()->get("database");
+		if (!is_array($configData)) {
+			throw new AssumptionFailedError("Expected array for \"database\" config");
+		}
 		$this->database = libasynqlDatabase::create($this->plugin, $configData, [
 			"sqlite" => "database/sqlite.sql",
 			"mysql" => "database/mysql.sql",
 		]);
-		$this->name = strtolower($configData["type"] ?? "libasynql");
+		$dbType = $configData["type"] ?? "libasynql";
+		if (!is_string($dbType)) {
+			throw new AssumptionFailedError("Expected string for \"database.type\" config");
+		}
+		$this->name = strtolower($dbType);
 
 		$this->database->executeGeneric('table.users');
 	}
@@ -77,11 +87,11 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<?UserData>
 	 */
 	public function getUserData(string $name) : Promise {
+		/** @phpstan-var PromiseResolver<?UserData> $dataPromiseResolver */
 		$dataPromiseResolver = new PromiseResolver();
 		$this->database->executeSelect("data.users.get", [
 			"name" => $name
 		], function (array $rows) use ($dataPromiseResolver) {
-			$playerdata = null;
 			if (isset($rows[0])) {
 				$dataPromiseResolver->resolve(UserData::jsonDeserialize($rows[0]));
 			} else {
@@ -98,6 +108,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<bool>
 	 */
 	public function isInDb(string $name) : Promise {
+		/** @phpstan-var PromiseResolver<bool> $promiseResolver */
 		$promiseResolver = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($promiseResolver) {
@@ -127,6 +138,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<array<string, ?int>>
 	 */
 	public function setRank(string $name, string $rank, ?int $expTime = null) : Promise {
+		/** @phpstan-var PromiseResolver<array<string, ?int>> $resultPromise */
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($name, $rank, $expTime, $resultPromise) {
@@ -148,6 +160,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<array<string, ?int>>
 	 */
 	public function removeRank(string $name, string $rank) : Promise {
+		/** @phpstan-var PromiseResolver<array<string, ?int>> $resultPromise */
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($name, $rank, $resultPromise) {
@@ -192,6 +205,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<array<string, ?int>>
 	 */
 	public function setPermission(string $name, string $permission, ?int $expTime = null) : Promise {
+		/** @phpstan-var PromiseResolver<array<string, ?int>> $resultPromise */
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($name, $permission, $expTime, $resultPromise) {
@@ -213,6 +227,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<array<string, ?int>>
 	 */
 	public function removePermission(string $name, string $permission) : Promise {
+		/** @phpstan-var PromiseResolver<array<string, ?int>> $resultPromise */
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($name, $permission, $resultPromise) {

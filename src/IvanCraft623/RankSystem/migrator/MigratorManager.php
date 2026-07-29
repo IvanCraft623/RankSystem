@@ -41,6 +41,9 @@ final class MigratorManager {
 		return $this->migrators[$name] ?? null;
 	}
 
+	/**
+	 * @return array<string, Migrator>
+	 */
 	public function getAll() : array {
 		return $this->migrators;
 	}

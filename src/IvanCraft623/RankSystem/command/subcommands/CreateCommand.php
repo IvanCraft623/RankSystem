@@ -38,6 +38,9 @@ use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
+use pocketmine\utils\AssumptionFailedError;
+
+use function is_string;
 
 final class CreateCommand extends BaseSubCommand {
 
@@ -52,19 +55,25 @@ final class CreateCommand extends BaseSubCommand {
 	}
 
 	/**
-	 * @param Player $sender
+	 * @param Player  $sender
+	 * @param mixed[] $args
 	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
-		if ($this->plugin->getRankManager()->exists($args["rank"])) {
+		$rankName = $args["rank"];
+		if (!is_string($rankName)) {
+			throw new AssumptionFailedError("Expected string argument \"rank\"");
+		}
+
+		if ($this->plugin->getRankManager()->exists($rankName)) {
 			$sender->sendMessage($this->plugin->getTranslator()->translate($sender, "rank.already_exists", [
-				"{%rank}" => $args["rank"]
+				"{%rank}" => $rankName
 			]));
 		} else {
 			$this->plugin->getFormManager()->sendRankEditor(
 				$sender,
-				$args["rank"],
-				["prefix" => "§8[§7" . $args["rank"] . "§8] ", "nameColor" => "§f"],
-				["prefix" => "§8[§7" . $args["rank"] . "§8] ", "nameColor" => "§f", "chatFormat" => "§e: §7"]
+				$rankName,
+				["prefix" => "§8[§7" . $rankName . "§8] ", "nameColor" => "§f"],
+				["prefix" => "§8[§7" . $rankName . "§8] ", "nameColor" => "§f", "chatFormat" => "§e: §7"]
 			);
 		}
 	}

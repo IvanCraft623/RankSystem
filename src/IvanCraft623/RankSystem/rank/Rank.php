@@ -31,20 +31,36 @@ namespace IvanCraft623\RankSystem\rank;
 
 use function array_merge;
 
+/**
+ * @phpstan-type NameTagFormat array{
+ * 	prefix: string,
+ * 	nameColor: string
+ * }
+ *
+ * @phpstan-type ChatFormat array{
+ * 	prefix: string,
+ * 	nameColor: string,
+ * 	chatFormat: string
+ * }
+ */
 final class Rank {
 
 	private string $name;
 
-	private array $nametag = [];
+	/** @var NameTagFormat */
+	private array $nametag;
 
-	private array $chat = [];
+	/** @var ChatFormat */
+	private array $chat;
 
+	/** @var string[] */
 	private array $permissions = [];
 
 	/** @var Rank[] */
 	private array $inheritance = [];
 
-	/* Example of how provide the variables:
+	/**
+	 * Example of how provide the variables:
 	 *
 	 * $nametag = [
 	 *		"prefix" => "§2[§aCat§2] ",
@@ -57,7 +73,11 @@ final class Rank {
 	 *		"chatFormat" => "§5: §b"
 	 * ];
 	 *
-	 * $perms = ["example.perm", "example.perm2"]:
+	 * $perms = ["example.perm", "example.perm2"];
+	 *
+	 * @param NameTagFormat $nametag
+	 * @param ChatFormat    $chat
+	 * @param string[]      $permissions
 	 */
 	public function __construct(string $name, array $nametag, array $chat, array $permissions = []) {
 		$this->name = $name;
@@ -70,18 +90,30 @@ final class Rank {
 		return $this->name;
 	}
 
+	/**
+	 * @return NameTagFormat
+	 */
 	public function getNameTagFormat() : array {
 		return $this->nametag;
 	}
 
+	/**
+	 * @return ChatFormat
+	 */
 	public function getChatFormat() : array {
 		return $this->chat;
 	}
 
+	/**
+	 * @return string[]
+	 */
 	public function getPermissions() : array {
 		return $this->permissions;
 	}
 
+	/**
+	 * @return Rank[]
+	 */
 	public function getInheritance() : array {
 		return $this->inheritance;
 	}

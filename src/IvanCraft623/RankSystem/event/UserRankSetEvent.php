@@ -47,7 +47,6 @@ class UserRankSetEvent extends Event implements Cancellable {
 
 	/**
 	 * PlayerRankSetEvent constructor.
-	 * @param ?int $expTime
 	 */
 	public function __construct(Session $session, Rank $rank, ?int $expTime) {
 		$this->session = $session;
@@ -63,9 +62,6 @@ class UserRankSetEvent extends Event implements Cancellable {
 		return $this->rank;
 	}
 
-	/**
-	 * @return ?Int
-	 */
 	public function getExpTime() : ?int {
 		return $this->expTime;
 	}

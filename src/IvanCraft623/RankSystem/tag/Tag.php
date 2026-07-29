@@ -37,7 +37,13 @@ use pocketmine\utils\Utils;
 
 final class Tag {
 
-	public function __construct(protected string $name, protected Closure $valueCallback) {
+	/**
+	 * @param Closure(Session $uset): string $valueCallback
+	 */
+	public function __construct(
+		protected string $name,
+		protected Closure $valueCallback
+	) {
 		Utils::validateCallableSignature(static function(Session $user) : string{ return ""; }, $valueCallback);
 	}
 

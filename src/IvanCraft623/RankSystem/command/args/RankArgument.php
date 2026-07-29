@@ -55,6 +55,9 @@ final class RankArgument extends StringEnumArgument {
 		return RankManager::getInstance()->getRank($string);
 	}
 
+	/**
+	 * @return string[]
+	 */
 	public function getEnumValues() : array {
 		return array_keys(RankManager::getInstance()->getAll());
 	}

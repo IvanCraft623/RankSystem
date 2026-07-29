@@ -34,9 +34,12 @@ use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\BaseSubCommand;
 
 use IvanCraft623\RankSystem\command\args\RankArgument;
+use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\command\CommandSender;
+use pocketmine\utils\AssumptionFailedError;
+use function is_string;
 
 final class RemoveRankCommand extends BaseSubCommand {
 
@@ -50,20 +53,33 @@ final class RemoveRankCommand extends BaseSubCommand {
 		$this->registerArgument(1, new RankArgument("rank"));
 	}
 
+	/**
+	 * @param mixed[] $args
+	 */
 	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void {
-		$session = $this->plugin->getSessionManager()->get($args["user"]);
-		$session->onInitialize(function () use ($session, $sender, $args) {
+		$user = $args["user"];
+		if (!is_string($user)) {
+			throw new AssumptionFailedError("Expected string argument \"user\"");
+		}
+
+		$rank = $args["rank"];
+		if (!$rank instanceof Rank) {
+			throw new AssumptionFailedError("Expected Rank argument \"rank\"");
+		}
+
+		$session = $this->plugin->getSessionManager()->get($user);
+		$session->onInitialize(function () use ($session, $sender, $rank) {
 			$translator = $this->plugin->getTranslator();
-			if (!$session->hasRank($args["rank"])) {
+			if (!$session->hasRank($rank)) {
 				$sender->sendMessage($translator->translate($sender, "user.remove_rank.no_rank", [
 					"{%user}" => $session->getName(),
-					"{%rank}" => $args["rank"]->getName()
+					"{%rank}" => $rank->getName()
 				]));
 			} else {
-				$session->removeRank($args["rank"]);
+				$session->removeRank($rank);
 				$sender->sendMessage($translator->translate($sender, "user.remove_rank.success", [
 					"{%user}" => $session->getName(),
-					"{%rank}" => $args["rank"]->getName()
+					"{%rank}" => $rank->getName()
 				]));
 			}
 		});

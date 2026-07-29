@@ -50,6 +50,7 @@ use IvanCraft623\RankSystem\task\UpdateTask;
 use JackMD\ConfigUpdater\ConfigUpdater;
 use JackMD\UpdateNotifier\UpdateNotifier;
 
+use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\DisablePluginException;
 use pocketmine\plugin\PluginBase;
@@ -58,8 +59,10 @@ use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
 use function array_map;
 use function basename;
+use function count;
 use function file_exists;
 use function glob;
+use function is_string;
 use function mkdir;
 use function parse_ini_file;
 use function strpos;
@@ -76,8 +79,10 @@ class RankSystem extends PluginBase {
 
 	public const DEFAULT_LANGUAGE = "en_US";
 
+	/** @var mixed[] */
 	private static array $globalPerms = [];
 
+	/** @var Permission[] */
 	private static array $pmDefaultPerms = [];
 
 	private Provider $provider;
@@ -95,7 +100,7 @@ class RankSystem extends PluginBase {
 			$this->reloadConfig();
 		}
 
-		self::$globalPerms = $this->getConfig()->get("Global_Perms");
+		self::$globalPerms = (array) $this->getConfig()->get("Global_Perms", []);
 		$this->saveResources();
 		$this->loadTranslations();
 		$this->getRankManager()->load();
@@ -155,15 +160,19 @@ class RankSystem extends PluginBase {
 		return new Config(self::getInstance()->getDataFolder() . $value, Config::YAML);
 	}
 
+	/**
+	 * @return mixed[]
+	 */
 	public function getGlobalPerms() : array {
 		return self::$globalPerms;
 	}
 
 	/**
 	 * From PurePerms
+	 * @return Permission[]
 	 */
 	public function getPmmpPerms() : array {
-		if (self::$pmDefaultPerms === []) {
+		if (count(self::$pmDefaultPerms) === 0) {
 			foreach (PermissionManager::getInstance()->getPermissions() as $permission) {
 				if (strpos($permission->getName(), "pocketmine") !== false) {
 					self::$pmDefaultPerms[] = $permission;
@@ -173,6 +182,9 @@ class RankSystem extends PluginBase {
 		return self::$pmDefaultPerms;
 	}
 
+	/**
+	 * @return Permission[]
+	 */
 	public function getPluginPerms(PluginBase $plugin) : array {
 		$pluginPerms = [];
 		foreach ($plugin->getDescription()->getPermissions() as $default => $perms) {
@@ -219,6 +231,9 @@ class RankSystem extends PluginBase {
 		}
 
 		$l = $this->getConfig()->get("default-language", self::DEFAULT_LANGUAGE);
+		if (!is_string($l)) {
+			$l = self::DEFAULT_LANGUAGE;
+		}
 		$lang = $this->translator->getLanguage($l) ?? throw new \InvalidArgumentException("Language $l not found");
 		$this->translator->setDefaultLanguage($lang);
 	}
@@ -233,7 +248,9 @@ class RankSystem extends PluginBase {
 
 	private function loadProvider() : void {
 		if (!isset($this->provider)) {
-			$name = $this->getConfig()->get("database")["type"] ?? "";
+			$database = (array) $this->getConfig()->get("database", []);
+			$nameRaw = $database["type"] ?? "";
+			$name = is_string($nameRaw) ? $nameRaw : "";
 			switch (strtolower($name)) {
 				case "sqlite":
 				case "sqlite3":
