@@ -19,10 +19,6 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/LatamPMDevs/Commando.git"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/LatamPMDevs/ConfigUpdater.git"
         },
         {

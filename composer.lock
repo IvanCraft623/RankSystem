@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16223a08270ab88482107e6af1f2aff9",
+    "content-hash": "8f9dde0ade1cea3e68992fdc45d96bfd",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -131,12 +131,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CortexPE/Commando.git",
-                "reference": "ee5b96f23df6dfacb8b4bc33f74f01fabb798cab"
+                "reference": "62db2be0ef4b5d509ee2832de876fdb4da401b6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CortexPE/Commando/zipball/ee5b96f23df6dfacb8b4bc33f74f01fabb798cab",
-                "reference": "ee5b96f23df6dfacb8b4bc33f74f01fabb798cab",
+                "url": "https://api.github.com/repos/CortexPE/Commando/zipball/62db2be0ef4b5d509ee2832de876fdb4da401b6e",
+                "reference": "62db2be0ef4b5d509ee2832de876fdb4da401b6e",
                 "shasum": ""
             },
             "require": {
@@ -166,7 +166,7 @@
                 "issues": "https://github.com/CortexPE/Commando/issues",
                 "source": "https://github.com/CortexPE/Commando/tree/master"
             },
-            "time": "2025-10-27T12:37:49+00:00"
+            "time": "2026-01-09T17:59:28+00:00"
         },
         {
             "name": "ivancraft623/languages",

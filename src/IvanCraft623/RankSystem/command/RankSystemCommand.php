@@ -58,10 +58,6 @@ final class RankSystemCommand extends BaseCommand {
 		$this->setPermissionMessage("§cYou don't have permission to us this command!");
 	}
 
-	public function getPermission() : string { //f*ck cortexpe/commando that hasn't updated the name to getPermissions... reeeee
-		return "ranksystem.command";
-	}
-
 	public function prepare() : void {
 		$this->registerSubCommand(new CreateCommand($this->plugin));
 		$this->registerSubCommand(new CreditsCommand($this->plugin));
