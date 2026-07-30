@@ -122,7 +122,7 @@ class libasynql extends Provider {
 	/**
 	 * @param array<string, ?int> $ranks
 	 */
-	public function setRanks(string $name, array $ranks, ?callable $onSuccess = null, ?callable $onError = null) : void {
+	public function setRanks(string $name, array $ranks, ?Closure $onSuccess = null, ?Closure $onError = null) : void {
 		$this->database->executeGeneric("data.users.setRanks", [
 			"name" => $name,
 			"ranks" => json_encode($ranks, JSON_THROW_ON_ERROR)
@@ -189,7 +189,7 @@ class libasynql extends Provider {
 	/**
 	 * @param array<string, ?int> $permissions
 	 */
-	public function setPermissions(string $name, array $permissions, ?callable $onSuccess = null, ?callable $onError = null) : void {
+	public function setPermissions(string $name, array $permissions, ?Closure $onSuccess = null, ?Closure $onError = null) : void {
 		$this->database->executeGeneric("data.users.setPermissions", [
 			"name" => $name,
 			"permissions" => json_encode($permissions, JSON_THROW_ON_ERROR)
@@ -253,7 +253,7 @@ class libasynql extends Provider {
 		return $resultPromise->getPromise();
 	}
 
-	public function delete(string $name, ?callable $onSuccess = null, ?callable $onError = null) : void {
+	public function delete(string $name, ?Closure $onSuccess = null, ?Closure $onError = null) : void {
 		$this->database->executeGeneric('data.users.delete', [
 			"name" => $name
 		], $onSuccess, function (SqlError $result) use ($onError) {
