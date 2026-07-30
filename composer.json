@@ -4,7 +4,7 @@
     "type": "project",
     "license": "Apache-2.0",
     "require": {
-        "cortexpe/commando": "dev-master",
+        "cortexpe/commando": "dev-no-backslashes",
         "ivancraft623/languages": "dev-main",
         "ifera-mc/config-updater": "dev-master",
         "latampmdevs/formapi": "dev-master",
@@ -18,33 +18,8 @@
     },
     "repositories": [
         {
-            "type": "package",
-            "package": {
-                "name": "cortexpe/commando",
-                "description": "A Command Framework virion for PocketMine-MP",
-                "type": "library",
-                "license": "LGPL-3.0-only",
-                "version": "dev-master",
-                "source": {
-                    "type": "git",
-                    "url": "https://github.com/CortexPE/Commando.git",
-                    "reference": "master"
-                },
-                "autoload": {
-                    "psr-4": {
-                        "CortexPE\\Commando\\": "src/CortexPE/Commando/"
-                    }
-                },
-                "require": {
-                    "pocketmine/pocketmine-mp": "^5.36.0"
-                },
-                "extra": {
-                    "virion": {
-                        "spec": "3.0",
-                        "namespace-root": "CortexPE\\Commando"
-                    }
-                }
-            }
+            "type": "vcs",
+            "url": "https://github.com/LatamPMDevs/Commando.git"
         },
         {
             "type": "package",

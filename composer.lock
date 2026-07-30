@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "92a03723b738144b280656ca2eba4eef",
+    "content-hash": "338ae859926d1d96b7389019af3a84ce",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -127,11 +127,17 @@
         },
         {
             "name": "cortexpe/commando",
-            "version": "dev-master",
+            "version": "dev-no-backslashes",
             "source": {
                 "type": "git",
-                "url": "https://github.com/CortexPE/Commando.git",
-                "reference": "master"
+                "url": "https://github.com/LatamPMDevs/Commando.git",
+                "reference": "4cecdf95739358c502ccbc2e30edc60ca44a59b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LatamPMDevs/Commando/zipball/4cecdf95739358c502ccbc2e30edc60ca44a59b5",
+                "reference": "4cecdf95739358c502ccbc2e30edc60ca44a59b5",
+                "shasum": ""
             },
             "require": {
                 "pocketmine/pocketmine-mp": "^5.36.0"
@@ -145,13 +151,19 @@
             },
             "autoload": {
                 "psr-4": {
-                    "CortexPE\\Commando\\": "src/CortexPE/Commando/"
+                    "CortexPE\\Commando\\": [
+                        "src/CortexPE/Commando/"
+                    ]
                 }
             },
             "license": [
                 "LGPL-3.0-only"
             ],
-            "description": "A Command Framework virion for PocketMine-MP"
+            "description": "A Command Framework virion for PocketMine-MP ",
+            "support": {
+                "source": "https://github.com/LatamPMDevs/Commando/tree/no-backslashes"
+            },
+            "time": "2026-07-30T17:49:37+00:00"
         },
         {
             "name": "ifera-mc/config-updater",
