@@ -1,0 +1,75 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Phar build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: pmmp/setup-php-action@3.2.0
+        with:
+          php-version: 8.2
+          install-path: ./bin
+
+      - name: Get plugin info
+        id: plugin-info
+        run: |
+          PM_VERSION=$(php -r "
+            \$api = yaml_parse_file('plugin.yml')['api'];
+            echo is_array(\$api) ? implode(', ', \$api) : \$api;
+          ")
+          PLUGIN_VERSION=$(php -r "echo yaml_parse_file('plugin.yml')['version'];")
+          PLUGIN_NAME=$(php -r "echo yaml_parse_file('plugin.yml')['name'];")
+          echo "PM_VERSION=$PM_VERSION" >> $GITHUB_OUTPUT
+          echo "PLUGIN_VERSION=$PLUGIN_VERSION" >> $GITHUB_OUTPUT
+          echo "PLUGIN_NAME=$PLUGIN_NAME" >> $GITHUB_OUTPUT
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --prefer-dist --no-interaction --classmap-authoritative --ignore-platform-reqs
+
+      - uses: SOF3/pharynx@v0.2
+        id: pharynx
+        with:
+          stage-poggit: true # TODO: set to false on poggit shutdown :(
+
+      # TODO: open a pharynx issue requesting a compression flag
+      - name: Compress phar
+        run: |
+          php -dphar.readonly=0 -r "
+            \$phar = new Phar('${{ steps.pharynx.outputs.output-phar }}');
+            \$phar->compressFiles(Phar::GZ);
+          "
+
+      - name: Rename phar
+        id: rename-phar
+        run: |
+          PHAR_PATH="$RUNNER_TEMP/${{ steps.plugin-info.outputs.PLUGIN_NAME }}.phar"
+          mv ${{ steps.pharynx.outputs.output-phar }} $PHAR_PATH
+          echo "PHAR_PATH=$PHAR_PATH" >> $GITHUB_OUTPUT
+
+      - name: Update the nightly tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag --force nightly ${{ github.sha }} && git push --force origin tag nightly
+
+      - name: Publish Nightly Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: nightly
+          name: Nightly Build ${{ steps.plugin-info.outputs.PLUGIN_VERSION }}+dev
+          prerelease: true
+          body: |
+            For PocketMine-MP ${{ steps.plugin-info.outputs.PM_VERSION }}
+            From commit: ${{ github.sha }}
+            Generated on: ${{ github.event.head_commit.timestamp }}
+            ⚠️ This is a development build. Not recommended for production use.
+          files: ${{ steps.rename-phar.outputs.PHAR_PATH }}
