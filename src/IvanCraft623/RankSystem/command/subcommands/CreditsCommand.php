@@ -55,7 +55,7 @@ final class CreditsCommand extends BaseSubCommand {
 		$sender->sendMessage(
 			"§a---- §6" . $this->plugin->getName() . " §b" . $translator->translate($sender, "text.credits") . " §a----\n\n" .
 			"§e" . $translator->translate($sender, "text.author") . ": §7IvanCraft623 / IvanCraft236\n" .
-			"§e" . $translator->translate($sender, "text.website") . ": §7https://poggit.pmmp.io/p/RankSystem\n" .
+			"§e" . $translator->translate($sender, "text.website") . ": §7" . $this->plugin->getDescription()->getWebsite() . "\n" .
 			"§e" . $translator->translate($sender, "text.donations") . ": §7" . RankSystem::DONATIONS_URL . "\n" .
 			"§e" . $translator->translate($sender, "text.sponsors") . ": §7" . implode(", ", $this->plugin->getSponsors()) . "\n\n" .
 			$translator->translate($sender, "credits.text")
