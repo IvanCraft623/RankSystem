@@ -1,30 +1,21 @@
-[![](https://poggit.pmmp.io/shield.state/RankSystem)](https://poggit.pmmp.io/p/RankSystem)
-[![](https://poggit.pmmp.io/shield.dl.total/RankSystem)](https://poggit.pmmp.io/p/RankSystem)
-
 <div align="center">
-  <h1> 👑 RankSystem 🔧</h1>
-  <p><strong>The most powerful and flexible Rank & Permissions Manager for PocketMine-MP</strong></p>
-  
-  <a href="https://poggit.pmmp.io/p/RankSystem">
-    <img src="https://img.shields.io/badge/Download-Poggit-2292ee?style=for-the-badge&logo=pocketmine&logoColor=white" alt="Download on Poggit">
-  </a>
+  <h1>👑 RankSystem 🔧</h1>
+  <p>The most powerful and flexible Rank & Permissions Manager for PocketMine-MP</p>
+
+  [![CI](https://img.shields.io/github/actions/workflow/status/IvanCraft623/RankSystem/phpstan.yml?label=CI&style=flat&logo=github)](https://github.com/IvanCraft623/RankSystem/actions/workflows/phpstan.yml)
+  [![Poggit Downloads](https://poggit.pmmp.io/shield.dl.total/RankSystem?style=flat)](https://poggit.pmmp.io/p/RankSystem)
+  [![bStats Servers](https://img.shields.io/bstats/servers/33024?style=flat&logo=googleanalytics&logoColor=white)](https://bstats.org/plugin/pocketmine/RankSystem/33024)
+  [![bStats Players](https://img.shields.io/bstats/players/33024?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTIgNS41YTMuNSAzLjUgMCAxIDEgNS44OTggMi41NDkgNS41MDggNS41MDggMCAwIDEgMy4wMzQgNC4wODQuNzUuNzUgMCAxIDEtMS40ODIuMjM1IDQgNCAwIDAgMC03LjkgMCAuNzUuNzUgMCAwIDEtMS40ODItLjIzNkE1LjUwNyA1LjUwNyAwIDAgMSAzLjEwMiA4LjA1IDMuNDkzIDMuNDkzIDAgMCAxIDIgNS41Wk0xMSA0YTMuMDAxIDMuMDAxIDAgMCAxIDIuMjIgNS4wMTggNS4wMSA1LjAxIDAgMCAxIDIuNTYgMy4wMTIuNzQ5Ljc0OSAwIDAgMS0uODg1Ljk1NC43NTIuNzUyIDAgMCAxLS41NDktLjUxNCAzLjUwNyAzLjUwNyAwIDAgMC0yLjUyMi0yLjM3Mi43NS43NSAwIDAgMS0uNTc0LS43M3YtLjM1MmEuNzUuNzUgMCAwIDEgLjQxNi0uNjcyQTEuNSAxLjUgMCAwIDAgMTEgNS41Ljc1Ljc1IDAgMCAxIDExIDRabS01LjUtLjVhMiAyIDAgMSAwLS4wMDEgMy45OTlBMiAyIDAgMCAwIDUuNSAzLjVaIi8+PC9zdmc+)](https://bstats.org/plugin/pocketmine/RankSystem/33024)
+  [![License](https://img.shields.io/github/license/IvanCraft623/RankSystem?style=flat&logo=opensourceinitiative&logoColor=white)](LICENSE)
 </div>
 
+---
 
-## 📖 Description
+## 📃 Description
 
-**RankSystem** is a permissions manager for **PocketMine-MP**. It simplifies complex hierarchy management with a system for multiple ranks, temporal permissions, and a user-friendly forms interface.
+**RankSystem** is a permissions manager for [PocketMine-MP](https://github.com/pmmp/PocketMine-MP). It simplifies complex hierarchy management with a system for multiple ranks, temporal permissions, and a user-friendly forms interface.
 
-#### 💖 Support the Project
-
-RankSystem is and will always be **free and open-source**. If this project helps your server grow, consider supporting me and its development.
-
-<p align="center">
-  <a href="https://donate.endergames.org/IvanCraft623">
-    <img src="https://img.shields.io/badge/Tip-Support%20Project-orange?style=for-the-badge&logo=heart" alt="Tip">
-  </a>
-</p>
-
+---
 
 ## ✨ Features
 
@@ -38,6 +29,25 @@ RankSystem is and will always be **free and open-source**. If this project helps
 * 💻 **API Ready:** Flexible API designed for plugin developers.
 * 📊 **Integrations:** Full ScoreHud integration to display ranks on scoreboards.
 
+---
+
+## 📥 Download
+
+> ℹ️ No stable release is available yet. Every commit automatically generates a downloadable nightly build.
+
+<div align="center">
+
+[![Download Nightly](https://img.shields.io/badge/dynamic/yaml?url=https://raw.githubusercontent.com/IvanCraft623/RankSystem/main/plugin.yml&query=$.version&label=Download&suffix=%2Bdev&color=blueviolet&style=for-the-badge&logo=github&logoColor=white)](https://github.com/IvanCraft623/RankSystem/releases/download/nightly/RankSystem.phar)
+
+*Always up to date · Built from the latest commit*
+
+<br/>
+
+<sub>Previous releases can be found on <a href="https://poggit.pmmp.io/p/RankSystem">Poggit</a> while the service is still running.</sub>
+
+</div>
+
+---
 
 ## 🤖 Commands
 
@@ -59,6 +69,7 @@ RankSystem is and will always be **free and open-source**. If this project helps
 > [!TIP]
 > You can use `/ranks` as a shortcut for the `/ranksystem` command.
 
+---
 
 ## 📊 ScoreHud Integration
 
@@ -70,7 +81,9 @@ Use these tags to display information in [ScoreHud](https://poggit.pmmp.io/p/Sco
 | `{ranksystem.highest_rank}` | Shows the player's highest rank. |
 | `{ranksystem.nametag}` | Shows the RankSystem assigned NameTag. |
 
-## 📋 FAQ (Frequently Asked Questions)
+---
+
+## 📋 FAQ
 
 <details>
 <summary><b>Why is the previous rank not removed when I use /ranks setrank?</b></summary>
@@ -118,7 +131,7 @@ RankSystem includes a powerful built-in tool to explore permissions. You can use
 <br>
 <code>/ranks permissions &lt;pluginName&gt; [page]</code>
 <br><br>
-This will list all permissions registered by that specific plugin. You can also use <code>pocketmine</code> as the argument to see all core permissions! 
+This will list all permissions registered by that specific plugin. You can also use <code>pocketmine</code> as the argument to see all core permissions!
 <br><i>Note: This works as long as the plugin has correctly registered its permissions in its <code>plugin.yml</code> or via code.</i>
 </details>
 
@@ -132,7 +145,20 @@ Please <b>report the issue on GitHub</b>. Make sure to include the crash dump an
 Don't hesitate to <b>ping me on the official PMMP Discord</b>. I'm usually around to help with configuration questions.
 </details>
 
+---
 
 ## 🛠 For Developers
 
-Find examples, API methods, and tutorials on **[RankSystem Wiki](https://github.com/IvanCraft623/RankSystem/wiki)**.
+Find examples, API methods, and tutorials on the **[RankSystem Wiki](https://github.com/IvanCraft623/RankSystem/wiki)**.
+
+---
+
+## 💖 Support the Project
+
+RankSystem is and will always be **free and open-source**. If you enjoy the plugin or it helps your server, consider supporting future development — it goes a long way!
+
+<div align="center">
+
+[![Donate](https://img.shields.io/badge/Donate-Support_Me-ff69b4?style=for-the-badge&logo=ilovepdf&logoColor=white)](https://donate.endergames.org/IvanCraft623)
+
+</div>
