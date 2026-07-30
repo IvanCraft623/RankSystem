@@ -29,13 +29,13 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem;
 
-use IvanCraft623\RankSystem\libs\_99cb2885b9e1a116\bStats\PocketmineMp\charts\SimplePie;
-use IvanCraft623\RankSystem\libs\_99cb2885b9e1a116\bStats\PocketmineMp\Metrics;
+use IvanCraft623\RankSystem\libs\_3f32fefb3b685e70\bStats\PocketmineMp\charts\SimplePie;
+use IvanCraft623\RankSystem\libs\_3f32fefb3b685e70\bStats\PocketmineMp\Metrics;
 
-use IvanCraft623\RankSystem\libs\_99cb2885b9e1a116\CortexPE\Commando\PacketHooker;
+use IvanCraft623\RankSystem\libs\_3f32fefb3b685e70\CortexPE\Commando\PacketHooker;
 
-use IvanCraft623\RankSystem\libs\_99cb2885b9e1a116\IvanCraft623\languages\Language;
-use IvanCraft623\RankSystem\libs\_99cb2885b9e1a116\IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\libs\_3f32fefb3b685e70\IvanCraft623\languages\Language;
+use IvanCraft623\RankSystem\libs\_3f32fefb3b685e70\IvanCraft623\languages\Translator;
 
 use IvanCraft623\RankSystem\command\RankSystemCommand;
 use IvanCraft623\RankSystem\form\FormManager;
@@ -50,7 +50,7 @@ use IvanCraft623\RankSystem\tag\TagManager;
 use IvanCraft623\RankSystem\task\SponsorsListTask;
 use IvanCraft623\RankSystem\task\UpdateTask;
 
-use IvanCraft623\RankSystem\libs\_99cb2885b9e1a116\JackMD\ConfigUpdater\ConfigUpdater;
+use IvanCraft623\RankSystem\libs\_3f32fefb3b685e70\JackMD\ConfigUpdater\ConfigUpdater;
 
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;

@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\provider;
 
+use Closure;
+
 use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\promise\Promise;
@@ -36,9 +38,9 @@ use pocketmine\promise\PromiseResolver;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\SingletonTrait;
 
-use IvanCraft623\RankSystem\libs\_99cb2885b9e1a116\poggit\libasynql\DataConnector;
-use IvanCraft623\RankSystem\libs\_99cb2885b9e1a116\poggit\libasynql\libasynql as libasynqlDatabase;
-use IvanCraft623\RankSystem\libs\_99cb2885b9e1a116\poggit\libasynql\SqlError;
+use IvanCraft623\RankSystem\libs\_3f32fefb3b685e70\poggit\libasynql\DataConnector;
+use IvanCraft623\RankSystem\libs\_3f32fefb3b685e70\poggit\libasynql\libasynql as libasynqlDatabase;
+use IvanCraft623\RankSystem\libs\_3f32fefb3b685e70\poggit\libasynql\SqlError;
 use function count;
 use function is_array;
 use function is_string;
