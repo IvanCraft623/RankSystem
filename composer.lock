@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "338ae859926d1d96b7389019af3a84ce",
+    "content-hash": "617b0eddda03100422e623ddc2a91c13",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -127,19 +127,20 @@
         },
         {
             "name": "cortexpe/commando",
-            "version": "dev-no-backslashes",
+            "version": "dev-ready",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LatamPMDevs/Commando.git",
-                "reference": "4cecdf95739358c502ccbc2e30edc60ca44a59b5"
+                "reference": "3f5bfa8db35820187cde7a5c65daa9889a4bb2c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LatamPMDevs/Commando/zipball/4cecdf95739358c502ccbc2e30edc60ca44a59b5",
-                "reference": "4cecdf95739358c502ccbc2e30edc60ca44a59b5",
+                "url": "https://api.github.com/repos/LatamPMDevs/Commando/zipball/3f5bfa8db35820187cde7a5c65daa9889a4bb2c6",
+                "reference": "3f5bfa8db35820187cde7a5c65daa9889a4bb2c6",
                 "shasum": ""
             },
             "require": {
+                "muqsit/simple-packet-handler": "^0.1.6",
                 "pocketmine/pocketmine-mp": "^5.36.0"
             },
             "type": "library",
@@ -161,9 +162,9 @@
             ],
             "description": "A Command Framework virion for PocketMine-MP ",
             "support": {
-                "source": "https://github.com/LatamPMDevs/Commando/tree/no-backslashes"
+                "source": "https://github.com/LatamPMDevs/Commando/tree/ready"
             },
-            "time": "2026-07-30T17:49:37+00:00"
+            "time": "2026-07-30T18:52:14+00:00"
         },
         {
             "name": "ifera-mc/config-updater",
@@ -287,6 +288,52 @@
                 "source": "https://github.com/LatamPMDevs/FormAPI/tree/master"
             },
             "time": "2024-07-24T01:27:44+00:00"
+        },
+        {
+            "name": "muqsit/simple-packet-handler",
+            "version": "0.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Muqsit/SimplePacketHandler.git",
+                "reference": "4e7b399c61f2def3c088ecde96e15d1f9858914f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Muqsit/SimplePacketHandler/zipball/4e7b399c61f2def3c088ecde96e15d1f9858914f",
+                "reference": "4e7b399c61f2def3c088ecde96e15d1f9858914f",
+                "shasum": ""
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "^5.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "virion": {
+                    "spec": "3.0",
+                    "namespace-root": "muqsit\\simplepackethandler"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Muqsit",
+                    "email": "hackhack05@gmail.com"
+                }
+            ],
+            "description": "Handle specific data packets (virion for PMMP API 4.0.0)",
+            "support": {
+                "issues": "https://github.com/Muqsit/SimplePacketHandler/issues",
+                "source": "https://github.com/Muqsit/SimplePacketHandler/tree/0.1.6"
+            },
+            "time": "2026-02-17T11:40:38+00:00"
         },
         {
             "name": "netresearch/jsonmapper",

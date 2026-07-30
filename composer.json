@@ -4,7 +4,7 @@
     "type": "project",
     "license": "Apache-2.0",
     "require": {
-        "cortexpe/commando": "dev-no-backslashes",
+        "cortexpe/commando": "dev-ready",
         "ivancraft623/languages": "dev-main",
         "ifera-mc/config-updater": "dev-master",
         "latampmdevs/formapi": "dev-master",
