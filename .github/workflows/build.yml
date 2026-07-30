@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [pm5]
+    branches: [PM5]
 
 jobs:
   build:
