@@ -20,6 +20,35 @@
         {
             "type": "package",
             "package": {
+                "name": "cortexpe/commando",
+                "description": "A Command Framework virion for PocketMine-MP",
+                "type": "library",
+                "license": "LGPL-3.0-only",
+                "version": "dev-master",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/CortexPE/Commando.git",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "CortexPE\\Commando\\": "src/CortexPE/Commando/"
+                    }
+                },
+                "require": {
+                    "pocketmine/pocketmine-mp": "^5.36.0"
+                },
+                "extra": {
+                    "virion": {
+                        "spec": "3.0",
+                        "namespace-root": "CortexPE\\Commando"
+                    }
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
                 "name": "ifera-mc/config-updater",
                 "description": "A handy virion for PocketMine-MP plugin developers that checks if a new version of config is available. If so then it notifies the user about the new update and updates the config.",
                 "type": "library",

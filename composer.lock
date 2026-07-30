@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7028ad57b23c4fabbc3987cf0d0f95e6",
+    "content-hash": "92a03723b738144b280656ca2eba4eef",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -131,18 +131,11 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CortexPE/Commando.git",
-                "reference": "62db2be0ef4b5d509ee2832de876fdb4da401b6e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/CortexPE/Commando/zipball/62db2be0ef4b5d509ee2832de876fdb4da401b6e",
-                "reference": "62db2be0ef4b5d509ee2832de876fdb4da401b6e",
-                "shasum": ""
+                "reference": "master"
             },
             "require": {
                 "pocketmine/pocketmine-mp": "^5.36.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "virion": {
@@ -152,21 +145,13 @@
             },
             "autoload": {
                 "psr-4": {
-                    "CortexPE\\Commando\\": [
-                        "src\\CortexPE\\Commando\\"
-                    ]
+                    "CortexPE\\Commando\\": "src/CortexPE/Commando/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL-3.0-only"
             ],
-            "description": "A Command Framework virion for PocketMine-MP ",
-            "support": {
-                "issues": "https://github.com/CortexPE/Commando/issues",
-                "source": "https://github.com/CortexPE/Commando/tree/master"
-            },
-            "time": "2026-01-09T17:59:28+00:00"
+            "description": "A Command Framework virion for PocketMine-MP"
         },
         {
             "name": "ifera-mc/config-updater",
