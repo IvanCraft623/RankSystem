@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\provider;
 
+use Closure;
+
 use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\promise\Promise;
