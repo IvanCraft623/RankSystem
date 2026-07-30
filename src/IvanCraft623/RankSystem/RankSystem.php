@@ -29,6 +29,9 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem;
 
+use bStats\PocketmineMp\charts\SimplePie;
+use bStats\PocketmineMp\Metrics;
+
 use CortexPE\Commando\PacketHooker;
 
 use IvanCraft623\languages\Language;
@@ -72,6 +75,8 @@ use const INI_SCANNER_RAW;
 class RankSystem extends PluginBase {
 	use SingletonTrait;
 
+	public const BSTATS_PLUGIN_ID = 33024;
+
 	public const DONATIONS_URL = "https://donate.endergames.org/IvanCraft623";
 
 	public const CONFIG_VERSION = 2;
@@ -110,6 +115,7 @@ class RankSystem extends PluginBase {
 			PacketHooker::register($this);
 		}
 
+		$this->loadMetrics();
 		$this->loadCommands();
 		$this->loadListeners();
 		$this->loadProvider();
@@ -287,6 +293,14 @@ class RankSystem extends PluginBase {
 				}
 			}
 		}
+	}
+
+	public function loadMetrics() : void {
+		$metrics = new Metrics($this, self::BSTATS_PLUGIN_ID);
+
+		$metrics->addCustomChart(new SimplePie("data_provider", function() : string {
+			return $this->provider->getName();
+		}));
 	}
 
 	public function setProvider(Provider $provider) : void {

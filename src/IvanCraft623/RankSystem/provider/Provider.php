@@ -47,7 +47,7 @@ abstract class Provider {
 
 	abstract public function unload() : void;
 
-	abstract public function getname() : string;
+	abstract public function getName() : string;
 
 	/**
 	 * @phpstan-return Promise<?UserData>

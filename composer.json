@@ -4,9 +4,10 @@
     "type": "project",
     "license": "Apache-2.0",
     "require": {
+        "bstats/pocketmine-mp": "^1.0.0",
         "cortexpe/commando": "dev-ready",
-        "ivancraft623/languages": "dev-main",
         "ifera-mc/config-updater": "dev-master",
+        "ivancraft623/languages": "dev-main",
         "latampmdevs/formapi": "dev-master",
         "sof3/libasynql": "^4.2.3"
     },
