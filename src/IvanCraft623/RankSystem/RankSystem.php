@@ -29,10 +29,13 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem;
 
-use IvanCraft623\RankSystem\libs\_226f1fc83fe584a7\CortexPE\Commando\PacketHooker;
+use IvanCraft623\RankSystem\libs\_6e57e2cb89c68251\bStats\PocketmineMp\charts\SimplePie;
+use IvanCraft623\RankSystem\libs\_6e57e2cb89c68251\bStats\PocketmineMp\Metrics;
 
-use IvanCraft623\RankSystem\libs\_226f1fc83fe584a7\IvanCraft623\languages\Language;
-use IvanCraft623\RankSystem\libs\_226f1fc83fe584a7\IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\libs\_6e57e2cb89c68251\CortexPE\Commando\PacketHooker;
+
+use IvanCraft623\RankSystem\libs\_6e57e2cb89c68251\IvanCraft623\languages\Language;
+use IvanCraft623\RankSystem\libs\_6e57e2cb89c68251\IvanCraft623\languages\Translator;
 
 use IvanCraft623\RankSystem\command\RankSystemCommand;
 use IvanCraft623\RankSystem\form\FormManager;
@@ -47,7 +50,7 @@ use IvanCraft623\RankSystem\tag\TagManager;
 use IvanCraft623\RankSystem\task\SponsorsListTask;
 use IvanCraft623\RankSystem\task\UpdateTask;
 
-use IvanCraft623\RankSystem\libs\_226f1fc83fe584a7\JackMD\ConfigUpdater\ConfigUpdater;
+use IvanCraft623\RankSystem\libs\_6e57e2cb89c68251\JackMD\ConfigUpdater\ConfigUpdater;
 
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
@@ -71,6 +74,8 @@ use const INI_SCANNER_RAW;
 
 class RankSystem extends PluginBase {
 	use SingletonTrait;
+
+	public const BSTATS_PLUGIN_ID = 33024;
 
 	public const DONATIONS_URL = "https://donate.endergames.org/IvanCraft623";
 
@@ -110,6 +115,7 @@ class RankSystem extends PluginBase {
 			PacketHooker::register($this);
 		}
 
+		$this->loadMetrics();
 		$this->loadCommands();
 		$this->loadListeners();
 		$this->loadProvider();
@@ -287,6 +293,14 @@ class RankSystem extends PluginBase {
 				}
 			}
 		}
+	}
+
+	public function loadMetrics() : void {
+		$metrics = new Metrics($this, self::BSTATS_PLUGIN_ID);
+
+		$metrics->addCustomChart(new SimplePie("data_provider", function() : string {
+			return $this->provider->getName();
+		}));
 	}
 
 	public function setProvider(Provider $provider) : void {

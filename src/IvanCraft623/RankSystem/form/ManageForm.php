@@ -31,7 +31,7 @@ namespace IvanCraft623\RankSystem\form;
 
 use IvanCraft623\RankSystem\RankSystem;
 
-use IvanCraft623\RankSystem\libs\_226f1fc83fe584a7\jojoe77777\FormAPI\SimpleForm;
+use IvanCraft623\RankSystem\libs\_6e57e2cb89c68251\jojoe77777\FormAPI\SimpleForm;
 
 use pocketmine\player\Player;
 
