@@ -37,7 +37,7 @@
 <div align="center">
 
 [![Stable Release](https://img.shields.io/github/v/release/IvanCraft623/RankSystem?label=Stable+Release&style=for-the-badge&logo=github&logoColor=white&color=2292ee)](https://github.com/IvanCraft623/RankSystem/releases/latest/download/RankSystem.phar)
-[![Nightly Build](https://img.shields.io/badge/dynamic/yaml?url=https://raw.githubusercontent.com/IvanCraft623/RankSystem/main/plugin.yml&query=$.version&label=Nightly+Build&prefix=v&suffix=%2Bdev&color=blueviolet&style=for-the-badge&logo=github&logoColor=white)](https://github.com/IvanCraft623/RankSystem/releases/download/nightly/RankSystem.phar)
+[![Nightly Build](https://img.shields.io/badge/dynamic/yaml?url=https://raw.githubusercontent.com/IvanCraft623/RankSystem/PM5/plugin.yml&query=$.version&label=Nightly+Build&prefix=v&color=blueviolet&style=for-the-badge&logo=github&logoColor=white)](https://github.com/IvanCraft623/RankSystem/releases/download/nightly/RankSystem.phar)
 
 *Stable recommended for production · Nightly always up to date from the latest commit*
 
