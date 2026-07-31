@@ -44,6 +44,7 @@ use pocketmine\player\Player;
 use pocketmine\promise\Promise;
 use pocketmine\promise\PromiseResolver;
 use pocketmine\utils\AssumptionFailedError;
+use function array_fill_keys;
 use function array_filter;
 use function array_key_exists;
 use function array_key_first;
@@ -80,8 +81,7 @@ final class Session {
 	/** @var array<string, ?int> */
 	private array $userPermissions = [];
 
-	/** @var PermissionAttachment[] */
-	private array $attachments = [];
+	private ?PermissionAttachment $attachment = null;
 
 	/** @var array<int, \Closure(): Promise<bool>> */
 	private array $syncQueue = [];
@@ -191,6 +191,7 @@ final class Session {
 	 */
 	public function setPlayer(Player $player) : void {
 		$this->player = $player;
+		$this->attachment = $player->addAttachment($this->plugin);
 	}
 
 	public function getNameTagFormat() : string {
@@ -468,16 +469,7 @@ final class Session {
 	}
 
 	public function updatePermissions() : void {
-		$player = $this->getPlayer();
-		if ($player !== null) {
-			foreach ($this->attachments as $attachment) {
-				$player->removeAttachment($attachment);
-			}
-			$this->attachments = [];
-			foreach ($this->permissions as $permission) {
-				$this->attachments[] = $player->addAttachment($this->plugin, $permission, true);
-			}
-		}
+		$this->attachment?->setPermissions(array_fill_keys($this->permissions, true));
 	}
 
 	public function updateNameTag() : void {
