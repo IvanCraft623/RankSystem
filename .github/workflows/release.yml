@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'      # v1.0.0
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'    # v1.0.0-beta.1, v1.0.0-rc.1
+      - '[0-9]+.[0-9]+.[0-9]+'       # 1.0.0
+      - '[0-9]+.[0-9]+.[0-9]+-*'     # 1.0.0-beta.1, 1.0.0-rc.1
+
+jobs:
+  validate:
+    name: Validate version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate tag matches plugin.yml version
+        run: |
+          TAG_CORE="${GITHUB_REF_NAME#v}"     # strip 'v'
+          TAG_CORE="${TAG_CORE%%-*}"           # strip pre-release suffix
+          PLUGIN_VER=$(yq '.version' plugin.yml)
+          if [ "$TAG_CORE" != "$PLUGIN_VER" ]; then
+            echo "❌ Tag $GITHUB_REF_NAME does not match plugin.yml version ($PLUGIN_VER)"
+            echo "   Update plugin.yml before tagging."
+            exit 1
+          fi
+          echo "✅ Tag matches plugin.yml version ($PLUGIN_VER)"
+
+  build:
+    name: Phar build
+    needs: validate
+    uses: ./.github/workflows/build-phar.yml
+    with:
+      stage-poggit: false
+
+  publish:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Detect pre-release
+        id: flags
+        run: |
+          [[ "$GITHUB_REF_NAME" == *"-"* ]] \
+            && echo "IS_PRERELEASE=true"  >> $GITHUB_OUTPUT \
+            || echo "IS_PRERELEASE=false" >> $GITHUB_OUTPUT
+
+      - name: Download phar
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.artifact-name }}
+          path: ${{ runner.temp }}
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ needs.build.outputs.plugin-name }} ${{ github.ref_name }}
+          prerelease: ${{ steps.flags.outputs.IS_PRERELEASE }}
+          generate_release_notes: true
+          body: |
+            For PocketMine-MP ${{ needs.build.outputs.pm-version }}
+          files: ${{ runner.temp }}/${{ needs.build.outputs.plugin-name }}.phar
