@@ -34,7 +34,7 @@ use Ifera\ScoreHud\scoreboard\ScoreTag;
 
 use InvalidArgumentException;
 
-use IvanCraft623\RankSystem\libs\_7534e2e543ef05e7\IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\libs\_3d291e54ddfd903d\IvanCraft623\languages\Translator;
 use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\session\Session;
 
