@@ -65,7 +65,7 @@ final class Session {
 
 	private ?Player $player = null;
 
-	private SessionChatFormatter $chatFormatter;
+	private ?SessionChatFormatter $chatFormatter = null;
 
 	private bool $initialized = false;
 
@@ -91,7 +91,6 @@ final class Session {
 	public function __construct(string $name) {
 		$this->plugin = RankSystem::getInstance();
 		$this->name = $name;
-		$this->chatFormatter = new SessionChatFormatter($this);
 
 		$this->loadUserData();
 	}
@@ -189,9 +188,15 @@ final class Session {
 	 *
 	 * @internal
 	 */
-	public function setPlayer(Player $player) : void {
+	public function setPlayer(?Player $player) : void {
 		$this->player = $player;
-		$this->attachment = $player->addAttachment($this->plugin);
+		if($player !== null){
+			$this->chatFormatter = new SessionChatFormatter($this);
+			$this->attachment = $player->addAttachment($this->plugin);
+		}else{
+			$this->chatFormatter = null;
+			$this->attachment = null;
+		}
 	}
 
 	public function getNameTagFormat() : string {
@@ -205,7 +210,7 @@ final class Session {
 		return $format;
 	}
 
-	public function getChatFormatter() : SessionChatFormatter {
+	public function getChatFormatter() : ?SessionChatFormatter {
 		return $this->chatFormatter;
 	}
 

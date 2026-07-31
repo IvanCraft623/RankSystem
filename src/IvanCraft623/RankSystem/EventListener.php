@@ -35,6 +35,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 
 class EventListener implements Listener {
 
@@ -72,7 +73,10 @@ class EventListener implements Listener {
 		if ($this->plugin->getConfig()->getNested("chat.enabled", true)) {
 			$player = $event->getPlayer();
 			$session = $this->plugin->getSessionManager()->get($player);
-			$event->setFormatter($session->getChatFormatter());
+			$formatter = $session->getChatFormatter();
+			if($formatter !== null){
+				$event->setFormatter($formatter);
+			}
 		}
 	}
 
@@ -88,5 +92,14 @@ class EventListener implements Listener {
 				"{%rank}" => $event->getRank()->getName()
 			]));
 		}
+	}
+
+	/**
+	 * @priority LOW
+	 */
+	public function onQuit(PlayerQuitEvent $event) : void {
+		$player = $event->getPlayer();
+		$session = $this->plugin->getSessionManager()->get($player);
+		$session->setPlayer(null);
 	}
 }
