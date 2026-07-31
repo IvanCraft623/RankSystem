@@ -2,7 +2,7 @@
 name: RankSystem
 author: IvanCraft623
 website: "https://github.com/IvanCraft623/RankSystem"
-version: 1.1.4+dev
+version: 1.2.0
 main: IvanCraft623\RankSystem\RankSystem
 api: "5.36.0"
 softdepend:

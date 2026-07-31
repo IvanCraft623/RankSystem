@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\form;
 
-use IvanCraft623\RankSystem\libs\_a2d25fd8ce5d9237\jojoe77777\FormAPI\CustomForm;
+use IvanCraft623\RankSystem\libs\_fa599532ba07189f\jojoe77777\FormAPI\CustomForm;
 
 use pocketmine\player\Player;
 use pocketmine\promise\Promise;
