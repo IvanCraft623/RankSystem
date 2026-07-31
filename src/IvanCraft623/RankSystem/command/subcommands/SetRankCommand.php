@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\command\subcommands;
 
-use IvanCraft623\RankSystem\libs\_41507086ca490e8c\CortexPE\Commando\args\RawStringArgument;
-use IvanCraft623\RankSystem\libs\_41507086ca490e8c\CortexPE\Commando\BaseCommand;
-use IvanCraft623\RankSystem\libs\_41507086ca490e8c\CortexPE\Commando\BaseSubCommand;
+use IvanCraft623\RankSystem\libs\_fbe832378929cc45\CortexPE\Commando\args\RawStringArgument;
+use IvanCraft623\RankSystem\libs\_fbe832378929cc45\CortexPE\Commando\BaseCommand;
+use IvanCraft623\RankSystem\libs\_fbe832378929cc45\CortexPE\Commando\BaseSubCommand;
 
 use IvanCraft623\RankSystem\command\args\RankArgument;
 use IvanCraft623\RankSystem\command\args\TimeArgument;
