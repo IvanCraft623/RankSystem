@@ -36,7 +36,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: nightly
-          name: Nightly Build ${{ needs.build.outputs.plugin-version }}+dev
+          name: Nightly Build ${{ needs.build.outputs.plugin-version }}
           prerelease: true
           body: |
             For PocketMine-MP ${{ needs.build.outputs.pm-version }}
