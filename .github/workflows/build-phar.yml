@@ -63,9 +63,14 @@ jobs:
             \$phar->compressFiles(Phar::GZ);
           "
 
+      - name: Rename phar
+        run: |
+          mv ${{ steps.pharynx.outputs.output-phar }} \
+             "$RUNNER_TEMP/${{ steps.plugin-info.outputs.PLUGIN_NAME }}.phar"
+
       - name: Upload phar artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.plugin-info.outputs.PLUGIN_NAME }}-phar
-          path: ${{ steps.pharynx.outputs.output-phar }}
+          path: ${{ runner.temp }}/${{ steps.plugin-info.outputs.PLUGIN_NAME }}.phar
           retention-days: 1
