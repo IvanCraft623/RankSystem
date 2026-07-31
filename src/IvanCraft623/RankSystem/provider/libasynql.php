@@ -1,34 +1,52 @@
 <?php
 
-#Plugin By:
-
 /*
-	8888888                            .d8888b.                   .d888 888     .d8888b.   .d8888b.   .d8888b.  
-	  888                             d88P  Y88b                 d88P"  888    d88P  Y88b d88P  Y88b d88P  Y88b 
-	  888                             888    888                 888    888    888               888      .d88P 
-	  888  888  888  8888b.  88888b.  888        888d888 8888b.  888888 888888 888d888b.       .d88P     8888"  
-	  888  888  888     "88b 888 "88b 888        888P"      "88b 888    888    888P "Y88b  .od888P"       "Y8b. 
-	  888  Y88  88P .d888888 888  888 888    888 888    .d888888 888    888    888    888 d88P"      888    888 
-	  888   Y8bd8P  888  888 888  888 Y88b  d88P 888    888  888 888    Y88b.  Y88b  d88P 888"       Y88b  d88P 
-	8888888  Y88P   "Y888888 888  888  "Y8888P"  888    "Y888888 888     "Y888  "Y8888P"  888888888   "Y8888P"  
-*/
+ *   ____             _     ____
+ *  |  _ \ __ _ _ __ | | __/ ___| _   _ ___| |_ ___ _ __ ___
+ *  | |_) / _` | '_ \| |/ /\___ \| | | / __| __/ _ \ '_ ` _ \
+ *  |  _ < (_| | | | |   <  ___) | |_| \__ \ ||  __/ | | | | |
+ *  |_| \_\__,_|_| |_|_|\_\|____/ \__, |___/\__\___|_| |_| |_|
+ *                                |___/
+ *
+ * An amazing rank and permissions manager for PocketMine-MP.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @author IvanCraft623
+ */
 
 declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\provider;
 
 use Closure;
-use InvalidArgumentException;
 
 use IvanCraft623\RankSystem\RankSystem;
 
 use pocketmine\promise\Promise;
 use pocketmine\promise\PromiseResolver;
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\SingletonTrait;
 
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql as libasynqlDatabase;
 use poggit\libasynql\SqlError;
+use function count;
+use function is_array;
+use function is_string;
+use function json_encode;
+use function strtolower;
+use const JSON_THROW_ON_ERROR;
 
 class libasynql extends Provider {
 	use SingletonTrait;
@@ -41,11 +59,18 @@ class libasynql extends Provider {
 		$this->plugin = RankSystem::getInstance();
 
 		$configData = $this->plugin->getConfig()->get("database");
+		if (!is_array($configData)) {
+			throw new AssumptionFailedError("Expected array for \"database\" config");
+		}
 		$this->database = libasynqlDatabase::create($this->plugin, $configData, [
 			"sqlite" => "database/sqlite.sql",
-			"mysql"  => "database/mysql.sql",
+			"mysql" => "database/mysql.sql",
 		]);
-		$this->name = strtolower($configData["type"] ?? "libasynql");
+		$dbType = $configData["type"] ?? "libasynql";
+		if (!is_string($dbType)) {
+			throw new AssumptionFailedError("Expected string for \"database.type\" config");
+		}
+		$this->name = strtolower($dbType);
 
 		$this->database->executeGeneric('table.users');
 	}
@@ -64,11 +89,11 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<?UserData>
 	 */
 	public function getUserData(string $name) : Promise {
+		/** @phpstan-var PromiseResolver<?UserData> $dataPromiseResolver */
 		$dataPromiseResolver = new PromiseResolver();
 		$this->database->executeSelect("data.users.get", [
 			"name" => $name
 		], function (array $rows) use ($dataPromiseResolver) {
-			$playerdata = null;
 			if (isset($rows[0])) {
 				$dataPromiseResolver->resolve(UserData::jsonDeserialize($rows[0]));
 			} else {
@@ -85,6 +110,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<bool>
 	 */
 	public function isInDb(string $name) : Promise {
+		/** @phpstan-var PromiseResolver<bool> $promiseResolver */
 		$promiseResolver = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($promiseResolver) {
@@ -98,7 +124,7 @@ class libasynql extends Provider {
 	/**
 	 * @param array<string, ?int> $ranks
 	 */
-	public function setRanks(string $name, array $ranks, ?callable $onSuccess = null, ?callable $onError = null) : void {
+	public function setRanks(string $name, array $ranks, ?Closure $onSuccess = null, ?Closure $onError = null) : void {
 		$this->database->executeGeneric("data.users.setRanks", [
 			"name" => $name,
 			"ranks" => json_encode($ranks, JSON_THROW_ON_ERROR)
@@ -114,6 +140,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<array<string, ?int>>
 	 */
 	public function setRank(string $name, string $rank, ?int $expTime = null) : Promise {
+		/** @phpstan-var PromiseResolver<array<string, ?int>> $resultPromise */
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($name, $rank, $expTime, $resultPromise) {
@@ -135,6 +162,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<array<string, ?int>>
 	 */
 	public function removeRank(string $name, string $rank) : Promise {
+		/** @phpstan-var PromiseResolver<array<string, ?int>> $resultPromise */
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($name, $rank, $resultPromise) {
@@ -163,7 +191,7 @@ class libasynql extends Provider {
 	/**
 	 * @param array<string, ?int> $permissions
 	 */
-	public function setPermissions(string $name, array $permissions, ?callable $onSuccess = null, ?callable $onError = null) : void {
+	public function setPermissions(string $name, array $permissions, ?Closure $onSuccess = null, ?Closure $onError = null) : void {
 		$this->database->executeGeneric("data.users.setPermissions", [
 			"name" => $name,
 			"permissions" => json_encode($permissions, JSON_THROW_ON_ERROR)
@@ -179,6 +207,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<array<string, ?int>>
 	 */
 	public function setPermission(string $name, string $permission, ?int $expTime = null) : Promise {
+		/** @phpstan-var PromiseResolver<array<string, ?int>> $resultPromise */
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($name, $permission, $expTime, $resultPromise) {
@@ -200,6 +229,7 @@ class libasynql extends Provider {
 	 * @phpstan-return Promise<array<string, ?int>>
 	 */
 	public function removePermission(string $name, string $permission) : Promise {
+		/** @phpstan-var PromiseResolver<array<string, ?int>> $resultPromise */
 		$resultPromise = new PromiseResolver();
 		$this->getUserData($name)->onCompletion(
 			function (?UserData $userData) use ($name, $permission, $resultPromise) {
@@ -225,7 +255,7 @@ class libasynql extends Provider {
 		return $resultPromise->getPromise();
 	}
 
-	public function delete(string $name, ?callable $onSuccess = null, ?callable $onError = null) : void {
+	public function delete(string $name, ?Closure $onSuccess = null, ?Closure $onError = null) : void {
 		$this->database->executeGeneric('data.users.delete', [
 			"name" => $name
 		], $onSuccess, function (SqlError $result) use ($onError) {

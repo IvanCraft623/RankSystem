@@ -1,0 +1,46 @@
+name: Nightly
+
+on:
+  push:
+    branches: [PM5]
+
+jobs:
+  build:
+    name: Phar build
+    uses: ./.github/workflows/build-phar.yml
+    with:
+      stage-poggit: true # TODO: set to false on poggit shutdown :(
+
+  publish:
+    name: Publish nightly
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download phar
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.artifact-name }}
+          path: ${{ runner.temp }}
+
+      - name: Update the nightly tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag --force nightly ${{ github.sha }} && git push --force origin tag nightly
+
+      - name: Publish Nightly Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: nightly
+          name: Nightly Build ${{ needs.build.outputs.plugin-version }}
+          prerelease: true
+          body: |
+            For PocketMine-MP ${{ needs.build.outputs.pm-version }}
+            From commit: ${{ github.sha }}
+            Generated on: ${{ github.event.head_commit.timestamp }}
+            ⚠️ This is a development build. Not recommended for production use.
+          files: ${{ runner.temp }}/${{ needs.build.outputs.plugin-name }}.phar

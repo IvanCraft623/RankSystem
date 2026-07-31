@@ -1,34 +1,73 @@
 <?php
 
-#Plugin By:
-
 /*
-	8888888                            .d8888b.                   .d888 888     .d8888b.   .d8888b.   .d8888b.  
-	  888                             d88P  Y88b                 d88P"  888    d88P  Y88b d88P  Y88b d88P  Y88b 
-	  888                             888    888                 888    888    888               888      .d88P 
-	  888  888  888  8888b.  88888b.  888        888d888 8888b.  888888 888888 888d888b.       .d88P     8888"  
-	  888  888  888     "88b 888 "88b 888        888P"      "88b 888    888    888P "Y88b  .od888P"       "Y8b. 
-	  888  Y88  88P .d888888 888  888 888    888 888    .d888888 888    888    888    888 d88P"      888    888 
-	  888   Y8bd8P  888  888 888  888 Y88b  d88P 888    888  888 888    Y88b.  Y88b  d88P 888"       Y88b  d88P 
-	8888888  Y88P   "Y888888 888  888  "Y8888P"  888    "Y888888 888     "Y888  "Y8888P"  888888888   "Y8888P"  
-*/
+ *   ____             _     ____
+ *  |  _ \ __ _ _ __ | | __/ ___| _   _ ___| |_ ___ _ __ ___
+ *  | |_) / _` | '_ \| |/ /\___ \| | | / __| __/ _ \ '_ ` _ \
+ *  |  _ < (_| | | | |   <  ___) | |_| \__ \ ||  __/ | | | | |
+ *  |_| \_\__,_|_| |_|_|\_\|____/ \__, |___/\__\___|_| |_| |_|
+ *                                |___/
+ *
+ * An amazing rank and permissions manager for PocketMine-MP.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @author IvanCraft623
+ */
 
 declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\utils;
 
-use InvalidArgumentException;
 use Ifera\ScoreHud\event\PlayerTagsUpdateEvent;
 use Ifera\ScoreHud\scoreboard\ScoreTag;
+
+use InvalidArgumentException;
+
 use IvanCraft623\languages\Translator;
-use IvanCraft623\RankSystem\session\Session;
 use IvanCraft623\RankSystem\rank\Rank;
+use IvanCraft623\RankSystem\session\Session;
+
 use pocketmine\command\CommandSender;
 
+use function ceil;
+use function class_exists;
+use function floor;
+use function implode;
+use function preg_match;
+use function strlen;
+use function strtotime;
+use function substr;
+use function time;
+use function trim;
+
+/**
+ * @phpstan-type Time array{
+ * 	years: int,
+ * 	months: int,
+ * 	days: int,
+ * 	hours: int,
+ * 	minutes: int,
+ * 	seconds: int
+ * }
+ */
 final class Utils {
 
 	public static bool $scoreHudDetected;
 
+	/**
+	 * @return Time
+	 */
 	public static function getTime(int $seconds) : array {
 		if ($seconds < 0) {
 			throw new InvalidArgumentException("Seconds is lower than 0");
@@ -73,7 +112,7 @@ final class Utils {
 	 * @return ?Int UNIX timestamp corresponding to the duration (1y will return the timestamp one year from now)
 	 * Credits for adeynes
 	 */
-	public static function parseDuration(string $duration, ?Translator $translator = null, ?CommandSender $sender = null): ?int {
+	public static function parseDuration(string $duration, ?Translator $translator = null, ?CommandSender $sender = null) : ?int {
 		$time_units = ['y' => 'year', 'M' => 'month', 'w' => 'week', 'd' => 'day', 'h' => 'hour', 'm' => 'minute'];
 		if ($translator !== null) {
 			$new_units = [];
@@ -130,11 +169,11 @@ final class Utils {
 	/**
 	 * @param Rank[] $ranks
 	 */
-	public static function ranks2string(array $ranks): string {
+	public static function ranks2string(array $ranks) : string {
 		return implode(", ", self::getRanksNames($ranks));
 	}
 
-	public static function updateScoreTags(Session $session): void {
+	public static function updateScoreTags(Session $session) : void {
 		if (!isset(self::$scoreHudDetected)) {
 			self::$scoreHudDetected = class_exists(PlayerTagsUpdateEvent::class);
 		}

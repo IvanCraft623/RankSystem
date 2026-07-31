@@ -4,17 +4,18 @@
     "type": "project",
     "license": "Apache-2.0",
     "require": {
-        "latampmdevs/commando": "dev-pm5",
-        "latampmdevs/config-updater": "dev-master",
-        "latampmdevs/update-notifier": "dev-master",
-        "latampmdevs/formapi": "dev-master",
+        "bstats/pocketmine-mp": "^1.0.0",
+        "cortexpe/commando": "dev-ready",
+        "ifera-mc/config-updater": "dev-master",
         "ivancraft623/languages": "dev-main",
-        "sof3/libasynql": "dev-pm5"
+        "latampmdevs/formapi": "dev-master",
+        "sof3/libasynql": "^4.2.3"
     },
     "require-dev": {
         "php": "^8.0",
-        "pocketmine/pocketmine-mp": "^5.3.0",
-        "phpstan/phpstan": "1.10.25"
+        "phpstan/phpstan": "2.2.7",
+        "pocketmine/pocketmine-mp": "^5.36.0",
+        "sof3/pharynx": "^0.3.8"
     },
     "repositories": [
         {
@@ -22,12 +23,31 @@
             "url": "https://github.com/LatamPMDevs/Commando.git"
         },
         {
-            "type": "vcs",
-            "url": "https://github.com/LatamPMDevs/ConfigUpdater.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/LatamPMDevs/UpdateNotifier.git"
+            "type": "package",
+            "package": {
+                "name": "ifera-mc/config-updater",
+                "description": "A handy virion for PocketMine-MP plugin developers that checks if a new version of config is available. If so then it notifies the user about the new update and updates the config.",
+                "type": "library",
+                "license": "GPL-3.0",
+                "version": "dev-master",
+                "require": {
+                    "pocketmine/pocketmine-mp": "^4.0.0 || ^5.0.0"
+                },
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/ifera-mc/ConfigUpdater.git",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "classmap": ["src"]
+                },
+                "extra": {
+                    "virion": {
+                        "spec": "3.0",
+                        "namespace-root": "JackMD\\ConfigUpdater"
+                    }
+                }
+            }
         },
         {
             "type": "vcs",

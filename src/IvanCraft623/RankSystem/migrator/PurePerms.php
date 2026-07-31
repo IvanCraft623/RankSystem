@@ -1,29 +1,53 @@
 <?php
 
-#Plugin By:
-
 /*
-	8888888                            .d8888b.                   .d888 888     .d8888b.   .d8888b.   .d8888b.  
-	  888                             d88P  Y88b                 d88P"  888    d88P  Y88b d88P  Y88b d88P  Y88b 
-	  888                             888    888                 888    888    888               888      .d88P 
-	  888  888  888  8888b.  88888b.  888        888d888 8888b.  888888 888888 888d888b.       .d88P     8888"  
-	  888  888  888     "88b 888 "88b 888        888P"      "88b 888    888    888P "Y88b  .od888P"       "Y8b. 
-	  888  Y88  88P .d888888 888  888 888    888 888    .d888888 888    888    888    888 d88P"      888    888 
-	  888   Y8bd8P  888  888 888  888 Y88b  d88P 888    888  888 888    Y88b.  Y88b  d88P 888"       Y88b  d88P 
-	8888888  Y88P   "Y888888 888  888  "Y8888P"  888    "Y888888 888     "Y888  "Y8888P"  888888888   "Y8888P"  
-*/
+ *   ____             _     ____
+ *  |  _ \ __ _ _ __ | | __/ ___| _   _ ___| |_ ___ _ __ ___
+ *  | |_) / _` | '_ \| |/ /\___ \| | | / __| __/ _ \ '_ ` _ \
+ *  |  _ < (_| | | | |   <  ___) | |_| \__ \ ||  __/ | | | | |
+ *  |_| \_\__,_|_| |_|_|\_\|____/ \__, |___/\__\___|_| |_| |_|
+ *                                |___/
+ *
+ * An amazing rank and permissions manager for PocketMine-MP.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @author IvanCraft623
+ */
 
 declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\migrator;
 
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Config;
+use pocketmine\utils\Utils as PMUtils;
+use function count;
+use function file_exists;
+use function file_put_contents;
+use function is_array;
+use function is_dir;
+use function is_string;
+use function opendir;
+use function readdir;
+use function unlink;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * PurePerms Migrator!
  */
 class PurePerms extends Migrator {
-	
+
 	public function getName() : string {
 		return "PurePerms";
 	}
@@ -61,6 +85,10 @@ class PurePerms extends Migrator {
 		] as $groupsFile) {
 			if (file_exists($groupsFile)) {
 				foreach ((new Config($groupsFile, Config::YAML))->getAll() as $groupName => $data) {
+					if (!is_array($data)) {
+						throw new AssumptionFailedError("Expected array for group data");
+					}
+
 					$group = (string) $groupName;
 					if (!$this->rankManager->exists($group)) {
 						$nameTag = [ //Hacks! >:D
@@ -71,6 +99,19 @@ class PurePerms extends Migrator {
 						$chat["chatFormat"] = "§f: §7";
 						$permissions = $data["permissions"] ?? [];
 						$inheritance = $data["inheritance"] ?? [];
+
+						if (!is_array($permissions)) {
+							throw new AssumptionFailedError("Expected array for permissions");
+						}
+						/** @var string[] $permissions */
+						PMUtils::validateArrayValueType($permissions, static function(string $_) : void {});
+
+						if (!is_array($inheritance)) {
+							throw new AssumptionFailedError("Expected array for inheritance");
+						}
+						/** @var string[] $inheritance */
+						PMUtils::validateArrayValueType($inheritance, static function(string $_) : void {});
+
 						$this->rankManager->create($group, $nameTag, $chat, $permissions, $inheritance);
 					}
 					if ($data["isDefault"] ?? false) {
@@ -93,9 +134,20 @@ class PurePerms extends Migrator {
 
 					$data = $playerData->getAll();
 					if (isset($data["userName"]) && isset($data["group"])) {
+						if (!is_string($data["userName"])) {
+							throw new AssumptionFailedError("Expected string for userName");
+						}
+
+						if (!is_string($data["group"])) {
+							throw new AssumptionFailedError("Expected string for group");
+						}
+
 						$session = $this->sessionManager->get($data["userName"]);
 						$rank = $this->rankManager->getRank($data["group"]);
 						$permissions = $data["permissions"] ?? [];
+						if (!is_array($permissions)) {
+							throw new AssumptionFailedError("Expected array for permissions");
+						}
 
 						$session->onInitialize(function() use ($session, $rank, $permissions) {
 							if ($rank !== null) {
@@ -103,6 +155,9 @@ class PurePerms extends Migrator {
 							}
 							if (count($permissions) !== 0) {
 								foreach ($permissions as $permission) {
+									if (!is_string($permission)) {
+										throw new AssumptionFailedError("Expected string for permission");
+									}
 									$session->setPermission($permission);
 								}
 							}
@@ -121,10 +176,21 @@ class PurePerms extends Migrator {
 		] as $groupsFile => $format) {
 			if (file_exists($groupsFile)) {
 				foreach ((new Config($groupsFile, $format))->getAll() as $username => $data) {
+					if (!is_array($data)) {
+						throw new AssumptionFailedError("Expected array for player data");
+					}
+
 					if (isset($data["group"])) {
+						if (!is_string($data["group"])) {
+							throw new AssumptionFailedError("Expected string for group");
+						}
+
 						$session = $this->sessionManager->get((string) $username);
 						$rank = $this->rankManager->getRank($data["group"]);
 						$permissions = $data["permissions"] ?? [];
+						if (!is_array($permissions)) {
+							throw new AssumptionFailedError("Expected array for permissions");
+						}
 
 						$session->onInitialize(function() use ($session, $rank, $permissions) {
 							if ($rank !== null) {
@@ -132,6 +198,9 @@ class PurePerms extends Migrator {
 							}
 							if (count($permissions) !== 0) {
 								foreach ($permissions as $permission) {
+									if (!is_string($permission)) {
+										throw new AssumptionFailedError("Expected string for permission");
+									}
 									$session->setPermission($permission);
 								}
 							}

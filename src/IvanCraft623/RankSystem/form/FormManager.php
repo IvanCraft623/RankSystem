@@ -1,5 +1,30 @@
 <?php
 
+/*
+ *   ____             _     ____
+ *  |  _ \ __ _ _ __ | | __/ ___| _   _ ___| |_ ___ _ __ ___
+ *  | |_) / _` | '_ \| |/ /\___ \| | | / __| __/ _ \ '_ ` _ \
+ *  |  _ < (_| | | | |   <  ___) | |_| \__ \ ||  __/ | | | | |
+ *  |_| \_\__,_|_| |_|_|\_\|____/ \__, |___/\__\___|_| |_| |_|
+ *                                |___/
+ *
+ * An amazing rank and permissions manager for PocketMine-MP.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @author IvanCraft623
+ */
+
 declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\form;
@@ -11,6 +36,10 @@ use pocketmine\player\Player;
 use pocketmine\promise\Promise;
 use pocketmine\utils\SingletonTrait;
 
+/**
+ * @phpstan-import-type NameTagFormat from Rank
+ * @phpstan-import-type ChatFormat from Rank
+ */
 final class FormManager {
 	use SingletonTrait;
 
@@ -26,6 +55,12 @@ final class FormManager {
 		(new UserManageForm())->send($player);
 	}
 
+	/**
+	 * @param NameTagFormat $nametag
+	 * @param ChatFormat    $chat
+	 * @param string[]      $permissions
+	 * @param string[]      $inheritance
+	 */
 	public function sendRankEditor(Player $player, string $name, array $nametag = ["prefix" => "", "nameColor" => "§f"], array $chat = ["prefix" => "", "nameColor" => "§f", "chatFormat" => "§e: §7"], array $permissions = [], array $inheritance = []) : void {
 		(new RankEditorForm($name, $nametag, $chat, $permissions, $inheritance))->send($player);
 	}

@@ -1,37 +1,61 @@
 <?php
 
-#Plugin By:
-
 /*
-	8888888                            .d8888b.                   .d888 888     .d8888b.   .d8888b.   .d8888b.  
-	  888                             d88P  Y88b                 d88P"  888    d88P  Y88b d88P  Y88b d88P  Y88b 
-	  888                             888    888                 888    888    888               888      .d88P 
-	  888  888  888  8888b.  88888b.  888        888d888 8888b.  888888 888888 888d888b.       .d88P     8888"  
-	  888  888  888     "88b 888 "88b 888        888P"      "88b 888    888    888P "Y88b  .od888P"       "Y8b. 
-	  888  Y88  88P .d888888 888  888 888    888 888    .d888888 888    888    888    888 d88P"      888    888 
-	  888   Y8bd8P  888  888 888  888 Y88b  d88P 888    888  888 888    Y88b.  Y88b  d88P 888"       Y88b  d88P 
-	8888888  Y88P   "Y888888 888  888  "Y8888P"  888    "Y888888 888     "Y888  "Y8888P"  888888888   "Y8888P"  
-*/
+ *   ____             _     ____
+ *  |  _ \ __ _ _ __ | | __/ ___| _   _ ___| |_ ___ _ __ ___
+ *  | |_) / _` | '_ \| |/ /\___ \| | | / __| __/ _ \ '_ ` _ \
+ *  |  _ < (_| | | | |   <  ___) | |_| \__ \ ||  __/ | | | | |
+ *  |_| \_\__,_|_| |_|_|\_\|____/ \__, |___/\__\___|_| |_| |_|
+ *                                |___/
+ *
+ * An amazing rank and permissions manager for PocketMine-MP.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @author IvanCraft623
+ */
 
 declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\session;
 
-use IvanCraft623\RankSystem\RankSystem;
+use IvanCraft623\RankSystem\event\UserPermissionRemoveEvent;
+use IvanCraft623\RankSystem\event\UserPermissionSetEvent;
+use IvanCraft623\RankSystem\event\UserRankRemoveEvent;
+use IvanCraft623\RankSystem\event\UserRankSetEvent;
+
 use IvanCraft623\RankSystem\provider\UserData;
 use IvanCraft623\RankSystem\rank\Rank;
+use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\utils\Utils;
-
-use IvanCraft623\RankSystem\event\UserRankSetEvent;
-use IvanCraft623\RankSystem\event\UserRankRemoveEvent;
-use IvanCraft623\RankSystem\event\UserPermissionSetEvent;
-use IvanCraft623\RankSystem\event\UserPermissionRemoveEvent;
 
 use pocketmine\permission\PermissionAttachment;
 use pocketmine\player\Player;
 use pocketmine\promise\Promise;
 use pocketmine\promise\PromiseResolver;
+use pocketmine\utils\AssumptionFailedError;
 use function array_fill_keys;
+use function array_filter;
+use function array_key_exists;
+use function array_key_first;
+use function array_keys;
+use function array_map;
+use function array_merge;
+use function count;
+use function in_array;
+use function is_string;
+use function spl_object_id;
+use function str_replace;
 
 final class Session {
 
@@ -45,13 +69,13 @@ final class Session {
 
 	private bool $initialized = false;
 
-	/** @var \Closure[] */
+	/** @var array<int, \Closure(): void> */
 	private array $onInits = [];
 
 	/** @var RankWrapper[] */
 	private array $ranks = [];
 
-	/** @var String[] */
+	/** @var string[] */
 	private array $permissions = [];
 
 	/** @var array<string, ?int> */
@@ -59,11 +83,11 @@ final class Session {
 
 	private ?PermissionAttachment $attachment = null;
 
-	/** @var \Closure[] */
+	/** @var array<int, \Closure(): Promise<bool>> */
 	private array $syncQueue = [];
 
 	private bool $synchronized = false;
-	
+
 	public function __construct(string $name) {
 		$this->plugin = RankSystem::getInstance();
 		$this->name = $name;
@@ -76,6 +100,9 @@ final class Session {
 		return $this->initialized;
 	}
 
+	/**
+	 * @param \Closure(): void $onInit
+	 */
 	public function onInitialize(\Closure $onInit) : void {
 		if ($this->initialized) {
 			$onInit();
@@ -105,7 +132,7 @@ final class Session {
 					$onInit();
 				}
 				$this->onInits = [];
-			}, fn() => throw new \Error("Failed to load ".$this->name."' session")
+			}, fn() => throw new \Error("Failed to load " . $this->name . "' session")
 		);
 	}
 
@@ -169,6 +196,9 @@ final class Session {
 
 	public function getNameTagFormat() : string {
 		$format = $this->plugin->getConfig()->getNested("nametag.format", "{nametag_ranks_prefix}{nametag_name-color}{name}");
+		if (!is_string($format)) {
+			throw new AssumptionFailedError("Expected string for \"nametag.format\" config");
+		}
 		foreach ($this->plugin->getTagManager()->getTags() as $tag) {
 			$format = str_replace($tag->getId(), $tag->getValue($this), $format);
 		}
@@ -181,6 +211,9 @@ final class Session {
 
 	public function getChatFormat() : string {
 		$format = $this->plugin->getConfig()->getNested("chat.format", "{chat_ranks_prefix}{chat_name-color}{name}{chat_format}{message}");
+		if (!is_string($format)) {
+			throw new AssumptionFailedError("Expected string for \"chat.format\" config");
+		}
 		foreach ($this->plugin->getTagManager()->getTags() as $tag) {
 			$format = str_replace($tag->getId(), $tag->getValue($this), $format);
 		}
@@ -207,6 +240,9 @@ final class Session {
 		return $ranks[array_key_first($ranks)];
 	}
 
+	/**
+	 * @return Rank[]
+	 */
 	public function getTempRanks() : array {
 		return array_map(function(RankWrapper $wrapper) {
 			return $wrapper->getRank();
@@ -236,6 +272,9 @@ final class Session {
 		return null;
 	}
 
+	/**
+	 * @param \Closure(): Promise<bool> $closure
+	 */
 	private function addToSyncQueue(\Closure $closure) : void {
 		$this->syncQueue[] = $closure;
 		if ($this->synchronized) {
@@ -281,7 +320,8 @@ final class Session {
 		}
 
 		$this->addToSyncQueue(function () use ($rank, $expTime) : Promise {
-			$resolver = new PromiseResolver;
+			/** @var PromiseResolver<bool> $resolver */
+			$resolver = new PromiseResolver();
 			$this->plugin->getProvider()->setRank($this->name, $rank->getName(), $expTime)->onCompletion(
 				function (array $ranks) use ($resolver) {
 					$this->syncRanks($ranks);
@@ -315,7 +355,8 @@ final class Session {
 		}
 
 		$this->addToSyncQueue(function () use ($rank) : Promise {
-			$resolver = new PromiseResolver;
+			/** @var PromiseResolver<bool> $resolver */
+			$resolver = new PromiseResolver();
 				$this->plugin->getProvider()->removeRank($this->name, $rank->getName())->onCompletion(
 				function (array $ranks) use ($resolver) {
 					$this->syncRanks($ranks);
@@ -329,6 +370,9 @@ final class Session {
 		return true;
 	}
 
+	/**
+	 * @return string[]
+	 */
 	public function getPermissions() : array {
 		return $this->permissions;
 	}
@@ -370,7 +414,8 @@ final class Session {
 		}
 
 		$this->addToSyncQueue(function () use ($perm, $expTime) : Promise {
-			$resolver = new PromiseResolver;
+			/** @var PromiseResolver<bool> $resolver */
+			$resolver = new PromiseResolver();
 				$this->plugin->getProvider()->setPermission($this->name, $perm, $expTime)->onCompletion(
 				function (array $permissions) use ($resolver) {
 					$this->syncPermissions($permissions);
@@ -396,7 +441,8 @@ final class Session {
 		}
 
 		$this->addToSyncQueue(function () use ($perm) : Promise {
-			$resolver = new PromiseResolver;
+			/** @var PromiseResolver<bool> $resolver */
+			$resolver = new PromiseResolver();
 				$this->plugin->getProvider()->removePermission($this->name, $perm)->onCompletion(
 				function (array $permissions) use ($resolver) {
 					$this->syncPermissions($permissions);
