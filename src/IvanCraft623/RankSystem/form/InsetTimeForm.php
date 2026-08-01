@@ -31,7 +31,7 @@ namespace IvanCraft623\RankSystem\form;
 
 use IvanCraft623\RankSystem\RankSystem;
 
-use IvanCraft623\RankSystem\libs\_b471fb4b0afaf307\jojoe77777\FormAPI\CustomForm;
+use IvanCraft623\RankSystem\libs\_95221d011a678a74\jojoe77777\FormAPI\CustomForm;
 
 use pocketmine\player\Player;
 use pocketmine\promise\Promise;
