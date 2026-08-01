@@ -29,14 +29,14 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\form;
 
-use IvanCraft623\RankSystem\libs\_95221d011a678a74\IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\libs\_16c4764b8e08f442\IvanCraft623\languages\Translator;
 
 use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\rank\RankManager;
 use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\session\Session;
 use IvanCraft623\RankSystem\utils\Utils;
-use IvanCraft623\RankSystem\libs\_95221d011a678a74\jojoe77777\FormAPI\SimpleForm;
+use IvanCraft623\RankSystem\libs\_16c4764b8e08f442\jojoe77777\FormAPI\SimpleForm;
 
 use pocketmine\player\Player;
 use function str_replace;
