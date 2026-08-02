@@ -6,19 +6,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    outputs:
-      artifact-name:  ${{ steps.build.outputs.artifact-name }}
-      plugin-name:    ${{ steps.build.outputs.plugin-name }}
-      plugin-version: ${{ steps.build.outputs.plugin-version }}
-      pm-version:     ${{ steps.build.outputs.pm-version }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: axolotl-pm/pmmp-plugin-actions/build-phar@main
-        id: build
-        with:
-          php-version: '8.2'
-          stage-poggit: true
+    uses: axolotl-pm/pmmp-plugin-actions/.github/workflows/build-phar.yml@main
+    with:
+      php-version: '8.2'
+      stage-poggit: true
+    permissions:
+      contents: read
 
   publish:
     needs: build
@@ -29,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: axolotl-pm/pmmp-plugin-actions/publish-nightly@main
         with:
-          artifact-name:  ${{ needs.build.outputs.artifact-name }}
+          artifact-id:    ${{ needs.build.outputs.artifact-id }}
           plugin-name:    ${{ needs.build.outputs.plugin-name }}
           plugin-version: ${{ needs.build.outputs.plugin-version }}
           pm-version:     ${{ needs.build.outputs.pm-version }}
