@@ -29,12 +29,12 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\form;
 
-use IvanCraft623\RankSystem\libs\_723798d82b3d20a4\IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\libs\_dd2697c4b4b2f1c0\IvanCraft623\languages\Translator;
 
 use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\session\Session;
 use IvanCraft623\RankSystem\session\SessionManager;
-use IvanCraft623\RankSystem\libs\_723798d82b3d20a4\jojoe77777\FormAPI\SimpleForm;
+use IvanCraft623\RankSystem\libs\_dd2697c4b4b2f1c0\jojoe77777\FormAPI\SimpleForm;
 
 use pocketmine\player\Player;
 

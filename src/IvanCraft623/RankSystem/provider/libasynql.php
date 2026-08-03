@@ -38,9 +38,9 @@ use pocketmine\promise\PromiseResolver;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\SingletonTrait;
 
-use IvanCraft623\RankSystem\libs\_723798d82b3d20a4\poggit\libasynql\DataConnector;
-use IvanCraft623\RankSystem\libs\_723798d82b3d20a4\poggit\libasynql\libasynql as libasynqlDatabase;
-use IvanCraft623\RankSystem\libs\_723798d82b3d20a4\poggit\libasynql\SqlError;
+use IvanCraft623\RankSystem\libs\_dd2697c4b4b2f1c0\poggit\libasynql\DataConnector;
+use IvanCraft623\RankSystem\libs\_dd2697c4b4b2f1c0\poggit\libasynql\libasynql as libasynqlDatabase;
+use IvanCraft623\RankSystem\libs\_dd2697c4b4b2f1c0\poggit\libasynql\SqlError;
 use function count;
 use function is_array;
 use function is_string;

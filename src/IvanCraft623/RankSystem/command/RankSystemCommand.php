@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\command;
 
-use IvanCraft623\RankSystem\libs\_723798d82b3d20a4\CortexPE\Commando\BaseCommand;
+use IvanCraft623\RankSystem\libs\_dd2697c4b4b2f1c0\CortexPE\Commando\BaseCommand;
 
 use IvanCraft623\RankSystem\command\subcommands\CreateCommand;
 use IvanCraft623\RankSystem\command\subcommands\CreditsCommand;
