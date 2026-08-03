@@ -9,7 +9,7 @@ jobs:
     uses: axolotl-pm/pmmp-plugin-actions/.github/workflows/build-phar.yml@main
     with:
       php-version: '8.2'
-      stage-poggit: true
+      stage-poggit: false
     permissions:
       contents: read
 
