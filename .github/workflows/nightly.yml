@@ -11,7 +11,7 @@ jobs:
       php-version: '8.2'
       stage-poggit: true
     permissions:
-      contents: write
+      contents: write  # Required because `stage-poggit: true`
 
   publish:
     needs: build
