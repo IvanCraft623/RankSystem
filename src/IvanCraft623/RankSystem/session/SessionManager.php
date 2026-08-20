@@ -29,36 +29,63 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\session;
 
+use IvanCraft623\RankSystem\RankSystem;
+
 use pocketmine\player\Player;
 use pocketmine\utils\SingletonTrait;
+use WeakMap;
 
 final class SessionManager {
 	use SingletonTrait;
 
-	/** @var array<string, Session> */
-	private array $sessions = [];
+	private RankSystem $plugin;
+
+	/** @var WeakMap<Player, OnlineSession> */
+	private WeakMap $onlineSessions;
+
+	public function __construct() {
+		$this->plugin = RankSystem::getInstance();
+		$this->onlineSessions = new WeakMap();
+	}
 
 	public function get(Player|string $player) : Session {
-		$name = ($player instanceof Player) ? $player->getName() : $player;
-		if (isset($this->sessions[$name])) {
-			return $this->sessions[$name];
+		if ($player instanceof Player) {
+			return $this->getOnline($player);
 		}
 
-		return $this->sessions[$name] = new Session($name);
+		$onlinePlayer = $this->plugin->getServer()->getPlayerExact($player);
+		if ($onlinePlayer !== null) {
+			return $this->getOnline($onlinePlayer);
+		}
+
+		return new OfflineSession($player);
+	}
+
+	public function getOnline(Player $player) : OnlineSession {
+		return $this->onlineSessions[$player] ??= new OnlineSession($player);
 	}
 
 	/**
-	 * @return array<string, Session>
+	 * @return array<string, OnlineSession>
 	 */
 	public function getAll() : array {
-		return $this->sessions;
+		$sessions = [];
+		foreach ($this->onlineSessions as $player => $session) {
+			$sessions[$player->getName()] = $session;
+		}
+		return $sessions;
 	}
 
 	public function reload() : void {
-		$sessions = [];
-		foreach ($this->sessions as $user => $ss) {
-			$sessions[$user] = new Session($user);
+		$replacement = [];
+		foreach ($this->onlineSessions as $player => $session) {
+			$session->close();
+			$replacement[] = [$player, new OnlineSession($player)];
 		}
-		$this->sessions = $sessions;
+
+		$this->onlineSessions = new WeakMap();
+		foreach ($replacement as [$player, $session]) {
+			$this->onlineSessions[$player] = $session;
+		}
 	}
 }
