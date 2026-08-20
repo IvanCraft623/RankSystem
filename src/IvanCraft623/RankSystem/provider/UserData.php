@@ -100,14 +100,14 @@ class UserData implements JsonSerializable {
 		$intOrNullValidator = static function(?int $_) : void{};
 
 		/** @var array<string, ?int> $ranks */
-		$ranks = isset($data["ranks"]) ? json_decode($data["ranks"], true) : [];
+		$ranks = isset($data["ranks"]) && $data["ranks"] !== "" ? json_decode($data["ranks"], true) : [];
 		if (!is_array($ranks)) {
 			throw new \TypeError("Expected array for \"ranks\"");
 		}
 		PMUtils::validateArrayValueType($ranks, $intOrNullValidator);
 
 		/** @var array<string, ?int> $permissions */
-		$permissions = isset($data["permissions"]) ? json_decode($data["permissions"], true) : [];
+		$permissions = isset($data["permissions"]) && $data["permissions"] !== "" ? json_decode($data["permissions"], true) : [];
 		if (!is_array($permissions)) {
 			throw new \TypeError("Expected array for \"permissions\"");
 		}
