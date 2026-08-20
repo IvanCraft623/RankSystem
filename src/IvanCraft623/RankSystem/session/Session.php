@@ -37,14 +37,12 @@ use IvanCraft623\RankSystem\event\UserRankSetEvent;
 use IvanCraft623\RankSystem\provider\UserData;
 use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\RankSystem;
-use IvanCraft623\RankSystem\utils\Utils;
 
-use pocketmine\permission\PermissionAttachment;
 use pocketmine\player\Player;
 use pocketmine\promise\Promise;
 use pocketmine\promise\PromiseResolver;
 use pocketmine\utils\AssumptionFailedError;
-use function array_fill_keys;
+
 use function array_filter;
 use function array_key_exists;
 use function array_key_first;
@@ -57,41 +55,33 @@ use function is_string;
 use function spl_object_id;
 use function str_replace;
 
-final class Session {
+abstract class Session {
+	protected RankSystem $plugin;
 
-	private RankSystem $plugin;
+	protected string $name;
 
-	private string $name;
-
-	private ?Player $player = null;
-
-	private SessionChatFormatter $chatFormatter;
-
-	private bool $initialized = false;
+	protected bool $initialized = false;
 
 	/** @var array<int, \Closure(): void> */
-	private array $onInits = [];
+	protected array $onInits = [];
 
 	/** @var RankWrapper[] */
-	private array $ranks = [];
+	protected array $ranks = [];
 
 	/** @var string[] */
-	private array $permissions = [];
+	protected array $permissions = [];
 
 	/** @var array<string, ?int> */
-	private array $userPermissions = [];
-
-	private ?PermissionAttachment $attachment = null;
+	protected array $userPermissions = [];
 
 	/** @var array<int, \Closure(): Promise<bool>> */
-	private array $syncQueue = [];
+	protected array $syncQueue = [];
 
-	private bool $synchronized = false;
+	protected bool $synchronized = false;
 
 	public function __construct(string $name) {
 		$this->plugin = RankSystem::getInstance();
 		$this->name = $name;
-		$this->chatFormatter = new SessionChatFormatter($this);
 
 		$this->loadUserData();
 	}
@@ -121,10 +111,9 @@ final class Session {
 
 					# Permissions
 					$permissions = $userData->getPermissions();
-
-					$this->updateRanks();
 				}
 				$this->syncPermissions($permissions);
+				$this->updateRanks();
 
 				$this->initialized = true;
 				$this->synchronized = true;
@@ -153,7 +142,6 @@ final class Session {
 				$this->ranks[spl_object_id($rank)] = new RankWrapper($rank, $expTime);
 			}
 		}
-		$this->updateRanks();
 	}
 
 	/**
@@ -172,27 +160,13 @@ final class Session {
 			$this->permissions = array_merge($this->permissions, $rank->getPermissions());
 		}
 		$this->permissions = array_merge($this->permissions, array_keys($userPermissions));
-
-		$this->updatePermissions();
 	}
 
 	public function getName() : string {
 		return $this->name;
 	}
 
-	public function getPlayer() : ?Player {
-		return $this->player;
-	}
-
-	/**
-	 * Called when the player joins the server
-	 *
-	 * @internal
-	 */
-	public function setPlayer(Player $player) : void {
-		$this->player = $player;
-		$this->attachment = $player->addAttachment($this->plugin);
-	}
+	abstract public function getPlayer() : ?Player;
 
 	public function getNameTagFormat() : string {
 		$format = $this->plugin->getConfig()->getNested("nametag.format", "{nametag_ranks_prefix}{nametag_name-color}{name}");
@@ -203,10 +177,6 @@ final class Session {
 			$format = str_replace($tag->getId(), $tag->getValue($this), $format);
 		}
 		return $format;
-	}
-
-	public function getChatFormatter() : SessionChatFormatter {
-		return $this->chatFormatter;
 	}
 
 	public function getChatFormat() : string {
@@ -326,13 +296,13 @@ final class Session {
 				function (array $ranks) use ($resolver) {
 					$this->syncRanks($ranks);
 					$this->syncPermissions($this->userPermissions);
+					$this->updateRanks();
 					$resolver->resolve(true);
 				},
 				fn() => $resolver->resolve(false)
 			);
 			return $resolver->getPromise();
 		});
-
 		return true;
 	}
 
@@ -357,10 +327,11 @@ final class Session {
 		$this->addToSyncQueue(function () use ($rank) : Promise {
 			/** @var PromiseResolver<bool> $resolver */
 			$resolver = new PromiseResolver();
-				$this->plugin->getProvider()->removeRank($this->name, $rank->getName())->onCompletion(
+			$this->plugin->getProvider()->removeRank($this->name, $rank->getName())->onCompletion(
 				function (array $ranks) use ($resolver) {
 					$this->syncRanks($ranks);
 					$this->syncPermissions($this->userPermissions);
+					$this->updateRanks();
 					$resolver->resolve(true);
 				},
 				fn() => $resolver->resolve(false)
@@ -416,9 +387,10 @@ final class Session {
 		$this->addToSyncQueue(function () use ($perm, $expTime) : Promise {
 			/** @var PromiseResolver<bool> $resolver */
 			$resolver = new PromiseResolver();
-				$this->plugin->getProvider()->setPermission($this->name, $perm, $expTime)->onCompletion(
+			$this->plugin->getProvider()->setPermission($this->name, $perm, $expTime)->onCompletion(
 				function (array $permissions) use ($resolver) {
 					$this->syncPermissions($permissions);
+					$this->updateRanks();
 					$resolver->resolve(true);
 				},
 				fn() => $resolver->resolve(false)
@@ -443,9 +415,10 @@ final class Session {
 		$this->addToSyncQueue(function () use ($perm) : Promise {
 			/** @var PromiseResolver<bool> $resolver */
 			$resolver = new PromiseResolver();
-				$this->plugin->getProvider()->removePermission($this->name, $perm)->onCompletion(
+			$this->plugin->getProvider()->removePermission($this->name, $perm)->onCompletion(
 				function (array $permissions) use ($resolver) {
 					$this->syncPermissions($permissions);
+					$this->updateRanks();
 					$resolver->resolve(true);
 				},
 				fn() => $resolver->resolve(false)
@@ -459,23 +432,5 @@ final class Session {
 		$this->ranks = array_map(function(Rank $rank) {
 			return new RankWrapper($rank, $this->getRankExpTime($rank));
 		}, $this->plugin->getRankManager()->getHierarchical($this->getRanks()));
-
-		$player = $this->getPlayer();
-		if ($player !== null) {
-			$this->updatePermissions();
-			$this->updateNameTag();
-			Utils::updateScoreTags($this);
-		}
-	}
-
-	public function updatePermissions() : void {
-		$this->attachment?->setPermissions(array_fill_keys($this->permissions, true));
-	}
-
-	public function updateNameTag() : void {
-		$player = $this->getPlayer();
-		if ($player !== null && $this->plugin->getConfig()->getNested("nametag.enabled", true)) {
-			$player->setNameTag($this->getNameTagFormat());
-		}
 	}
 }
