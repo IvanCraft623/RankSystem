@@ -29,12 +29,12 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\form;
 
-use IvanCraft623\RankSystem\libs\_75f674b7ad5f0a23\IvanCraft623\languages\Translator;
+use IvanCraft623\RankSystem\libs\_ab9d215404d83cdb\IvanCraft623\languages\Translator;
 use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\RankSystem;
 
-use IvanCraft623\RankSystem\libs\_75f674b7ad5f0a23\jojoe77777\FormAPI\CustomForm;
-use IvanCraft623\RankSystem\libs\_75f674b7ad5f0a23\jojoe77777\FormAPI\SimpleForm;
+use IvanCraft623\RankSystem\libs\_ab9d215404d83cdb\jojoe77777\FormAPI\CustomForm;
+use IvanCraft623\RankSystem\libs\_ab9d215404d83cdb\jojoe77777\FormAPI\SimpleForm;
 
 use pocketmine\player\Player;
 use function explode;
