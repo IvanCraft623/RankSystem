@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\command\args;
 
-use IvanCraft623\RankSystem\libs\_7c604e93589d947c\CortexPE\Commando\args\StringEnumArgument;
+use IvanCraft623\RankSystem\libs\_2f17bee6c3ea9171\CortexPE\Commando\args\StringEnumArgument;
 
 use IvanCraft623\RankSystem\rank\Rank;
 use IvanCraft623\RankSystem\rank\RankManager;
