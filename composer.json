@@ -4,9 +4,9 @@
     "type": "project",
     "license": "Apache-2.0",
     "require": {
+        "axolotl-plugin-orphanage/commando": "^3.3.0",
+        "axolotl-plugin-orphanage/config-updater": "^2.2.0",
         "bstats/pocketmine-mp": "^1.0.0",
-        "cortexpe/commando": "dev-ready",
-        "ifera-mc/config-updater": "dev-master",
         "ivancraft623/languages": "dev-main",
         "latampmdevs/formapi": "dev-master",
         "sof3/libasynql": "^4.2.3"
@@ -18,37 +18,6 @@
         "sof3/pharynx": "^0.3.8"
     },
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/LatamPMDevs/Commando.git"
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "ifera-mc/config-updater",
-                "description": "A handy virion for PocketMine-MP plugin developers that checks if a new version of config is available. If so then it notifies the user about the new update and updates the config.",
-                "type": "library",
-                "license": "GPL-3.0",
-                "version": "dev-master",
-                "require": {
-                    "pocketmine/pocketmine-mp": "^4.0.0 || ^5.0.0"
-                },
-                "source": {
-                    "type": "git",
-                    "url": "https://github.com/ifera-mc/ConfigUpdater.git",
-                    "reference": "master"
-                },
-                "autoload": {
-                    "classmap": ["src"]
-                },
-                "extra": {
-                    "virion": {
-                        "spec": "3.0",
-                        "namespace-root": "JackMD\\ConfigUpdater"
-                    }
-                }
-            }
-        },
         {
             "type": "vcs",
             "url": "https://github.com/LatamPMDevs/FormAPI.git"
