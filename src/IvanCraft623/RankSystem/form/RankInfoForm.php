@@ -33,7 +33,7 @@ use IvanCraft623\RankSystem\rank\Rank;
 
 use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\utils\Utils;
-use IvanCraft623\RankSystem\libs\_2f17bee6c3ea9171\jojoe77777\FormAPI\SimpleForm;
+use IvanCraft623\RankSystem\libs\_8f07b1a4a0e2ea16\jojoe77777\FormAPI\SimpleForm;
 
 use pocketmine\player\Player;
 

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\command\args;
 
-use IvanCraft623\RankSystem\libs\_2f17bee6c3ea9171\CortexPE\Commando\args\RawStringArgument;
+use IvanCraft623\RankSystem\libs\_8f07b1a4a0e2ea16\CortexPE\Commando\args\RawStringArgument;
 
 use IvanCraft623\RankSystem\RankSystem;
 use IvanCraft623\RankSystem\utils\Utils;

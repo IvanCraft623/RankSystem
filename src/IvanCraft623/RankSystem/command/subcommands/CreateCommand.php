@@ -29,10 +29,10 @@ declare(strict_types=1);
 
 namespace IvanCraft623\RankSystem\command\subcommands;
 
-use IvanCraft623\RankSystem\libs\_2f17bee6c3ea9171\CortexPE\Commando\args\RawStringArgument;
-use IvanCraft623\RankSystem\libs\_2f17bee6c3ea9171\CortexPE\Commando\BaseCommand;
-use IvanCraft623\RankSystem\libs\_2f17bee6c3ea9171\CortexPE\Commando\BaseSubCommand;
-use IvanCraft623\RankSystem\libs\_2f17bee6c3ea9171\CortexPE\Commando\constraint\InGameRequiredConstraint;
+use IvanCraft623\RankSystem\libs\_8f07b1a4a0e2ea16\CortexPE\Commando\args\RawStringArgument;
+use IvanCraft623\RankSystem\libs\_8f07b1a4a0e2ea16\CortexPE\Commando\BaseCommand;
+use IvanCraft623\RankSystem\libs\_8f07b1a4a0e2ea16\CortexPE\Commando\BaseSubCommand;
+use IvanCraft623\RankSystem\libs\_8f07b1a4a0e2ea16\CortexPE\Commando\constraint\InGameRequiredConstraint;
 
 use IvanCraft623\RankSystem\RankSystem;
 
